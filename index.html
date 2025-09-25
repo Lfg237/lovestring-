@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lovestring</title>
+<style>
+:root {
+  --accent1:#ff6600; --accent2:#ffcc00; --accent3:#33ccff;
+  --bg:#111; --card-bg:#222; --card-hover:#333; --text:#fff;
+}
+body { margin:0; font-family:Arial,sans-serif; background:var(--bg); color:var(--text); overflow-y:auto; }
+header { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem;
+  background: linear-gradient(-45deg, var(--accent1), var(--accent2), var(--accent3), #ff3399);
+  background-size:400% 400%; animation:gradientBG 15s ease infinite; position:sticky; top:0; z-index:1000; }
+header h1 { font-size:1.4rem; display:flex; align-items:center; gap:0.6rem; }
+header h1 .heart { color:red; animation:pulseHeart 1.2s infinite; }
+@keyframes pulseHeart {0%,100%{transform:scale(1);} 50%{transform:scale(1.3);} }
+@keyframes gradientBG {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;} }
+.carousel-container { margin:20px; overflow-x:hidden; }
+.carousel-title { margin-bottom:10px; font-size:1.3rem; font-weight:bold; }
+.carousel { display:flex; overflow-x:auto; gap:15px; padding-bottom:10px; }
+.carousel::-webkit-scrollbar { height:8px; }
+.carousel::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.2); border-radius:4px; }
+.item { position:relative; min-width:220px; background:var(--card-bg); border-radius:12px; overflow:hidden; cursor:pointer; flex-shrink:0; transition:transform 0.3s, box-shadow 0.3s; }
+.item:hover { transform:translateY(-5px); box-shadow:0 0 20px rgba(255,255,255,0.4); }
+.item img { width:100%; height:160px; object-fit:cover; display:block; transition: transform 0.4s; }
+.item:hover img { transform:scale(1.05); }
+.info { padding:8px 10px; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center; }
+.price { font-weight:bold; color:#ffcc00; position:relative; z-index:5; }
+.veil { position:absolute; top:0; left:0; right:0; bottom:40px; background: rgba(0,0,0,0.45); display:flex; justify-content:center; align-items:center; color:#fff; font-size:0.9rem; opacity:1; transition:opacity 0.4s; }
+.veil.hidden { opacity:0; pointer-events:none; }
+.modal { position:fixed; inset:0; background: rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; padding:20px; z-index:2000; }
+.modal.open { display:flex; }
+.modal-content { background: #111; border-radius:12px; max-width:500px; width:100%; padding:16px; text-align:center; color:#fff; }
+.modal-content img { width:100%; border-radius:6px; margin-bottom:12px; }
+.modal-content .close { float:right; cursor:pointer; font-size:1.2rem; }
+footer { margin-top:20px; background: linear-gradient(45deg,var(--accent1),var(--accent2),var(--accent3),#ff3399);
+  background-size:400% 400%; animation:gradientBG 12s ease infinite; color:#fff; padding:20px; display:flex; justify-content:space-around; flex-wrap:wrap; font-size:0.9rem; }
+footer a { color:#fff; text-decoration:none; margin:2px; }
+button { background:#ff6600; border:none; padding:10px; border-radius:8px; cursor:pointer; margin-top:10px; width:100%; font-weight:bold; transition:all 0.3s; }
+button:hover { background:#ffcc00; color:#000; box-shadow:0 0 10px #fff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🛒  <span class="heart">❤️lovestring</span></h1>
+  <div id="datetime">--</div>
+</header>
+
+<!-- Nouveautés -->
+<div class="carousel-container">
+  <div class="carousel-title">🔥 Nouveautés</div>
+  <div class="carousel">
+    <div class="item" data-id="prod1" data-title="Produit Gratuit" data-price="0" data-desc="Message caché gratuit." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Gratuit</span><span class="price">XAF0</span></div>
+    </div>
+    <div class="item" data-id="prod2" data-title="Produit Payant" data-price="15" data-desc="Message caché payant." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Payant</span><span class="price">XAF15</span></div>
+    </div>
+  </div>
+</div>
+<!-- Nouveautés -->
+<div class="carousel-container">
+  <div class="carousel-title">🔥 Nouveautés</div>
+  <div class="carousel">
+    <div class="item" data-id="prod1" data-title="Produit Gratuit" data-price="0" data-desc="Message caché gratuit." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Gratuit</span><span class="price">XAF0</span></div>
+    </div>
+    <div class="item" data-id="prod2" data-title="Produit Payant" data-price="15" data-desc="Message caché payant." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Payant</span><span class="price">XAF15</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Premium -->
+<div class="carousel-container">
+  <div class="carousel-title">💎 Premium</div>
+  <div class="carousel">
+    <div class="item" data-id="prod3" data-title="Produit Premium 1" data-price="20" data-desc="Message caché premium 1." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 1</span><span class="price">XAF20</span></div>
+    </div>
+    <div class="item" data-id="prod4" data-title="Produit Premium 2" data-price="25" data-desc="Message caché premium 2." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 2</span><span class="price">XAF25</span></div>
+    </div>
+    <div class="item" data-id="prod5" data-title="Produit Premium 3" data-price="30" data-desc="Message caché premium 3." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/sample_premium3.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/sample_premium3.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 3</span><span class="price">XAF30</span></div>
+    </div>
+  </div>
+</div>
+  <!-- Nouveautés -->
+<div class="carousel-container">
+  <div class="carousel-title">🔥 Nouveautés</div>
+  <div class="carousel">
+    <div class="item" data-id="prod1" data-title="Produit Gratuit" data-price="0" data-desc="Message caché gratuit." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Gratuit</span><span class="price">XAF0</span></div>
+    </div>
+    <div class="item" data-id="prod2" data-title="Produit Payant" data-price="15" data-desc="Message caché payant." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Payant</span><span class="price">XAF15</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Premium -->
+<div class="carousel-container">
+  <div class="carousel-title">💎 Premium</div>
+  <div class="carousel">
+    <div class="item" data-id="prod3" data-title="Produit Premium 1" data-price="20" data-desc="Message caché premium 1." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 1</span><span class="price">XAF20</span></div>
+    </div>
+    <div class="item" data-id="prod4" data-title="Produit Premium 2" data-price="25" data-desc="Message caché premium 2." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 2</span><span class="price">XAF25</span></div>
+    </div>
+    <div class="item" data-id="prod5" data-title="Produit Premium 3" data-price="30" data-desc="Message caché premium 3." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/sample_premium3.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/sample_premium3.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 3</span><span class="price">XAF30</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">❌</span>
+    <h3 id="modalTitle"></h3>
+    <p id="modalDesc"></p>
+    <p id="modalHiddenPreview"></p>
+    <button id="payBtn"><a id="payLink" href="#" target="_blank" style="color:#fff; text-decoration:none;">💳 Payer maintenant</a></button>
+  </div>
+</div>
+  
+<!-- Premium -->
+<div class="carousel-container">
+  <div class="carousel-title">💎 Premium</div>
+  <div class="carousel">
+    <div class="item" data-id="prod3" data-title="Produit Premium 1" data-price="20" data-desc="Message caché premium 1." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 1</span><span class="price">XAF20</span></div>
+    </div>
+    <div class="item" data-id="prod4" data-title="Produit Premium 2" data-price="25" data-desc="Message caché premium 2." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 2</span><span class="price">XAF25</span></div>
+    </div>
+    <div class="item" data-id="prod5" data-title="Produit Premium 3" data-price="30" data-desc="Message caché premium 3." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/sample_premium3.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/sample_premium3.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 3</span><span class="price">XAF30</span></div>
+    </div>
+  </div>
+</div>
+  <!-- Nouveautés -->
+<div class="carousel-container">
+  <div class="carousel-title">🔥 Nouveautés</div>
+  <div class="carousel">
+    <div class="item" data-id="prod1" data-title="Produit Gratuit" data-price="0" data-desc="Message caché gratuit." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Gratuit</span><span class="price">XAF0</span></div>
+    </div>
+    <div class="item" data-id="prod2" data-title="Produit Payant" data-price="15" data-desc="Message caché payant." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Payant</span><span class="price">XAF15</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Premium -->
+<div class="carousel-container">
+  <div class="carousel-title">💎 Premium</div>
+  <div class="carousel">
+    <div class="item" data-id="prod3" data-title="Produit Premium 1" data-price="20" data-desc="Message caché premium 1." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 1</span><span class="price">XAF20</span></div>
+    </div>
+    <div class="item" data-id="prod4" data-title="Produit Premium 2" data-price="25" data-desc="Message caché premium 2." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 2</span><span class="price">XAF25</span></div>
+    </div>
+    <div class="item" data-id="prod5" data-title="Produit Premium 3" data-price="30" data-desc="Message caché premium 3." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/sample_premium3.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/sample_premium3.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 3</span><span class="price">XAF30</span></div>
+    </div>
+  </div>
+</div>
+  <!-- Nouveautés -->
+<div class="carousel-container">
+  <div class="carousel-title">🔥 Nouveautés</div>
+  <div class="carousel">
+    <div class="item" data-id="prod1" data-title="Produit Gratuit" data-price="0" data-desc="Message caché gratuit." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Gratuit</span><span class="price">XAF0</span></div>
+    </div>
+    <div class="item" data-id="prod2" data-title="Produit Payant" data-price="15" data-desc="Message caché payant." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Payant</span><span class="price">XAF15</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Premium -->
+<div class="carousel-container">
+  <div class="carousel-title">💎 Premium</div>
+  <div class="carousel">
+    <div class="item" data-id="prod3" data-title="Produit Premium 1" data-price="20" data-desc="Message caché premium 1." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 1</span><span class="price">XAF20</span></div>
+    </div>
+    <div class="item" data-id="prod4" data-title="Produit Premium 2" data-price="25" data-desc="Message caché premium 2." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 2</span><span class="price">XAF25</span></div>
+    </div>
+    <div class="item" data-id="prod5" data-title="Produit Premium 3" data-price="30" data-desc="Message caché premium 3." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/sample_premium3.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/sample_premium3.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 3</span><span class="price">XAF30</span></div>
+    </div>
+  </div>
+</div>
+  <!-- Nouveautés -->
+<div class="carousel-container">
+  <div class="carousel-title">🔥 Nouveautés</div>
+  <div class="carousel">
+    <div class="item" data-id="prod1" data-title="Produit Gratuit" data-price="0" data-desc="Message caché gratuit." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/20250830_035314.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Gratuit</span><span class="price">XAF0</span></div>
+    </div>
+    <div class="item" data-id="prod2" data-title="Produit Payant" data-price="15" data-desc="Message caché payant." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20250822_195008871.png">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Payant</span><span class="price">XAF15</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Premium -->
+<div class="carousel-container">
+  <div class="carousel-title">💎 Premium</div>
+  <div class="carousel">
+    <div class="item" data-id="prod3" data-title="Produit Premium 1" data-price="20" data-desc="Message caché premium 1." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20240813_044050132.jpg">
+      <div class="veil"></div>
+      <div class="info"><span>Produit Premium 1</span><span class="price">XAF20</span></div>
+    </div>
+    <div class="item" data-id="prod4" data-title="Produit Premium 2" data-price="25" data-desc="Message caché premium 2." data-hidden="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/InShot_20250824_073145807.jpg" onclick="openModal(this)">
+      <img src="https://raw.githubuse
