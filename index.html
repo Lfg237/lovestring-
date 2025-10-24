@@ -1,517 +1,280 @@
-m<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Carrousel Lovestring - Paiement Mobile Money</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Assistant LesFacilitateurs - Validation stricte</title>
 <style>
-body {font-family: Arial, sans-serif; background:#111; color:#fff; margin:0; padding:20px;}
-header{padding:10px 20px; background:#222; font-size:1.2rem; font-weight:bold;}
-.carousel-container{margin:20px 0; position: relative;}
-.carousel-title{font-weight:bold; margin-bottom:8px; font-size:1.1rem;}
-.carousel{display:flex; overflow-x:auto; gap:12px; scroll-behavior:smooth; padding-bottom:10px;}
-.carousel::-webkit-scrollbar{height:6px;}
-.carousel::-webkit-scrollbar-thumb{background:#0ff;border-radius:4px;}
-.item{flex:0 0 200px; background:#222; border-radius:8px; padding:10px; text-align:center; box-shadow:0 0 8px #0ff2;}
-.item img{width:100%; height:130px; object-fit:cover; border-radius:6px;}
-.item h4{margin:8px 0 4px;}
-.item p{margin:0 0 8px;}
-button{padding:6px 10px; border:none; border-radius:6px; cursor:pointer; background:#0ff; color:#000; font-weight:bold;}
-.carousel-btn{position:absolute; top:50%; transform:translateY(-50%); background:#0ffaa; color:#000; font-weight:bold; border-radius:50%; width:35px; height:35px; display:flex; justify-content:center; align-items:center; cursor:pointer; user-select:none;}
-.carousel-btn:hover{background:#0cc;}
-.prev{left:-15px;}
-.next{right:-15px;}
-.modal{position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center;}
-.modal-content{background:#222; padding:20px; border-radius:12px; max-width:400px; width:90%; box-shadow:0 0 15px #0ff; text-align:center; color:#fff;}
-.vendeur-box{margin-bottom:15px; padding:12px; background:#333; border:2px solid #0ff; border-radius:10px; box-shadow:0 0 12px #0ff; text-align:left;}
-.vendeur-box strong{color:#0ff;}
-textarea{width:100%;height:100px;margin-top:10px;border-radius:8px;padding:8px;border:none;}
-#hiddenContent{margin-top:15px;}
-.hidden{display:none;}
+:root{--bg:#0b1220;--card:#0f1a2b;--accent:#2563eb;--accent2:#10b981;--muted:rgba(255,255,255,0.06);}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#e6eef8;-webkit-font-smoothing:antialiased;}
+#botFloat{position:fixed;right:20px;bottom:20px;width:72px;height:72px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1100;}
+#botFloat img{width:60%;height:60%;}
+#botBox{position:fixed;right:0;bottom:0;width:100%;max-width:420px;height:90vh;background:var(--card);border-radius:12px 12px 0 0;display:none;flex-direction:column;overflow:hidden;z-index:1200;box-shadow:0 -8px 30px rgba(0,0,0,0.6);}
+#botHead{display:flex;align-items:center;gap:8px;padding:10px;background:var(--accent);}
+#botHead .title{font-weight:700;}
+#botBody{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
+.premiumOptions{display:block;padding:6px;background:rgba(255,255,255,0.03);border-radius:8px;}
+.premiumOption{padding:10px;border-radius:8px;background:var(--accent2);color:white;font-weight:700;cursor:pointer;margin-bottom:6px;text-align:center;}
+.recordList{display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow:auto;padding:6px;border-radius:8px;}
+.record{background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;}
+.record .meta{line-height:1.1;}
+.record .contact{filter:blur(6px);user-select:none;opacity:0.9;}
+.record .contact.revealed{filter:none;color:var(--accent2);font-weight:700;opacity:1;}
+.btn{padding:6px 8px;border-radius:6px;border:none;background:var(--accent);color:white;cursor:pointer;font-weight:700;}
+.btn.pay{background:#f59e0b;}
+#paymentModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1400;align-items:center;justify-content:center;}
+#paymentCard{background:#122033;padding:16px;border-radius:12px;width:92%;max-width:420px;display:flex;flex-direction:column;gap:8px;}
+input[type="text"], input[type="password"]{padding:8px;border-radius:6px;border:none;background:rgba(255,255,255,0.03);color:white;outline:none;width:100%;}
+small.note{color:#cfd8e3;opacity:0.8}
+.reason{color:#ffb4b4;font-weight:700}
+footer.bar{padding:10px;background:transparent;display:flex;gap:8px;align-items:center;}
+@media (max-width:420px){ #botBox{right:0;left:0;width:100%;max-width:none;border-radius:12px 12px 0 0;} }
 </style>
 </head>
 <body>
 
-<header>🔞 ❤️ Lovestring 🌶️</header>
-les frais pour les rencontres c'est à partir de 100xaf
-<div class="carousel-container">
-  <div class="caroussel">🔞les filles chaudes de Yaoundé 🌶️</div>
-  <div class="carousel" id="carousel">
-    <div class="item">
-      <img src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>nkolmesseng BADDI 23 ANS BIxesuel </h4>
-      <p>100FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','Produit 1',100,'+237 6 56 04 31 76')">Voir détails / Payer</button>
+<!-- Floating open button -->
+<div id="botFloat" title="Ouvrir le bot">
+  <img src="https://i.ibb.co/4JH0qZt/african-head.png" alt="bot">
+</div>
+
+<!-- Bot panel -->
+<div id="botBox" role="region" aria-label="Assistant LesFacilitateurs">
+  <div id="botHead">
+    <div class="title">🤵🏿 LesFacilitateurs</div>
+    <input id="adminCode" type="password" placeholder="Code admin (caché)">
+    <button id="adminValidateBtn" class="btn">Valider</button>
+  </div>
+
+  <div id="botBody">
+    <div class="premiumOptions" aria-hidden="false">
+      <div class="premiumOption" data-type="emploi">💼 Emploi</div>
+      <div class="premiumOption" data-type="marketing">📈 Marketing / Visibilité / Pub</div>
+      <div class="premiumOption" data-type="rencontre">❤️ Rencontre Célibataire</div>
+      <div class="premiumOption" data-type="formation">🎓 Formation</div>
     </div>
-    <div class="item">
-      <img
-src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>Ivana 26 ans Yaoundé. Melen Bisexuel</h4>
-      <p>100FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','Produit 1',100,'651490863')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1015/200/150" alt="Produit 2">
-      <h4>Produit 2</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Ivana 
-26 ans 
-Yaoundé. Melen
-Bisexuel',100,'https://exemple.com/651490863')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1025/200/150" alt="Produit 3">
-      <h4>Produit 3</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p3','Produit 3',100,'Message secret 3')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1035/200/150" alt="Produit 4">
-      <h4>Produit 4</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p4','Produit 4',100,'https://exemple.com/fichier4.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1045/200/150" alt="Produit 5">
-      <h4>Produit 5</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p5','Produit 5',100,'Message secret 5')">Voir détails / Payer</button>
+
+    <div id="recordsHost" class="recordList" aria-live="polite">
+      <div style="opacity:0.6">Sélectionne une option pour voir les enregistrements.</div>
     </div>
   </div>
 
-  <div class="carousel-btn prev" onclick="scrollCarousel(-220)">&#10094;</div>
-  <div class="carousel-btn next" onclick="scrollCarousel(220)">&#10095;</div>
+  <footer class="bar">
+    <input id="botInput" type="text" placeholder="Écris ton message...">
+    <button id="sendBtn" class="btn">Envoyer</button>
+  </footer>
 </div>
 
-<div class="carousel-container">
-  <div class="caroussel">🔞les filles chaudes de douala 🌶️</div>
-  <div class="carousel" id="carousel1">
-    <div class="item">
-      <img src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>Naomi 27 ans pk14</h4>
-      <p>300 FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','naomi pk14 27 ans',100,'657518896')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1015/200/150" alt="Célia 24ans
-Bonamoussadi">
-      <h4> Célia 24ans
-Bonamoussadi</h4>
-      <p>100FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Produit 2',100,'+237 6 82 45 93 87')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img
-src="https://picsum.photos/id/1015/200/150" alt="Célia 24ans
-Bonamoussadi">
-      <h4> Jessica 20ans
-Douala deido lesbienne n'envoie pas l'argent de taxi </h4>
-      <p>100FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Douala deido
-Jessica 
-20 ans
-bi',100,'678385423')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1025/200/150" alt="Produit 3">
-      <h4>Produit 3</h4>
-      <p>scrollCarousel FCFA</p>
-      <button onclick="ouvrirModalProduit('p3','Produit 3',100,'Message secret 3')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1035/200/150" alt="Produit 4">
-      <h4>Produit 4</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p4','Produit 4',100,'https://exemple.com/fichier4.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1045/200/150" alt="Produit 5">
-      <h4>Produit 5</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p5','Produit 5',100,'Message secret 5')">Voir détails / Payer</button>
-    </div>
-  </div>
+<!-- Payment modal -->
+<div id="paymentModal" aria-hidden="true">
+  <div id="paymentCard" role="dialog" aria-modal="true">
+    <div><strong>💳 Paiement HelepMoney — 100 FCFA</strong></div>
+    <div><small class="note">Bénéficiaire: Loveline Wirnkar — OM: 640647072 / MoMo: 676353859</small></div>
 
-  <div class="carousel-btn prev" onclick="scrollCarousel(-220)">&#10094;</div>
-  <div class="carousel-btn next" onclick="scrollCarousel(220)">&#10095;</div>
-</div>
+    <input id="txInput" type="text" placeholder="ID transaction ou code admin 233233" autocomplete="off">
+    <div id="paymentFeedback" class="reason" style="min-height:18px"></div>
 
-<div class="carousel-container">
-  <div class="caroussel">🔞les filles chaudes de bafoussam 🌶️</div>
-  <div class="carousel" id="carousel1">
-    <div class="item">
-      <img src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>Produit 1</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','Produit 1',100,'Message secret 1')">Voir détails / Payer</button>
+    <div style="display:flex;gap:8px;">
+      <button id="confirmPaymentBtn" class="btn pay">Valider</button>
+      <button id="cancelPaymentBtn" class="btn">Annuler</button>
     </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1015/200/150" alt="Produit 2">
-      <h4>Produit 2</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Produit 2',100,'https://exemple.com/fichier2.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1025/200/150" alt="Produit 3">
-      <h4>Produit 3</h4>
-      <p>1800 FCFA</p>
-      <button onclick="ouvrirModalProduit('p3','Produit 3',100,'Message secret 3')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1035/200/150" alt="Produit 4">
-      <h4>Produit 4</h4>
-      <p>scrollCarousel FCFA</p>
-      <button onclick="ouvrirModalProduit('p4','Produit 4',100,'https://exemple.com/fichier4.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1045/200/150" alt="Produit 5">
-      <h4>Produit 5</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p5','Produit 5',100,'Message secret 5')">Voir détails / Payer</button>
-    </div>
-  </div>
-
-  <div class="carousel-btn prev" onclick="scrollCarousel(-220)">&#10094;</div>
-  <div class="carousel-btn next" onclick="scrollCarousel(220)">&#10095;</div>
-</div>
-
-<div class="carousel-container">
-  <div class="caroussel">🔞les filles chaudes de ngaoundéré 🌶️</div>
-  <div class="carousel" id="carousel1">
-    <div class="item">
-      <img src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>ta perle rare 25 ans</h4>
-      <p>200 FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','Produit 1',200,'+237 6 72 13 95 89')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1015/200/150" alt="Produit 2">
-      <h4>Produit 2</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Produit 2',100,'https://exemple.com/fichier2.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1025/200/150" alt="Produit 3">
-      <h4>Produit 3</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p3','Produit 3',100,'Message secret 3')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1035/200/150" alt="Produit 4">
-      <h4>Produit 4</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p4','Produit 4',100,'https://exemple.com/fichier4.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1045/200/150" alt="Produit 5">
-      <h4>Produit 5</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p5','Produit 5',100,'Message secret 5')">Voir détails / Payer</button>
-    </div>
-  </div>
-
-  <div class="carousel-btn prev" onclick="scrollCarousel(-220)">&#10094;</div>
-  <div class="carousel-btn next" onclick="scrollCarousel(220)">&#10095;</div>
-</div>
-
-<div class="carousel-container">
-  <div class="caroussel">🔞les filles chaudes de maroua 🌶️</div>
-  <div class="carousel" id="carousel1">
-    <div class="item">
-      <img src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>Produit 1</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','Produit 1',100,'Message secret 1')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1015/200/150" alt="Produit 2">
-      <h4>Produit 2</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Produit 2',100,'https://exemple.com/fichier2.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1025/200/150" alt="Produit 3">
-      <h4>Produit 3</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p3','Produit 3',100,'Message secret 3')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1035/200/150" alt="Produit 4">
-      <h4>Produit 4</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p4','Produit 4',100,'https://exemple.com/fichier4.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1045/200/150" alt="Produit 5">
-      <h4>Produit 5</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p5','Produit 5',100,'Message secret 5')">Voir détails / Payer</button>
-    </div>
-  </div>
-
-  <div class="carousel-btn prev" onclick="scrollCarousel(-220)">&#10094;</div>
-  <div class="carousel-btn next" onclick="scrollCarousel(220)">&#10095;</div>
-</div>
-
-<div class="carousel-container">
-  <div class="caroussel">🔞les filles chaudes de garoua 🌶️</div>
-  <div class="carousel" id="carousel1">
-    <div class="item">
-      <img src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>Produit 1</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','Produit 1',100,'Message secret 1')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1015/200/150" alt="Produit 2">
-      <h4>Produit 2</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Produit 2',100,'https://exemple.com/fichier2.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1025/200/150" alt="Produit 3">
-      <h4>Produit 3</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p3','Produit 3',100,'Message secret 3')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1035/200/150" alt="Produit 4">
-      <h4>Produit 4</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p4','Produit 4',100,'https://exemple.com/fichier4.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1045/200/150" alt="Produit 5">
-      <h4>Produit 5</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p5','Produit 5',100,'Message secret 5')">Voir détails / Payer</button>
-    </div>
-  </div>
-
-  <div class="carousel-btn prev" onclick="scrollCarousel(-220)">&#10094;</div>
-  <div class="carousel-btn next" onclick="scrollCarousel(220)">&#10095;</div>
-</div>
-
-
-<div class="carousel-container">
-  <div class="caroussel">🔞les filles chaudes de ebolowa 🌶️</div>
-  <div class="carousel" id="carousel1">
-    <div class="item">
-      <img src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>Produit 1</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','Produit 1',100,'Message secret 1')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1015/200/150" alt="Produit 2">
-      <h4>Produit 2</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Produit 2',100,'https://exemple.com/fichier2.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1025/200/150" alt="Produit 3">
-      <h4>Produit 3</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p3','Produit 3',100,'Message secret 3')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1035/200/150" alt="Produit 4">
-      <h4>Produit 4</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p4','Produit 4',100,'https://exemple.com/fichier4.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1045/200/150" alt="Produit 5">
-      <h4>Produit 5</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p5','Produit 5',100,'Message secret 5')">Voir détails / Payer</button>
-    </div>
-  </div>
-
-  <div class="carousel-btn prev" onclick="scrollCarousel(-220)">&#10094;</div>
-  <div class="carousel-btn next" onclick="scrollCarousel(220)">&#10095;</div>
-</div>
-
-<div class="carousel-container">
-  <div class="caroussel">🔞les filles chaudes de bamenda 🌶️</div>
-  <div class="carousel" id="carousel1">
-    <div class="item">
-      <img src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>Produit 1</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','Produit 1',100,'Message secret 1')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1015/200/150" alt="Produit 2">
-      <h4>Produit 2</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Produit 2',100,'https://exemple.com/fichier2.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1025/200/150" alt="Produit 3">
-      <h4>Produit 3</h4>
-      <p>00 FCFA</p>
-      <button onclick="ouvrirModalProduit('p3','Produit 3',100,'Message secret 3')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1035/200/150" alt="Produit 4">
-      <h4>Produit 4</h4>
-      <p>00 FCFA</p>
-      <button onclick="ouvrirModalProduit('p4','Produit 4',100,'https://exemple.com/fichier4.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1045/200/150" alt="Produit 5">
-      <h4>Produit 5</h4>
-      <p>00 FCFA</p>
-      <button onclick="ouvrirModalProduit('p5','Produit 5',100,'Message secret 5')">Voir détails / Payer</button>
-    </div>
-  </div>
-
-  <div class="carousel-btn prev" onclick="scrollCarousel(-220)">&#10094;</div>
-  <div class="carousel-btn next" onclick="scrollCarousel(220)">&#10095;</div>
-</div>
-
-<div class="carousel-container">
-  <div class="caroussel">🔞les filles chaudes de buea 🌶️</div>
-  <div class="carousel" id="carousel1">
-    <div class="item">
-      <img src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>Produit 1</h4>
-      <p> ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','Produit 1',100,'Message secret 1')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1015/200/150" alt="Produit 2">
-      <h4>Produit 2</h4>
-      <p>000 FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Produit 2',100,'https://exemple.com/fichier2.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1025/200/150" alt="Produit 3">
-      <h4>Produit 3</h4>
-      <p>00 FCFA</p>
-      <button onclick="ouvrirModalProduit('p3','Produit 3',100,'Message secret 3')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1035/200/150" alt="Produit 4">
-      <h4>Produit 4</h4>
-      <p>00 FCFA</p>
-      <button onclick="ouvrirModalProduit('p4','Produit 4',100,'https://exemple.com/fichier4.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1045/200/150" alt="Produit 5">
-      <h4>Produit 5</h4>
-      <p>00 FCFA</p>
-      <button onclick="ouvrirModalProduit('p5','Produit 5',2500,'Message secret 5')">Voir détails / Payer</button>
-    </div>
-  </div>
-
-  <div class="carousel-btn prev" onclick="scrollCarousel(-220)">&#10094;</div>
-  <div class="carousel-btn next" onclick="scrollCarousel(220)">&#10095;</div>
-</div>
-<div class="carousel-container">
-  <div class="caroussel">🔞les filles chaudes de bertoua🌶️</div>
-  <div class="carousel" id="carousel1">
-    <div class="item">
-      <img src="https://picsum.photos/id/1011/200/150" alt="Produit 1">
-      <h4>Produit 1</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p1','Produit 1',100,'Message secret 1')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1015/200/150" alt="Produit 2">
-      <h4>Produit 2</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p2','Produit 2',100,'https://exemple.com/fichier2.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1025/200/150" alt="Produit 3">
-      <h4>Produit 3</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p3','Produit 3',100,'Message secret 3')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1035/200/150" alt="Produit 4">
-      <h4>Produit 4</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p4','Produit 4',100,'https://exemple.com/fichier4.pdf')">Voir détails / Payer</button>
-    </div>
-    <div class="item">
-      <img src="https://picsum.photos/id/1045/200/150" alt="Produit 5">
-      <h4>Produit 5</h4>
-      <p>ras FCFA</p>
-      <button onclick="ouvrirModalProduit('p5','Produit 5',100,'Message secret 5')">Voir détails / Payer</button>
-    </div>
-  </div>
-
-  <div class="carousel-btn prev" onclick="scrollCarousel(-220)">&#10094;</div>
-  <div class="carousel-btn next" onclick="scrollCarousel(220)">&#10095;</div>
-</div>
-
-
-<!-- Modal paiement -->
-<div id="paymentModal" class="modal hidden">
-  <div class="modal-content">
-    <h2>💳 Paiement Mobile Money</h2>
-    <div id="vendeurInfo" class="vendeur-box"></div>
-    <p>📩 Veuillez coller le message Mobile Money reçu :</p>
-    <textarea id="mmMessage"></textarea>
-    <button id="validateBtn">✅ Valider</button>
-    <p id="paymentMsg"></p>
-    <div id="hiddenContent" class="hidden"></div>
-    <br>
-    <button onclick="fermerModal()">↩️ Retour</button>
+    <small class="note">Validation: transaction correcte ou code admin 233233. Date max 10 minutes avant l'heure locale.</small>
   </div>
 </div>
 
 <script>
-const vendeur = {nom:"Loveline Kinyuy Wirnkar", numeros:["676353859","640647072"]};
-let currentProduct = null;
-const usedTransactions = new Set();
+// Beneficiary & transactions
+const BENEF={nom:'Loveline Wirnkar', om:'640647072', momo:'676353859'};
+const now=Date.now();
+const validTransactions=[
+  {id:'TX1001', name:'Loveline Wirnkar', number:'640647072', timestampISO:new Date(now-3*60*1000).toISOString(), used:false},
+  {id:'TX1002', name:'loveline wirnkar', number:'676353859', timestampISO:new Date(now-5*60*1000).toISOString(), used:false}
+];
 
-function scrollCarousel(distance){
-  const car = document.getElementById('carousel1');
-  car.scrollBy({left: distance, behavior:'smooth'});
+// Records
+const records={
+  emploi:[{nom:'Momo Alpha', age:28, ville:'Douala', quartier:'Bonapriso', contact:'699123456'},{nom:'Pauline Beta', age:25, ville:'Yaoundé', quartier:'Bastos', contact:'699987654'}],
+  
+  marketing:[{nom:'Agence X', age:'—', ville:'Douala', quartier:'Akwa', contact:'650112233'}],
+  
+  rencontre:[
+    {nom:'celia', age:24, ville:'douala', quartier:'bonammoussadi hetero', contact:'+237 6 82 45 93 87'},
+    
+    {nom:'jessica', age:20, ville:'douala', quartier:'deido lesbienne', contact:'+237 6 78 38 54 23'},
+    
+    {nom:'naomie', age:27, ville:'douala', quartier:'pk14 hetero', contact:'+237 6 57 51 88 96'},
+    
+    {nom:'baddie', age:23, ville:'yaounde', quartier:'nkolmesseng bisexuelle', contact:'+237 6 56 04 31 76'},
+    
+    {nom:'yvanna', age:26, ville:'yaounde', quartier:' melen bisexuelle', contact:'651490863'},
+    
+  ],
+  
+  formation:[{nom:'Formation React', age:'—', ville:'Remote', quartier:'—', contact:'680998877'}]
+};
+
+// DOM
+const botFloat=document.getElementById('botFloat'), botBox=document.getElementById('botBox');
+const premiumBtns=document.querySelectorAll('.premiumOption');
+const recordsHost=document.getElementById('recordsHost');
+const paymentModal=document.getElementById('paymentModal');
+const txInput=document.getElementById('txInput');
+const paymentFeedback=document.getElementById('paymentFeedback');
+const confirmPaymentBtn=document.getElementById('confirmPaymentBtn');
+const cancelPaymentBtn=document.getElementById('cancelPaymentBtn');
+const adminCodeInput=document.getElementById('adminCode');
+const adminValidateBtn=document.getElementById('adminValidateBtn');
+
+let currentSelectedRecord=null;
+
+// ---------- Show/hide bot ----------
+botFloat.addEventListener('click', () => {
+  botBox.style.display = botBox.style.display === 'flex' ? 'none' : 'flex';
+});
+
+// ---------- Render records ----------
+function renderRecordsFor(type) {
+  recordsHost.innerHTML = '';
+  const list = records[type] || [];
+  if (list.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'record';
+    empty.textContent = 'Aucun enregistrement pour cette catégorie.';
+    recordsHost.appendChild(empty);
+    return;
+  }
+
+  list.forEach((r, idx) => {
+    const item = document.createElement('div');
+    item.className = 'record';
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.innerHTML = `<strong>${r.nom}</strong><br>${r.age ? r.age + ' ans, ' : ''}${r.ville} — ${r.quartier || ''}`;
+
+    const right = document.createElement('div');
+    right.style.display = 'flex';
+    right.style.alignItems = 'center';
+    right.style.gap = '8px';
+
+    const masked = document.createElement('span');
+    masked.className = 'contact';
+    masked.textContent = '*****';
+    masked.style.filter = 'blur(2px)';
+    right.appendChild(masked);
+
+    const btn = document.createElement('button');
+    btn.className = 'btn show';
+    btn.textContent = 'Voir le numéro (100 FCFA)';
+    btn.onclick = () => {
+      currentSelectedRecord = { type, index: idx };
+      txInput.value = '';
+      paymentFeedback.textContent = '';
+      paymentModal.style.display = 'flex';
+      paymentModal.setAttribute('aria-hidden', 'false');
+      setTimeout(() => txInput.focus(), 120);
+    };
+    right.appendChild(btn);
+
+    item.appendChild(meta);
+    item.appendChild(right);
+
+    item._contactSpan = masked; // store for later reveal
+    recordsHost.appendChild(item);
+  });
 }
 
+// ---------- Premium button click ----------
+premiumBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.type;
+    renderRecordsFor(type);
+  });
+});
 
-// Modal paiement
-function ouvrirModalProduit(id,titre,prix,hidden){
-  currentProduct = {id,titre,prix,hidden};
-  document.getElementById("paymentModal").classList.remove("hidden");
-  document.getElementById("vendeurInfo").innerHTML =
-    `<p><strong>👤 Vendeur :</strong> ${vendeur.nom}</p>
-     <p><strong>📱 Numéros :</strong> OM 640647072, MoMo 676353859</p>
-     <p><strong>💰 Montant à payer :</strong> ${prix} FCFA</p>`;
-  document.getElementById("mmMessage").value = '';
-  document.getElementById("paymentMsg").textContent = '';
-  document.getElementById("hiddenContent").classList.add("hidden");
+// ---------- Strict validation ----------
+function normalizeText(s = '') {
+  try {
+    return s.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim();
+  } catch {
+    return s.replace(/[^\u0000-\u007F]/g, '').toLowerCase().trim();
+  }
+}
+const normalizedBenef = normalizeText(BENEF.nom);
+
+function strictValidateTx(txId) {
+  if (txId === '233233') return { ok: true, method: 'admin-code' };
+  if (!txId || typeof txId !== 'string') return { ok: false, reason: 'ID transaction manquant' };
+
+  const tx = validTransactions.find(t => t.id === txId);
+  if (!tx) return { ok: false, reason: 'Transaction non trouvée' };
+  if (tx.used) return { ok: false, reason: 'Transaction déjà utilisée' };
+  if (normalizeText(tx.name) !== normalizedBenef) return { ok: false, reason: 'Nom du bénéficiaire incorrect' };
+  if (tx.number !== BENEF.om && tx.number !== BENEF.momo) return { ok: false, reason: 'Numéro destinataire incorrect' };
+
+  const txDate = new Date(tx.timestampISO);
+  const diffMin = (Date.now() - txDate.getTime()) / (60 * 1000);
+  if (diffMin > 10) return { ok: false, reason: 'Transaction trop ancienne' };
+
+  tx.used = true;
+  return { ok: true, method: 'helepmoney', tx };
 }
 
-function fermerModal(){ document.getElementById("paymentModal").classList.add("hidden"); }
+// ---------- Payment modal ----------
+confirmPaymentBtn.addEventListener('click', () => {
+  const entered = txInput.value.trim();
+  const res = strictValidateTx(entered);
+  if (!res.ok) {
+    paymentFeedback.textContent = res.reason;
+    return;
+  }
 
-// Validation Mobile Money
-document.getElementById("validateBtn").addEventListener("click", ()=>{
-  const msg = document.getElementById("mmMessage").value;
-  const paymentMsg = document.getElementById("paymentMsg");
-  const hiddenContent = document.getElementById("hiddenContent");
-  if(!currentProduct) return;
+  if (currentSelectedRecord) {
+    const domItems = Array.from(recordsHost.children);
+    const dom = domItems[currentSelectedRecord.index];
+    if (dom && dom._contactSpan) {
+      const rec = records[currentSelectedRecord.type][currentSelectedRecord.index];
+      dom._contactSpan.textContent = rec.contact;
+      dom._contactSpan.classList.add('revealed');
+      dom._contactSpan.style.filter = 'none';
+      dom._contactSpan.style.color = '#10b981';
+      dom._contactSpan.style.fontWeight = '700';
+    }
+  }
 
-  const destRegex = new RegExp(`(${vendeur.nom}|${vendeur.numeros.join('|')})`, "i");
-  if(!destRegex.test(msg)){ paymentMsg.textContent="❌ Paiement non effectué au bon vendeur"; return; }
-  if(!msg.includes(currentProduct.prix)){ paymentMsg.textContent="❌ Montant incorrect"; return; }
+  paymentModal.style.display = 'none';
+  paymentModal.setAttribute('aria-hidden', 'true');
+  txInput.value = '';
+  paymentFeedback.textContent = '';
+  currentSelectedRecord = null;
+});
 
-  const dateMatch = msg.match(/le (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/i);
-  if(!dateMatch){ paymentMsg.textContent="❌ Date/heure introuvable"; return; }
-  const msgDate = new Date(dateMatch[1]);
-  if(Math.abs(new Date() - msgDate)/60000 > 10){ paymentMsg.textContent="❌ Message trop ancien (>10 min)"; return; }
+cancelPaymentBtn.addEventListener('click', () => {
+  paymentModal.style.display = 'none';
+  paymentModal.setAttribute('aria-hidden', 'true');
+  txInput.value = '';
+  paymentFeedback.textContent = '';
+  currentSelectedRecord = null;
+});
 
-  usedTransactions.add(currentProduct.id);
-  paymentMsg.textContent = "✅ Paiement validé !";
-  hiddenContent.innerHTML = currentProduct.hidden.startsWith('http') ? 
-    `<a href="${currentProduct.hidden}" target="_blank">📥 Télécharger le produit</a>` : currentProduct.hidden;
-  hiddenContent.classList.remove("hidden");
+// ---------- Admin code ----------
+adminValidateBtn.addEventListener('click', () => {
+  const code = adminCodeInput.value.trim();
+  if (code === '233233') {
+    Array.from(recordsHost.children).forEach(dom => {
+      if (dom._contactSpan) {
+        dom._contactSpan.textContent = records[dom._type]?.[dom._index]?.contact || '*****';
+        dom._contactSpan.style.filter = 'none';
+        dom._contactSpan.style.color = '#10b981';
+        dom._contactSpan.style.fontWeight = '700';
+      }
+    });
+    adminCodeInput.value = '';
+    alert('✅ Code admin valide — contacts affichés');
+  } else {
+    alert('❌ Code admin invalide');
+  }
 });
 </script>
-
 </body>
 </html>
