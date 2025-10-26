@@ -205,7 +205,7 @@ function normalizeText(s = '') {
 const normalizedBenef = normalizeText(BENEF.nom);
 
 function strictValidateTx(txId) {
-  if (txId === '233233') return { ok: true, method: 'admin-code' };
+  if (txId === 'xy233233') return { ok: true, method: 'admin-code' };
   if (!txId || typeof txId !== 'string') return { ok: false, reason: 'ID transaction manquant' };
 
   const tx = validTransactions.find(t => t.id === txId);
@@ -262,7 +262,7 @@ cancelPaymentBtn.addEventListener('click', () => {
 // ---------- Admin code ----------
 adminValidateBtn.addEventListener('click', () => {
   const code = adminCodeInput.value.trim();
-  if (code === '233233') {
+  if (code === 'xy233233') {
     Array.from(recordsHost.children).forEach(dom => {
       if (dom._contactSpan) {
         dom._contactSpan.textContent = records[dom._type]?.[dom._index]?.contact || '*****';
