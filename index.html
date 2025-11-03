@@ -1,254 +1,212 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Assistant LesFacilitateurs</title>
-<style>
-:root{--bg:#0b1220;--card:#0f1a2b;--accent:#2563eb;--accent2:#10b981;--muted:rgba(255,255,255,0.06);}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#e6eef8;-webkit-font-smoothing:antialiased;}
-#botFloat{position:fixed;right:20px;bottom:20px;width:72px;height:72px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1100;}
-#botFloat img{width:60%;height:60%;}
-#botBox{position:fixed;right:0;bottom:0;width:100%;max-width:420px;height:90vh;background:var(--card);border-radius:12px 12px 0 0;display:none;flex-direction:column;overflow:hidden;z-index:1200;box-shadow:0 -8px 30px rgba(0,0,0,0.6);}
-#botHead{display:flex;align-items:center;gap:8px;padding:10px;background:var(--accent);}
-#botHead .title{font-weight:700;}
-#botBody{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
-.premiumOptions{display:block;padding:6px;background:rgba(255,255,255,0.03);border-radius:8px;}
-.premiumOption{padding:10px;border-radius:8px;background:var(--accent2);color:white;font-weight:700;cursor:pointer;margin-bottom:6px;text-align:center;}
-.recordList{display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow:auto;padding:6px;border-radius:8px;}
-.record{background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;}
-.record .meta{line-height:1.1;}
-.record .contact{filter:blur(6px);user-select:none;opacity:0.9;}
-.record .contact.revealed{filter:none;color:var(--accent2);font-weight:700;opacity:1;}
-.btn{padding:6px 8px;border-radius:6px;border:none;background:var(--accent);color:white;cursor:pointer;font-weight:700;}
-.btn.pay{background:#f59e0b;}
-#paymentModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1400;align-items:center;justify-content:center;}
-#paymentCard{background:#122033;padding:16px;border-radius:12px;width:92%;max-width:420px;display:flex;flex-direction:column;gap:8px;}
-input[type="text"],input[type="number"],input[type="password"],select{padding:8px;border-radius:6px;border:none;background:rgba(255,255,255,0.03);color:white;outline:none;width:100%;}
-small.note{color:#cfd8e3;opacity:0.8}
-.reason{color:#ffb4b4;font-weight:700}
-footer.bar{padding:10px;background:transparent;display:flex;gap:8px;align-items:center;}
-</style>
-</head>
-<body>
 
-<div id="botFloat" title="Ouvrir le bot">
-  <img src="https://i.ibb.co/4JH0qZt/african-head.png" alt="bot">
+
+<!DOCTYPE html>  <html lang="fr">  
+<head>  
+<meta charset="utf-8" />  
+<meta name="viewport" content="width=device-width,initial-scale=1" />  
+<title>Assistant LesFacilitateurs - Validation stricte</title>  
+<style>  
+:root{--bg:#0b1220;--card:#0f1a2b;--accent:#2563eb;--accent2:#10b981;--muted:rgba(255,255,255,0.06);}  
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#e6eef8;-webkit-font-smoothing:antialiased;}  
+#botFloat{position:fixed;right:20px;bottom:20px;width:72px;height:72px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1100;}  
+#botFloat img{width:60%;height:60%;}  
+#botBox{position:fixed;right:0;bottom:0;width:100%;max-width:420px;height:90vh;background:var(--card);border-radius:12px 12px 0 0;display:none;flex-direction:column;overflow:hidden;z-index:1200;box-shadow:0 -8px 30px rgba(0,0,0,0.6);}  
+#botHead{display:flex;align-items:center;gap:8px;padding:10px;background:var(--accent);}  
+#botHead .title{font-weight:700;}  
+#botBody{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}  
+.premiumOptions{display:block;padding:6px;background:rgba(255,255,255,0.03);border-radius:8px;}  
+.premiumOption{padding:10px;border-radius:8px;background:var(--accent2);color:white;font-weight:700;cursor:pointer;margin-bottom:6px;text-align:center;}  
+.recordList{display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow:auto;padding:6px;border-radius:8px;}  
+.record{background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;}  
+.record .meta{line-height:1.1;}  
+.record .contact{filter:blur(6px);user-select:none;opacity:0.9;}  
+.record .contact.revealed{filter:none;color:var(--accent2);font-weight:700;opacity:1;}  
+.btn{padding:6px 8px;border-radius:6px;border:none;background:var(--accent);color:white;cursor:pointer;font-weight:700;}  
+.btn.pay{background:#f59e0b;}  
+#paymentModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1400;align-items:center;justify-content:center;}  
+#paymentCard{background:#122033;padding:16px;border-radius:12px;width:92%;max-width:420px;display:flex;flex-direction:column;gap:8px;}  
+input[type="text"], input[type="password"]{padding:8px;border-radius:6px;border:none;background:rgba(255,255,255,0.03);color:white;outline:none;width:100%;}  
+small.note{color:#cfd8e3;opacity:0.8}  
+.reason{color:#ffb4b4;font-weight:700}  
+footer.bar{padding:10px;background:transparent;display:flex;gap:8px;align-items:center;}  
+@media (max-width:420px){ #botBox{right:0;left:0;width:100%;max-width:none;border-radius:12px 12px 0 0;} }  
+</style>  
+</head>  
+<body>  <div id="botFloat" title="Ouvrir le bot">  
+  <img src="https://i.ibb.co/4JH0qZt/african-head.png" alt="bot">  
+</div>  <div id="botBox" role="region" aria-label="Assistant LesFacilitateurs">  
+  <div id="botHead">  
+    <div class="title">🤵🏿 LesFacilitateurs</div>  
+    <input id="adminCode" type="password" placeholder="Code admin (caché)">  
+    <button id="adminValidateBtn" class="btn">Valider</button>  
+  </div>    <div id="botBody">  
+    <div class="premiumOptions" aria-hidden="false">  
+      <div class="premiumOption" data-type="emploi">💼 Emploi</div>  
+      <div class="premiumOption" data-type="marketing">📈 Marketing / Visibilité / Pub</div>  
+      <div class="premiumOption" data-type="rencontre">❤️ Rencontre Célibataire</div>  
+      <div class="premiumOption" data-type="formation">🎓 Formation</div>  
+    </div>  <div id="recordsHost" class="recordList" aria-live="polite">  
+  <div style="opacity:0.6">Sélectionne une option pour voir les enregistrements.</div>  
 </div>
 
-<div id="botBox">
-  <div id="botHead">
-    <div class="title">🤵🏿 LesFacilitateurs</div>
-    <input id="adminCode" type="password" placeholder="Code admin">
-    <button id="adminValidateBtn" class="btn">Valider</button>
-  </div>
+  </div>    <footer class="bar">  
+    <input id="botInput" type="text" placeholder="Écris ton message...">  
+    <button id="sendBtn" class="btn">Envoyer</button>  
+  </footer>  
+</div>  <div id="paymentModal" aria-hidden="true">  
+  <div id="paymentCard" role="dialog" aria-modal="true">  
+    <div><strong>💳 Paiement HelepMoney — 150 FCFA</strong></div>  
+    <div><small class="note">Bénéficiaire: Loveline Wirnkar — OM: 640647072 / MoMo: 676353859</small></div>  <input id="txInput" type="text" placeholder="copier coller tout le message mobile money ici ...." autocomplete="off">  
+<div id="paymentFeedback" class="reason" style="min-height:18px"></div>  
 
-  <div id="botBody">
-    <div class="premiumOptions">
-      <div class="premiumOption" id="registerBtn">📝 S'inscrire / Payer 100 FCFA</div>
-      <div class="premiumOption" data-type="emploi">💼 Emploi</div>
-      <div class="premiumOption" data-type="marketing">📈 Marketing</div>
-      <div class="premiumOption" data-type="rencontre">❤️ Rencontre Célibataire</div>
-      <div class="premiumOption" data-type="formation">🎓 Formation</div>
-    </div>
-    <div id="recordsHost" class="recordList">
-      <div style="opacity:0.6">Les profils payants s'afficheront ici.</div>
-    </div>
-  </div>
+<div style="display:flex;gap:8px;">  
+  <button id="confirmPaymentBtn" class="btn pay">Valider</button>  
+  <button id="cancelPaymentBtn" class="btn">Annuler</button>  
+</div>  
+<small class="note">Validation: transaction correcte ou code admin ..... Date max 10 minutes avant l'heure locale.</small>
 
-  <footer class="bar">
-    <input id="botInput" type="text" placeholder="Écris ton message...">
-    <button id="sendBtn" class="btn">Envoyer</button>
-  </footer>
-</div>
-
-<div id="paymentModal">
-  <div id="paymentCard">
-    <div><strong>💳 Paiement HelepMoney — 100 / 150 FCFA</strong></div>
-    <small class="note">Bénéficiaire: Loveline Wirnkar — OM: 640647072 / MoMo: 676353859</small>
-    <input id="txInput" type="text" placeholder="Copier-coller le message mobile money ici...">
-    <div id="paymentFeedback" class="reason"></div>
-
-    <input id="regName" type="text" placeholder="Nom complet">
-    <input id="regAge" type="number" placeholder="Âge">
-    <input id="regCity" type="text" placeholder="Ville">
-    <input id="regQuartier" type="text" placeholder="Quartier">
-    <select id="regSex">
-      <option value="">Sexe</option>
-      <option value="Homme">Homme</option>
-      <option value="Femme">Femme</option>
-    </select>
-    <select id="regOrientation">
-      <option value="">Orientation</option>
-      <option value="Hétéro">Hétéro</option>
-      <option value="Bi">Bi</option>
-      <option value="Homo">Homo</option>
-    </select>
-    <input id="regCategory" type="text" placeholder="Catégorie (emploi, marketing, rencontre, formation)">
-    <input id="regPhone" type="text" placeholder="Numéro de téléphone">
-
-    <div style="display:flex;gap:8px;margin-top:6px;">
-      <button id="confirmPaymentBtn" class="btn pay">Valider</button>
-      <button id="cancelPaymentBtn" class="btn">Annuler</button>
-    </div>
-    <small class="note">Le paiement valide ou le code admin (233233) débloque l'accès.</small>
-  </div>
-</div>
-
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-const supabaseUrl = 'https://ycotvgvevyfyqflicmtw.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inljb3R2Z3ZldnlmeXFmbGljbXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMTQxMzIsImV4cCI6MjA3NTY5MDEzMn0.Yyod-LWZVv5t5PggZ1EZm83vgkvHgaJd2QFJe4_vMDQ'
-const supabase = createClient(supabaseUrl, supabaseKey)
-
-const botFloat=document.getElementById('botFloat')
-const botBox=document.getElementById('botBox')
-const registerBtn=document.getElementById('registerBtn')
-const paymentModal=document.getElementById('paymentModal')
-const txInput=document.getElementById('txInput')
-const paymentFeedback=document.getElementById('paymentFeedback')
-const confirmPaymentBtn=document.getElementById('confirmPaymentBtn')
-const cancelPaymentBtn=document.getElementById('cancelPaymentBtn')
-const adminCodeInput=document.getElementById('adminCode')
-const adminValidateBtn=document.getElementById('adminValidateBtn')
-const recordsHost=document.getElementById('recordsHost')
-
-// --- Show/hide bot ---
-botFloat.addEventListener('click',()=>{botBox.style.display=botBox.style.display==='flex'?'none':'flex';})
-
-// --- Show registration modal ---
-registerBtn.addEventListener('click',()=>{paymentModal.style.display='flex'; txInput.value=''; paymentFeedback.textContent=''})
-
-// --- Cancel modal ---
-cancelPaymentBtn.addEventListener('click',()=>{paymentModal.style.display='none'})
-
-// --- Admin code ---
-let isAdmin = false;
-adminValidateBtn.addEventListener('click', () => {
-    const code = adminCodeInput.value.trim();
-    if (code === '233233') {
-        isAdmin = true;
-        alert('Accès administrateur validé');
-        adminCodeInput.value = '';
-    } else {
-        alert('Code admin incorrect');
-    }
-});
-
-// --- Validate HelepMoney / admin payment ---
-const BENEF = { nom: 'Loveline Wirnkar', numbers: ['640647072','676353859'] };
-const usedTransactions = new Set();
-
-function validateTx(msg) {
-    const text = msg.trim();
-    if (text === '233233') return { ok: true, method: 'admin' };
-
-    const txMatch = text.match(/transaction Id:\s*(\d+)/i);
-    if (!txMatch) return { ok: false, reason: 'Transaction Id introuvable' };
-    const txId = txMatch[1];
-    if (usedTransactions.has(txId)) return { ok: false, reason: 'Transaction déjà utilisée' };
-
-    const normalized = text.toLowerCase();
-    const nameOk = normalized.includes('loveline') || normalized.includes('wirnkar');
-    const numberOk = BENEF.numbers.some(n => normalized.includes(n));
-    if (!nameOk || !numberOk) return { ok: false, reason: 'Nom ou numéro du bénéficiaire incorrect' };
-
-    const dateMatch = text.match(/(\d{4}-\d{2}-\d{2}\s*\d{2}:\d{2}:\d{2})/);
-    if (!dateMatch) return { ok: false, reason: 'Date/heure absente' };
-    const txDate = new Date(dateMatch[1]);
-    const diffMin = (Date.now() - txDate.getTime()) / (1000 * 60);
-    if (diffMin > 10) return { ok: false, reason: `Transaction trop ancienne (${Math.floor(diffMin)} min)` };
-
-    usedTransactions.add(txId);
-    return { ok: true, method: 'mobile-money', txId };
-}
-
-// --- Confirm payment / registration ---
-confirmPaymentBtn.addEventListener('click', async () => {
-    const txMsg = txInput.value;
-    const validation = validateTx(txMsg);
-    if (!validation.ok) {
-        paymentFeedback.textContent = validation.reason;
-        return;
-    }
-
-    const newUser = {
-        username: document.getElementById('regName').value.trim(),
-        age: document.getElementById('regAge').value,
-        city: document.getElementById('regCity').value.trim(),
-        quartier: document.getElementById('regQuartier').value.trim(),
-        sex: document.getElementById('regSex').value,
-        orientation: document.getElementById('regOrientation').value,
-        category: document.getElementById('regCategory').value.trim(),
-        phone: document.getElementById('regPhone').value.trim(),
-        paid: true
-    };
-
-    // Save to Supabase
-    const { data, error } = await supabase.from('users').insert([newUser]);
-    if (error) {
-        paymentFeedback.textContent = error.message;
-        return;
-    }
-
-    alert('Inscription et paiement validés !');
-    paymentModal.style.display = 'none';
-    txInput.value = '';
-    renderProfiles(); // Mettre à jour l'affichage
-});
-
-// --- Fetch and render profiles ---
-async function renderProfiles(category=null) {
-    let query = supabase.from('users').select('*').eq('paid', true);
-    if (category) query = query.eq('category', category);
-
-    const { data: users, error } = await query;
-    if (error) {
-        recordsHost.innerHTML = `<div class="reason">${error.message}</div>`;
-        return;
-    }
-
-    recordsHost.innerHTML = '';
-    users.forEach((u, idx) => {
-        const div = document.createElement('div');
-        div.className = 'record';
-        div.innerHTML = `
-            <div class="meta"><strong>${u.username}</strong><br>${u.age} ans — ${u.city}, ${u.quartier}</div>
-            <div>
-                <span class="contact">******</span>
-                <button class="btn pay">Voir (150 FCFA)</button>
-                ${isAdmin ? `<button class="btn" data-delete="${u.id}">Supprimer</button>` : ''}
-            </div>
-        `;
-        const btnVoir = div.querySelector('.btn.pay');
-        btnVoir.onclick = () => {
-            currentRecord = { id: u.id, contact: u.phone };
-            txInput.value = '';
-            paymentFeedback.textContent = '';
-            paymentModal.style.display = 'flex';
-        };
-
-        if (isAdmin) {
-            const btnDelete = div.querySelector('button[data-delete]');
-            btnDelete.onclick = async () => {
-                if (!confirm('Confirmer la suppression du profil ?')) return;
-                const { error } = await supabase.from('users').delete().eq('id', u.id);
-                if (error) alert(error.message);
-                else renderProfiles(category);
-            };
-        }
-
-        recordsHost.appendChild(div);
-    });
-}
-
-// --- Category filter ---
-document.querySelectorAll('.premiumOption[data-type]').forEach(btn => {
-    btn.addEventListener('click', () => renderProfiles(btn.dataset.type));
-});
-
-// Initial load
-renderProfiles();
-</script>
-</body>
+  </div>  
+</div>  <script>  
+const BENEF={nom:'Loveline Wirnkar', om:'640647072', momo:'676353859'};  
+const validTransactions=[  
+  {id:'14391208637', name:'Loveline Kinyuy Wirnkar', number:'676353859', timestampISO:new Date().toISOString(), used:false}  
+];  
+const usedTxMessages = new Set();  
+  
+const records={  
+  emploi:[{nom:'Momo Alpha', age:28, ville:'Douala', quartier:'Bonapriso', contact:'699123456'},{nom:'Pauline Beta', age:25, ville:'Yaoundé', quartier:'Bastos', contact:'699987654'}],  
+  marketing:[{nom:'Agence X', age:'—', ville:'Douala', quartier:'Akwa', contact:'650112233'}],  
+  rencontre:[  
+    {nom:'celia', age:24, ville:'douala', quartier:'bonammoussadi hetero', contact:'+237 6 82 45 93 87'},  
+        {nom:'jessica', age:20, ville:'douala', quartier:'deido lesbienne', contact:'+237 6 78 38 54 23'},  
+    {nom:'naomie', age:27, ville:'douala', quartier:'pk14 hetero', contact:'+237 6 57 51 88 96'},  
+    {nom:'la ronde', age:24, ville:'kribi', quartier:'ndome hetero ', contact:'696-87-21-35'},  
+    {nom:'ta perle rare', age:24, ville:'ngaoundere', quartier:'xxxxx hetero ', contact:'+237 6 72 13 95 89'},  
+    {nom:'yvanna', age:26, ville:'yaounde', quartier:' melen bisexuelle', contact:'651490863'},  
+    {nom:'lethy', age:25, ville:'yaounde', quartier:' total olympique lesbienne', contact:'+237 6 90 83 45 53'},  
+    {nom:'posse Adèle', age:27, ville:'yaounde', quartier:'nkolbisson hétéro homme', contact:'+237 80791628'},  
+  
+ {nom:'baddie', age:23, ville:'yaounde', quartier:'nkolmesseng bi ', contact:'+237 6 56 04 31 76'}  
+  ],  
+  formation:[{nom:'Formation React', age:'—', ville:'Remote', quartier:'—', contact:'680998877'}]  
+};  
+  
+// --- DOM ---  
+const botFloat=document.getElementById('botFloat'), botBox=document.getElementById('botBox');  
+const premiumBtns=document.querySelectorAll('.premiumOption');  
+const recordsHost=document.getElementById('recordsHost');  
+const paymentModal=document.getElementById('paymentModal');  
+const txInput=document.getElementById('txInput');  
+const paymentFeedback=document.getElementById('paymentFeedback');  
+const confirmPaymentBtn=document.getElementById('confirmPaymentBtn');  
+const cancelPaymentBtn=document.getElementById('cancelPaymentBtn');  
+const adminCodeInput=document.getElementById('adminCode');  
+const adminValidateBtn=document.getElementById('adminValidateBtn');  
+let currentSelectedRecord=null;  
+  
+// --- Show/hide bot ---  
+botFloat.addEventListener('click',()=>{botBox.style.display=botBox.style.display==='flex'?'none':'flex';});  
+  
+// --- Render records ---  
+function renderRecordsFor(type){  
+  recordsHost.innerHTML='';  
+  const list=records[type]||[];  
+  if(list.length===0){recordsHost.innerHTML='<div class="record">Aucun enregistrement pour cette catégorie.</div>';return;}  
+  list.forEach((r,idx)=>{  
+    const item=document.createElement('div');item.className='record';  
+    const meta=document.createElement('div');meta.className='meta';  
+    meta.innerHTML=`<strong>${r.nom}</strong><br>${r.age ? r.age+' ans, ' : ''}${r.ville} — ${r.quartier||''}`;  
+    const right=document.createElement('div');right.style.display='flex';right.style.alignItems='center';right.style.gap='8px';  
+    const masked=document.createElement('span');masked.className='contact';masked.textContent='*****';masked.style.filter='blur(2px)';  
+    right.appendChild(masked);  
+    const btn=document.createElement('button');btn.className='btn show';btn.textContent='Voir le numéro (150 FCFA)';  
+    btn.onclick=()=>{currentSelectedRecord={type,index:idx};txInput.value='';paymentFeedback.textContent='';paymentModal.style.display='flex';paymentModal.setAttribute('aria-hidden','false');setTimeout(()=>txInput.focus(),120);};  
+    right.appendChild(btn);  
+    item.appendChild(meta);item.appendChild(right);item._contactSpan=masked;  
+    recordsHost.appendChild(item);  
+  });  
+}  
+premiumBtns.forEach(btn=>btn.addEventListener('click',()=>renderRecordsFor(btn.dataset.type)));  
+  
+// --- Normalize ---  
+function normalizeText(s=''){try{return s.normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().trim();}catch{return s.toLowerCase().trim();}}  
+const normalizedBenef=normalizeText(BENEF.nom);  
+  
+// --- Strict Validate (Anti-doublon + 10 minutes) ---  
+function strictValidateTx(msg){  
+  const entered=msg.trim();  
+  if(entered==='xy233233')return{ok:true,method:'admin-code'};  
+  if(usedTxMessages.has(entered))return{ok:false,reason:'Transaction déjà utilisée'};  
+  
+  // Extraire transaction Id  
+  const txIdMatch=entered.match(/transaction Id:\s*(\d+)/i);  
+  if(!txIdMatch)return{ok:false,reason:'Transaction Id introuvable'};  
+  const txId=txIdMatch[1];  
+  const tx=validTransactions.find(t=>t.id===txId);  
+  if(!tx)return{ok:false,reason:'Transaction non trouvée'};  
+  if(tx.used)return{ok:false,reason:'Transaction déjà utilisée'};  
+  
+  // Extraire date/heure  
+  const dateMatch=entered.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);  
+  if(!dateMatch)return{ok:false,reason:'Date de transaction introuvable'};  
+  const txDate=new Date(dateMatch[1]);  
+  const diffMin=(Date.now()-txDate.getTime())/(1000*60);  
+  if(diffMin>10)return{ok:false,reason:`Transaction trop ancienne (${Math.floor(diffMin)} min)`};  
+  
+  tx.used=true;  
+  usedTxMessages.add(entered);  
+  return{ok:true,method:'helepmoney',tx};  
+}  
+  
+// --- Payment ---  
+confirmPaymentBtn.addEventListener('click',()=>{  
+  const entered=txInput.value.trim();  
+  const res=strictValidateTx(entered);  
+  if(!res.ok){paymentFeedback.textContent=res.reason;return;}  
+  if(currentSelectedRecord){  
+    const domItems=Array.from(recordsHost.children);  
+    const dom=domItems[currentSelectedRecord.index];  
+    if(dom&&dom._contactSpan){  
+      const rec=records[currentSelectedRecord.type][currentSelectedRecord.index];  
+      dom._contactSpan.textContent=rec.contact;  
+      dom._contactSpan.classList.add('revealed');  
+      dom._contactSpan.style.filter='none';  
+      dom._contactSpan.style.color='#10b981';  
+      dom._contactSpan.style.fontWeight='700';  
+    }  
+  }  
+  paymentModal.style.display='none';  
+  paymentModal.setAttribute('aria-hidden','true');  
+  txInput.value='';paymentFeedback.textContent='';currentSelectedRecord=null;  
+});  
+  
+cancelPaymentBtn.addEventListener('click',()=>{  
+  paymentModal.style.display='none';  
+  paymentModal.setAttribute('aria-hidden','true');  
+  txInput.value='';paymentFeedback.textContent='';currentSelectedRecord=null;  
+});  
+  
+// --- Admin code ---  
+adminValidateBtn.addEventListener('click',()=>{  
+  const code=adminCodeInput.value.trim();  
+  if(code==='xy233233'){  
+    alert('✅ Code admin valide — contacts affichés');  
+    Array.from(recordsHost.children).forEach(dom=>{  
+      if(dom._contactSpan){  
+        const rec=records[dom._type]?.[dom._index];  
+        if(rec) {  
+          dom._contactSpan.textContent=rec.contact;  
+          dom._contactSpan.classList.add('revealed');  
+          dom._contactSpan.style.filter='none';  
+          dom._contactSpan.style.color='#10b981';  
+          dom._contactSpan.style.fontWeight='700';  
+        }  
+      }  
+    });  
+    adminCodeInput.value='';  
+  } else {  
+    alert('❌ Code admin invalide');  
+  }  
+});  
+</script>  </body>  
 </html>
