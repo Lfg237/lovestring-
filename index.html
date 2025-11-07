@@ -13,31 +13,17 @@
   --accent: #2563eb;
   --accent2: #10b981;
   --text: #e0e7ff;
-  --danger: #ef4444;
 }
 body {
-  font-family: "Poppins", sans-serif;
-  margin:0; padding:0;
   background: var(--bg);
   color: var(--text);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  font-family: "Poppins", sans-serif;
+  margin: 0; padding: 0;
+  display: flex; flex-direction: column; align-items: center;
 }
-header {
-  text-align: center;
-  padding: 20px;
-}
-header img {
-  width: 100px;
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--accent);
-}
-h1 {
-  font-size: 1.5em;
-  color: var(--accent2);
-  margin-top: 10px;
-}
+header { text-align: center; padding: 20px; }
+header img { width: 100px; border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
+h1 { font-size: 1.5em; color: var(--accent2); margin-top: 10px; }
 button {
   background: var(--card);
   border: 2px solid var(--accent);
@@ -51,59 +37,18 @@ button {
   cursor: pointer;
   transition: 0.3s;
 }
-button:hover {
-  background: var(--accent);
-  transform: scale(1.05);
-}
-section {
-  display: none;
-  width: 90%;
-  max-width: 400px;
-  background: var(--card);
-  border-radius: 15px;
-  padding: 20px;
-  margin-top: 10px;
-}
-input, select, textarea {
-  width: 100%;
-  margin: 5px 0;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  outline: none;
-  background: #1a2438;
-  color: var(--text);
-}
+button:hover { background: var(--accent); transform: scale(1.05); }
+section { display: none; width: 90%; max-width: 400px; background: var(--card); border-radius: 15px; padding: 20px; margin-top: 10px; }
+input, select, textarea { width: 100%; margin: 5px 0; padding: 10px; border: none; border-radius: 10px; outline: none; background: #1a2438; color: var(--text); }
 label { font-size: 0.9em; color: #cbd5e1; }
-.popup {
-  display: none;
-  position: fixed;
-  top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.85);
-  align-items: center;
-  justify-content: center;
-  z-index:100;
-}
-.popup-content {
-  background: var(--card);
-  border-radius: 15px;
-  padding: 20px;
-  text-align: center;
-  color: var(--text);
-  max-width: 320px;
-}
-#catContent {
-  max-height: 400px;
-  overflow-y: auto;
-  padding-right: 5px;
-}
-.profile-card {
-  background: #1a2438;
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 12px;
-}
-.hidden { display: none; }
+.popup { display: none; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index:100; }
+.popup-content { background: var(--card); border-radius: 15px; padding: 20px; text-align: center; color: var(--text); max-width: 320px; }
+#catContent { max-height: 400px; overflow-y: auto; padding-right: 5px; }
+.profile-card { background: #1a2438; padding: 12px; margin: 8px 0; border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { border: 1px solid var(--accent); padding: 8px; text-align: left; }
+th { background: var(--accent2); color: #000; }
+td button { width: auto; padding: 6px 12px; margin: 2px; }
 </style>
 </head>
 <body>
@@ -111,7 +56,7 @@ label { font-size: 0.9em; color: #cbd5e1; }
   <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/3f26f24977c0505945653116dc1e37ad8c037a73/Polish_20251101_140054583.png">
   <h1>♥️lovestring💘</h1>
 </header>
-rencontre au Cameroun 💖
+💖site de rencontre au cameroun🪔
 <div id="home">
   <button onclick="openCategory('Marketing')">📈 Marketing</button>
   <button onclick="openCategory('Rencontres')">💞 Rencontre</button>
@@ -121,20 +66,15 @@ rencontre au Cameroun 💖
   <button onclick="openAllProfiles()">📋 Tous les profils</button>
   <button onclick="openAdmin()">🔐 Admin</button>
 </div>
-<section id="categorySection">
-  <h2 id="catTitle">📂 Catégorie</h2>
-  <div id="catContent"></div>
-  <button onclick="retourAccueil()">🔙 Retour</button>
-</section><section id="formSection">
+
+<section id="formSection">
   <h2>📝 Fiche d'inscription</h2>
   <form id="inscriptionForm">
     <label>Nom complet</label><input name="nom_complet" required>
     <label>Âge</label><input name="age" type="number" required>
     <label>Ville</label>
     <select name="ville">
-      <option>Yaoundé</option><option>Douala</
-option><option>kribi</
-option><option>Maroua</option>
+      <option>Yaoundé</option><option>Douala</option><option>Maroua</option>
       <option>Garoua</option><option>Ngaoundéré</option><option>Bamenda</option>
       <option>Buea</option><option>Ebolowa</option><option>Bertoua</option><option>Bafoussam</option>
     </select>
@@ -149,8 +89,14 @@ option><option>Maroua</option>
       <option>Marketing</option><option>Rencontres</option><option>Emplois</option><option>Trainings</option>
     </select>
     <label>Numéro de téléphone</label><input name="numero_telephone" required>
-    <button type="button" onclick="ouvrirPaiement()">💸 S’inscrire (500 FCFA)</button>
+    <button type="button" onclick="ouvrirPaiement()">💸 S’inscrire (100 FCFA)</button>
   </form>
+  <button onclick="retourAccueil()">🔙 Retour</button>
+</section>
+
+<section id="categorySection">
+  <h2 id="catTitle">📂 Catégorie</h2>
+  <div id="catContent"></div>
   <button onclick="retourAccueil()">🔙 Retour</button>
 </section>
 
@@ -158,24 +104,18 @@ option><option>Maroua</option>
   <div class="popup-content">
     <h3>💰 HelepMoney</h3>
     <p>Effectue ton paiement :</p>
-    <p>Loveline Wirnkar<br>MOMO :676353859 <br> BIBI OM: 656523656</p>
-    <textarea id="msgTransaction" rows="4" placeholder="après le dépôt copie et Colle le message de transaction ici 👇👇"></textarea>
+    <p>Loveline Wirnkar<br>OM : 646647072<br>MoMo : 676353859</p>
+    <textarea id="msgTransaction" rows="4" placeholder="Colle ici ton message de transaction ou entre code admin"></textarea>
     <button onclick="validerPaiement()">✅ Valider</button>
     <button onclick="fermerPopup()">❌ Annuler</button>
   </div>
 </div>
-<section id="profilsSection">
-  <h2 id="profilsTitle">📋 Profils</h2>
-  <div id="profilsContent"></div>
-  <button onclick="retourAccueil()">🔙 Retour</button>
-</section>
 
 <section id="adminPanel">
   <h2>🔐 Administration</h2>
   <input id="adminCode" type="password" placeholder="Entrer le code admin">
   <button onclick="checkAdmin()">Valider</button>
   <div id="adminContent"></div>
-  <div id="adminTable"></div>
   <button onclick="retourAccueil()">🔙 Retour</button>
 </section>
 
@@ -183,7 +123,6 @@ option><option>Maroua</option>
 const SUPABASE_URL = "https://ycotvgvevyfyqflicmtw.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inljb3R2Z3ZldnlmeXFmbGljbXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMTQxMzIsImV4cCI6MjA3NTY5MDEzMn0.Yyod-LWZVv5t5PggZ1EZm83vgkvHgaJd2QFJe4_vMDQ";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 let formData = {};
 
 window.openCategory = async function(cat){
@@ -192,7 +131,6 @@ window.openCategory = async function(cat){
   document.getElementById("catTitle").innerText = "📂 " + cat;
   const container = document.getElementById("catContent");
   container.innerHTML = "<p>Chargement...</p>";
-
   const { data, error } = await supabase.from("lesfacilitateurs").select().eq('categorie', cat);
   if(error){ container.innerHTML="<p>Erreur de chargement.</p>"; console.log(error); return;}
   if(data.length===0){ container.innerHTML="<p>Aucun profil.</p>"; return;}
@@ -226,11 +164,9 @@ window.openAllProfiles = async function() {
 window.afficherTousProfils = async function() {
   const container = document.getElementById("catContent");
   container.innerHTML = "<p>Chargement des profils...</p>";
-
   const { data, error } = await supabase.from("lesfacilitateurs").select().order('created_at', { ascending: false });
   if (error) { container.innerHTML = "<p>Erreur lors du chargement des profils.</p>"; console.log(error); return; }
   if (data.length === 0) { container.innerHTML = "<p>Aucun profil enregistré.</p>"; return; }
-
   container.innerHTML = "";
   data.forEach(p => {
     const div = document.createElement("div");
@@ -251,23 +187,9 @@ window.afficherTousProfils = async function() {
   });
 }
 
-window.voirContact = function(id, numero){
-  const msg = prompt("Entre le code admin ou colle ton message de transaction:");
-  if(!msg) return;
-  if(msg === "233233") { alert(`📞 Numéro : ${numero}`); return; }
-  alert("⚠️ Paiement HelepMoney non implémenté ici."); // simplifié
-}
-</script><script>
-window.openForm = function() { 
-  document.getElementById("home").style.display="none"; 
-  document.getElementById("formSection").style.display="block"; 
-}
-
-window.openAdmin = function() { 
-  document.getElementById("home").style.display="none"; 
-  document.getElementById("adminPanel").style.display="block"; 
-}
-
+// --- Formulaire, Admin, Paiement ---
+window.openForm = function() { document.getElementById("home").style.display="none"; document.getElementById("formSection").style.display="block"; }
+window.openAdmin = function() { document.getElementById("home").style.display="none"; document.getElementById("adminPanel").style.display="block"; }
 window.retourAccueil = function() {
   document.getElementById("formSection").style.display="none";
   document.getElementById("adminPanel").style.display="none";
@@ -275,23 +197,17 @@ window.retourAccueil = function() {
   document.getElementById("categorySection").style.display="none";
   document.getElementById("home").style.display="flex";
 }
-
 window.ouvrirPaiement = function() {
   formData = Object.fromEntries(new FormData(document.getElementById("inscriptionForm")).entries());
   document.getElementById("popupPaiement").style.display = "flex";
 }
-
-window.fermerPopup = function() { 
-  document.getElementById("popupPaiement").style.display = "none"; 
-}
+window.fermerPopup = function() { document.getElementById("popupPaiement").style.display = "none"; }
 
 window.validerPaiement = async function() {
   const msg = document.getElementById("msgTransaction").value.trim();
-  if(!msg) return alert("⚠️ après le dépôt copie et  Colle ton message mobile money ici 👇👇");
-
+  if(!msg) return alert("⚠️ Colle ton message de transaction ou entre code admin");
   formData = Object.fromEntries(new FormData(document.getElementById("inscriptionForm")).entries());
   formData.created_at = new Date().toISOString();
-
   if(msg === "233233") {
     await enregistrerInscription();
     alert("✅ Inscription validée via code admin !");
@@ -299,10 +215,9 @@ window.validerPaiement = async function() {
     retourAccueil();
     return;
   }
-
   const lower = msg.toLowerCase();
   const validNumbers = ["676353859","656523656"];
-  const validName = "loveline bibi";
+  const validName = "loveline ,bibi";
   const now = new Date();
   let isRecent = false;
   const regexTime = /(\d{1,2}[:h]\d{1,2})/;
@@ -314,10 +229,8 @@ window.validerPaiement = async function() {
       if((now - msgTime)/60000 < 10) isRecent=true;
     }catch(e){ console.log(e); }
   }
-
   const isValid = validNumbers.some(n => lower.includes(n)) && lower.includes(validName) && isRecent;
   if(!isValid){ alert("❌ Paiement non reconnu ou expiré !"); return; }
-
   await enregistrerInscription();
   alert("✅ Paiement vérifié !");
   fermerPopup();
@@ -333,81 +246,107 @@ async function enregistrerInscription() {
   }catch(err){ console.error(err); alert("❌ Exception lors de l'enregistrement !"); }
 }
 
-// --- Admin ---
+window.voirContact = function(id, numero){
+  const msg = prompt("fais le depot copies et  colle ton message mobile money ici ");
+  if(!msg) return;
+  if(msg === "233233") { alert(`📞 Numéro : ${numero}`); return; }
+  const lower = msg.toLowerCase();
+  const validNumbers = ["676353859","656523656"];
+  const validName = "loveline , bibi";
+  const now = new Date();
+  let isRecent=false;
+  const regexTime=/(\d{1,2}[:h]\d{1,2})/;
+  const match=msg.match(regexTime);
+  if(match){
+    try{
+      const [h,m]=match[1].replace("h",":").split(":").map(Number);
+      const msgTime = new Date(); msgTime.setHours(h); msgTime.setMinutes(m); msgTime.setSeconds(0);
+      if((now-msgTime)/60000<10) isRecent=true;
+    }catch(e){console.log(e);}
+  }
+  const isValid = validNumbers.some(n=>lower.includes(n)) && lower.includes(validName) && isRecent;
+  if(!isValid){ alert("❌ Paiement non reconnu ou expiré !"); return; }
+  alert(`📞 Numéro : ${numero}`);
+}
+
 window.checkAdmin = async function() {
   const code = document.getElementById("adminCode").value.trim();
-  if(code !== "233233"){ alert("❌ Code admin incorrect !"); return; }
+  if(code==="233233"){
+    document.getElementById("adminContent").innerHTML="<p>🔧 Accès administrateur autorisé.</p>";
+    await chargerAdminTable();
+  } else alert("❌ Code admin incorrect !");
+}
 
-  const { data, error } = await supabase.from("lesfacilitateurs").select().order('created_at', {ascending:false});
-  if(error){ console.error(error); alert("❌ Erreur lors du chargement des profils !"); return; }
+async function chargerAdminTable() {
+  const { data, error } = await supabase.from("lesfacilitateurs").select().order('created_at', { ascending: false });
+  const container = document.getElementById("adminContent");
+  if(error){ container.innerHTML="<p>Erreur chargement admin.</p>"; console.log(error); return; }
+  if(data.length===0){ container.innerHTML="<p>Aucun profil.</p>"; return; }
 
-  const container = document.getElementById("adminTable");
-  container.innerHTML = "";
   const table = document.createElement("table");
-  table.style.width="100%";
-  table.style.borderCollapse="collapse";
-  table.innerHTML = `
-    <tr style="border-bottom:1px solid var(--accent);">
-      <th>Nom</th><th>Âge</th><th>Ville</th><th>Quartier</th>
-      <th>Catégorie</th><th>Actions</th>
-    </tr>
-  `;
-
+  table.innerHTML = `<tr>
+    <th>Nom</th><th>Âge</th><th>Ville</th><th>Quartier</th><th>Catégorie</th><th>Actions</th>
+  </tr>`;
   data.forEach(p=>{
     const tr = document.createElement("tr");
-    tr.style.borderBottom="1px solid #2563eb";
-    tr.innerHTML=`
+    tr.innerHTML = `
       <td>${p.nom_complet}</td>
       <td>${p.age}</td>
       <td>${p.ville}</td>
       <td>${p.quartier}</td>
       <td>${p.categorie}</td>
       <td>
-        <button onclick='modifierProfil("${p.id}")'>✏️ Modifier</button>
-        <button style="background:var(--danger);" onclick='supprimerProfil("${p.id}", this)'>🗑️ Supprimer</button>
+        <button onclick='modifierProfil("${p.id}")'>Modifier</button>
+        <button onclick='supprimerProfil("${p.id}")'>Supprimer</button>
       </td>
     `;
     table.appendChild(tr);
   });
-  container.appendChild(table);
+  container.innerHTML=""; container.appendChild(table);
 }
 
-window.supprimerProfil = async function(id, btn){
-  if(!confirm("⚠️ Supprimer ce profil définitivement ?")) return;
+window.supprimerProfil = async function(id){
+  if(!confirm("❌ Confirmer la suppression du profil ?")) return;
   const { error } = await supabase.from("lesfacilitateurs").delete().eq('id', id);
-  if(error){ alert("❌ Erreur lors de la suppression"); console.log(error); return; }
+  if(error){ alert("Erreur suppression"); console.log(error); return; }
   alert("✅ Profil supprimé !");
-  btn.closest("tr").remove();
+  await chargerAdminTable();
 }
 
 window.modifierProfil = async function(id){
-  const { data, error } = await supabase.from("lesfacilitateurs").select().eq('id', id);
-  if(error || data.length===0){ alert("❌ Impossible de récupérer le profil"); return; }
-  const p = data[0];
+  const { data, error } = await supabase.from("lesfacilitateurs").select().eq('id', id).single();
+  if(error){ alert("Erreur récupération profil"); console.log(error); return; }
+  
+  // Remplir le formulaire avec les données existantes
+  formData = data; // copie des données
   document.getElementById("home").style.display="none";
   document.getElementById("formSection").style.display="block";
-  const form = document.getElementById("inscriptionForm");
-  form.nom_complet.value = p.nom_complet;
-  form.age.value = p.age;
-  form.ville.value = p.ville;
-  form.quartier.value = p.quartier;
-  form.dernier_diplome.value = p.dernier_diplome;
-  form.sexe.value = p.sexe;
-  form.orientation_sexuelle.value = p.orientation_sexuelle;
-  form.profession.value = p.profession;
-  form.categorie.value = p.categorie;
-  form.numero_telephone.value = p.numero_telephone;
 
-  // Remplacer l'action de l'inscription pour modifier
-  const btn = form.querySelector("button[type='button']");
-  btn.textContent = "💾 Enregistrer les modifications";
-  btn.onclick = async function(){
-    const newData = Object.fromEntries(new FormData(form).entries());
-    const { error } = await supabase.from("lesfacilitateurs").update(newData).eq('id', id);
-    if(error){ alert("❌ Erreur lors de la modification"); console.log(error); return; }
-    alert("✅ Profil modifié !");
-    form.reset();
+  const form = document.getElementById("inscriptionForm");
+  form.nom_complet.value = data.nom_complet;
+  form.age.value = data.age;
+  form.ville.value = data.ville;
+  form.quartier.value = data.quartier;
+  form.dernier_diplome.value = data.dernier_diplome;
+  form.sexe.value = data.sexe;
+  form.orientation_sexuelle.value = data.orientation_sexuelle;
+  form.profession.value = data.profession;
+  form.categorie.value = data.categorie;
+  form.numero_telephone.value = data.numero_telephone;
+
+  // Modifier le bouton paiement pour mettre à jour au lieu d'inscrire
+  const btn = form.querySelector('button[type="button"]');
+  btn.textContent = "💾 Mettre à jour";
+  btn.onclick = async function() {
+    formData = Object.fromEntries(new FormData(form).entries());
+    const { error } = await supabase.from("lesfacilitateurs").update(formData).eq('id', id);
+    if(error){ alert("Erreur mise à jour"); console.log(error); return; }
+    alert("✅ Profil mis à jour !");
+    document.getElementById("inscriptionForm").reset();
+    btn.textContent = "💸 S’inscrire (500 FCFA)";
+    btn.onclick = ouvrirPaiement;
     retourAccueil();
+    await chargerAdminTable();
   }
 }
 </script>
