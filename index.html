@@ -206,7 +206,7 @@ window.fermerPopup = function() { document.getElementById("popupPaiement").style
 
 window.validerPaiement = async function() {
   const msg = document.getElementById("msgTransaction").value.trim();
-  if(!msg) return alert("⚠️ Colle ton message de transaction ou entre code admin");
+  if(!msg) return alert("⚠️ fais le dépôt copie et Colle ton message de mobile Money ici👇👇");
   formData = Object.fromEntries(new FormData(document.getElementById("inscriptionForm")).entries());
   formData.created_at = new Date().toISOString();
   if(msg === "233233") {
@@ -248,7 +248,7 @@ async function enregistrerInscription() {
 }
 
 window.voirContact = function(id, numero){
-  const msg = prompt("fais le depot copies et  colle ton message mobile money ici ");
+  const msg = prompt("LOVELINE WIRNKAR MOMO 676353859 BIBI OM 656523656 fais le depot copies et  colle ton message mobile money ici ");
   if(!msg) return;
   if(msg === "233233") { alert(`📞 Numéro : ${numero}`); return; }
   const lower = msg.toLowerCase();
