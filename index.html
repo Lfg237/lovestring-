@@ -109,8 +109,9 @@ label { font-size: 0.9em; color: #cbd5e1; }
 <body>
 <header>
   <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/3f26f24977c0505945653116dc1e37ad8c037a73/Polish_20251101_140054583.png">
-  <h1>🤖 Bot LesFacilitateurs</h1>
+  <h1>♥️lovestring💘</h1>
 </header>
+rencontre au Cameroun 💖
 <div id="home">
   <button onclick="openCategory('Marketing')">📈 Marketing</button>
   <button onclick="openCategory('Rencontres')">💞 Rencontre</button>
@@ -131,7 +132,9 @@ label { font-size: 0.9em; color: #cbd5e1; }
     <label>Âge</label><input name="age" type="number" required>
     <label>Ville</label>
     <select name="ville">
-      <option>Yaoundé</option><option>Douala</option><option>Maroua</option>
+      <option>Yaoundé</option><option>Douala</
+option><option>kribi</
+option><option>Maroua</option>
       <option>Garoua</option><option>Ngaoundéré</option><option>Bamenda</option>
       <option>Buea</option><option>Ebolowa</option><option>Bertoua</option><option>Bafoussam</option>
     </select>
@@ -146,7 +149,7 @@ label { font-size: 0.9em; color: #cbd5e1; }
       <option>Marketing</option><option>Rencontres</option><option>Emplois</option><option>Trainings</option>
     </select>
     <label>Numéro de téléphone</label><input name="numero_telephone" required>
-    <button type="button" onclick="ouvrirPaiement()">💸 S’inscrire (100 FCFA)</button>
+    <button type="button" onclick="ouvrirPaiement()">💸 S’inscrire (500 FCFA)</button>
   </form>
   <button onclick="retourAccueil()">🔙 Retour</button>
 </section>
@@ -155,8 +158,8 @@ label { font-size: 0.9em; color: #cbd5e1; }
   <div class="popup-content">
     <h3>💰 HelepMoney</h3>
     <p>Effectue ton paiement :</p>
-    <p>Loveline Wirnkar<br>OM : 646647072<br>MoMo : 676353859</p>
-    <textarea id="msgTransaction" rows="4" placeholder="Colle ici ton message de transaction ou entre code admin"></textarea>
+    <p>Loveline Wirnkar<br>MOMO :676353859 <br> BIBI OM: 656523656</p>
+    <textarea id="msgTransaction" rows="4" placeholder="après le dépôt copie et Colle le message de transaction ici 👇👇"></textarea>
     <button onclick="validerPaiement()">✅ Valider</button>
     <button onclick="fermerPopup()">❌ Annuler</button>
   </div>
@@ -284,7 +287,7 @@ window.fermerPopup = function() {
 
 window.validerPaiement = async function() {
   const msg = document.getElementById("msgTransaction").value.trim();
-  if(!msg) return alert("⚠️ Colle ton message de transaction ou entre code admin");
+  if(!msg) return alert("⚠️ après le dépôt copie et  Colle ton message mobile money ici 👇👇");
 
   formData = Object.fromEntries(new FormData(document.getElementById("inscriptionForm")).entries());
   formData.created_at = new Date().toISOString();
@@ -298,8 +301,8 @@ window.validerPaiement = async function() {
   }
 
   const lower = msg.toLowerCase();
-  const validNumbers = ["676353859","646647072"];
-  const validName = "loveline";
+  const validNumbers = ["676353859","656523656"];
+  const validName = "loveline","bibi";
   const now = new Date();
   let isRecent = false;
   const regexTime = /(\d{1,2}[:h]\d{1,2})/;
