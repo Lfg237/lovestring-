@@ -3,205 +3,325 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💘lovestring ♥️</title>
+<title>🤖 Bot LesFacilitateurs</title>
 <link rel="icon" href="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/3f26f24977c0505945653116dc1e37ad8c037a73/Polish_20251101_140054583.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root { --bg:#0b1220; --card:#101a30; --accent:#2563eb; --accent2:#10b981; --text:#e0e7ff; }
-body { background: var(--bg); color: var(--text); font-family: "Poppins", sans-serif; margin:0; padding:0; display:flex; flex-direction:column; align-items:center; }
-header { text-align:center; padding:20px; }
-header img { width:100px; border-radius:50%; box-shadow:0 0 10px var(--accent); }
-h1 { font-size:1.5em; color: var(--accent2); margin-top:10px; }
-button { background: var(--card); border:2px solid var(--accent); border-radius:12px; padding:12px 20px; color: var(--text); font-size:1em; margin:8px; width:80%; max-width:300px; cursor:pointer; transition:0.3s; }
-button:hover { background: var(--accent); transform:scale(1.05); }
-section { display:none; width:90%; max-width:400px; background: var(--card); border-radius:15px; padding:20px; margin-top:10px; }
-input, select, textarea { width:100%; margin:5px 0; padding:10px; border:none; border-radius:10px; outline:none; background:#1a2438; color:var(--text); }
-label { font-size:0.9em; color:#cbd5e1; }
-.popup { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:100; }
-.popup-content { background: var(--card); border-radius:15px; padding:20px; text-align:center; color:var(--text); max-width:320px; }
-#catContent { max-height:400px; overflow-y:auto; padding-right:5px; }
-.profile-card { background:#1a2438; padding:12px; margin:8px 0; border-radius:12px; }
-table { width:100%; border-collapse:collapse; }
-th, td { border:1px solid var(--accent); padding:8px; text-align:left; font-size:0.85em; }
-th { background: var(--accent); color:#fff; }
+:root {
+  --bg: #0b1220;
+  --card: #101a30;
+  --accent: #2563eb;
+  --accent2: #10b981;
+  --text: #e0e7ff;
+  --danger: #ef4444;
+}
+body {
+  font-family: "Poppins", sans-serif;
+  margin:0; padding:0;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+header {
+  text-align: center;
+  padding: 20px;
+}
+header img {
+  width: 100px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent);
+}
+h1 {
+  font-size: 1.5em;
+  color: var(--accent2);
+  margin-top: 10px;
+}
+button {
+  background: var(--card);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  padding: 12px 20px;
+  color: var(--text);
+  font-size: 1em;
+  margin: 8px;
+  width: 80%;
+  max-width: 300px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: var(--accent);
+  transform: scale(1.05);
+}
+section {
+  display: none;
+  width: 90%;
+  max-width: 400px;
+  background: var(--card);
+  border-radius: 15px;
+  padding: 20px;
+  margin-top: 10px;
+}
+input, select, textarea {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background: #1a2438;
+  color: var(--text);
+}
+label { font-size: 0.9em; color: #cbd5e1; }
+.popup {
+  display: none;
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.85);
+  align-items: center;
+  justify-content: center;
+  z-index:100;
+}
+.popup-content {
+  background: var(--card);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  color: var(--text);
+  max-width: 320px;
+}
+#catContent {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+.profile-card {
+  background: #1a2438;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 12px;
+}
+.hidden { display: none; }
 </style>
 </head>
 <body>
 <header>
-<img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/3f26f24977c0505945653116dc1e37ad8c037a73/Polish_20251101_140054583.png">
-<h1>💘 lovestring ♥️</h1>
+  <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/3f26f24977c0505945653116dc1e37ad8c037a73/Polish_20251101_140054583.png">
+  <h1>🤖 Bot LesFacilitateurs</h1>
 </header>
-
 <div id="home">
-<button onclick="openCategory('Marketing')">📈 Marketing</button>
-<button onclick="openCategory('Rencontres')">💞 Rencontre</button>
-<button onclick="openCategory('Emplois')">💼 Emploi</button>
-<button onclick="openCategory('Trainings')">🎓 Formation</button>
-<button onclick="openForm()">📝 Inscription</button>
-<button onclick="openAllProfiles()">📋 Tous les profils</button>
-<button onclick="openAdmin()">🔐 Admin</button>
+  <button onclick="openCategory('Marketing')">📈 Marketing</button>
+  <button onclick="openCategory('Rencontres')">💞 Rencontre</button>
+  <button onclick="openCategory('Emplois')">💼 Emploi</button>
+  <button onclick="openCategory('Trainings')">🎓 Formation</button>
+  <button onclick="openForm()">📝 Inscription</button>
+  <button onclick="openAllProfiles()">📋 Tous les profils</button>
+  <button onclick="openAdmin()">🔐 Admin</button>
 </div>
-
-<section id="formSection">
-<h2>📝 Fiche d'inscription</h2>
-<form id="inscriptionForm">
-<label>Nom complet</label><input name="nom_complet" required>
-<label>Âge</label><input name="age" type="number" required>
-<label>Ville</label>
-<select name="ville">
-<option>Yaoundé</option><option>Douala</
-option><option>kribi</
-option><option>Maroua</option><option>Garoua</option><option>Ngaoundéré</option><option>Bamenda</option><option>Buea</option><option>Ebolowa</option><option>Bertoua</option><option>Bafoussam</option>
-</select>
-<label>Quartier</label><input name="quartier">
-<label>Dernier diplôme</label><input name="dernier_diplome">
-<label>Sexe</label><select name="sexe"><option>Homme</option><option>Femme</option></select>
-<label>Orientation sexuelle</label><select name="orientation_sexuelle"><option>Hétéro</option><option>Homo</option><option>Bisexuel</option><option>Lesbienne</option></select>
-<label>Profession</label><input name="profession">
-<label>Catégorie</label><select name="categorie"><option>Marketing</option><option>Rencontres</option><option>Emplois</option><option>Trainings</option></select>
-<label>Numéro de téléphone</label><input name="numero_telephone" required>
-<button type="button" onclick="ouvrirPaiement()">💸 S’inscrire (500 FCFA)</button>
-</form>
-<button onclick="retourAccueil()">🔙 Retour</button>
-</section>
-
 <section id="categorySection">
-<h2 id="catTitle">📂 Catégorie</h2>
-<div id="catContent"></div>
-<button onclick="retourAccueil()">🔙 Retour</button>
+  <h2 id="catTitle">📂 Catégorie</h2>
+  <div id="catContent"></div>
+  <button onclick="retourAccueil()">🔙 Retour</button>
+</section><section id="formSection">
+  <h2>📝 Fiche d'inscription</h2>
+  <form id="inscriptionForm">
+    <label>Nom complet</label><input name="nom_complet" required>
+    <label>Âge</label><input name="age" type="number" required>
+    <label>Ville</label>
+    <select name="ville">
+      <option>Yaoundé</option><option>Douala</option><option>Maroua</option>
+      <option>Garoua</option><option>Ngaoundéré</option><option>Bamenda</option>
+      <option>Buea</option><option>Ebolowa</option><option>Bertoua</option><option>Bafoussam</option>
+    </select>
+    <label>Quartier</label><input name="quartier">
+    <label>Dernier diplôme</label><input name="dernier_diplome">
+    <label>Sexe</label><select name="sexe"><option>Homme</option><option>Femme</option></select>
+    <label>Orientation sexuelle</label><select name="orientation_sexuelle">
+      <option>Hétéro</option><option>Homo</option><option>Bisexuel</option><option>Lesbienne</option>
+    </select>
+    <label>Profession</label><input name="profession">
+    <label>Catégorie</label><select name="categorie">
+      <option>Marketing</option><option>Rencontres</option><option>Emplois</option><option>Trainings</option>
+    </select>
+    <label>Numéro de téléphone</label><input name="numero_telephone" required>
+    <button type="button" onclick="ouvrirPaiement()">💸 S’inscrire (100 FCFA)</button>
+  </form>
+  <button onclick="retourAccueil()">🔙 Retour</button>
 </section>
 
 <div class="popup" id="popupPaiement">
-<div class="popup-content">
-<h3>💰 HelepMoney</h3>
-<p>Effectue ton paiement :</p>
-<p>Loveline Wirnkar<br>MoMo : 676353859</p>
-<p>bibi<br>om : 656523656</p>
-
-<textarea id="msgTransaction" rows="4" placeholder="Colle ici ton message de transaction ou entre code admin"></textarea>
-<button onclick="validerPaiement()">✅ Valider</button>
-<button onclick="fermerPopup()">❌ Annuler</button>
+  <div class="popup-content">
+    <h3>💰 HelepMoney</h3>
+    <p>Effectue ton paiement :</p>
+    <p>Loveline Wirnkar<br>OM : 646647072<br>MoMo : 676353859</p>
+    <textarea id="msgTransaction" rows="4" placeholder="Colle ici ton message de transaction ou entre code admin"></textarea>
+    <button onclick="validerPaiement()">✅ Valider</button>
+    <button onclick="fermerPopup()">❌ Annuler</button>
+  </div>
 </div>
-</div>
+<section id="profilsSection">
+  <h2 id="profilsTitle">📋 Profils</h2>
+  <div id="profilsContent"></div>
+  <button onclick="retourAccueil()">🔙 Retour</button>
+</section>
 
 <section id="adminPanel">
-<h2>🔐 Administration</h2>
-<input id="adminCode" type="password" placeholder="Entrer le code admin">
-<button onclick="checkAdmin()">Valider</button>
-<div id="adminContent"></div>
-<button onclick="retourAccueil()">🔙 Retour</button>
+  <h2>🔐 Administration</h2>
+  <input id="adminCode" type="password" placeholder="Entrer le code admin">
+  <button onclick="checkAdmin()">Valider</button>
+  <div id="adminContent"></div>
+  <div id="adminTable"></div>
+  <button onclick="retourAccueil()">🔙 Retour</button>
 </section>
 
 <script>
-const SUPABASE_URL="https://ycotvgvevyfyqflicmtw.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inljb3R2Z3ZldnlmeXFmbGljbXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMTQxMzIsImV4cCI6MjA3NTY5MDEzMn0.Yyod-LWZVv5t5PggZ1EZm83vgkvHgaJd2QFJe4_vMDQ";
-const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let formData={};
+const SUPABASE_URL = "https://ycotvgvevyfyqflicmtw.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inljb3R2Z3ZldnlmeXFmbGljbXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMTQxMzIsImV4cCI6MjA3NTY5MDEzMn0.Yyod-LWZVv5t5PggZ1EZm83vgkvHgaJd2QFJe4_vMDQ";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-window.openCategory=async function(cat){
-document.getElementById("home").style.display="none";
-document.getElementById("categorySection").style.display="block";
-document.getElementById("catTitle").innerText="📂 "+cat;
-const container=document.getElementById("catContent");
-container.innerHTML="<p>Chargement...</p>";
-const {data,error}=await supabase.from("lesfacilitateurs").select().eq('categorie',cat);
-if(error){container.innerHTML="<p>Erreur de chargement.</p>";console.log(error);return;}
-if(data.length===0){container.innerHTML="<p>Aucun profil.</p>";return;}
-container.innerHTML="";
-data.forEach(p=>{
-const div=document.createElement("div");
-div.className="profile-card";
-div.innerHTML=`
-<b>${p.nom_complet}</b><br>
-Âge: ${p.age}<br>
-Ville: ${p.ville}<br>
-Quartier: ${p.quartier}<br>
-Diplôme: ${p.dernier_diplome}<br>
-Sexe: ${p.sexe}<br>
-Orientation: ${p.orientation_sexuelle}<br>
-Profession: ${p.profession}<br>
-Catégorie: ${p.categorie}<br>
-<button onclick='voirContact("${p.id}","${p.numero_telephone}")'>👁️ Voir le contact (150 FCFA)</button>
-`;
-container.appendChild(div);
-});
+let formData = {};
+
+window.openCategory = async function(cat){
+  document.getElementById("home").style.display="none";
+  document.getElementById("categorySection").style.display="block";
+  document.getElementById("catTitle").innerText = "📂 " + cat;
+  const container = document.getElementById("catContent");
+  container.innerHTML = "<p>Chargement...</p>";
+
+  const { data, error } = await supabase.from("lesfacilitateurs").select().eq('categorie', cat);
+  if(error){ container.innerHTML="<p>Erreur de chargement.</p>"; console.log(error); return;}
+  if(data.length===0){ container.innerHTML="<p>Aucun profil.</p>"; return;}
+  container.innerHTML="";
+  data.forEach(p=>{
+    const div=document.createElement("div");
+    div.className="profile-card";
+    div.innerHTML=`
+      <b>${p.nom_complet}</b><br>
+      Âge: ${p.age}<br>
+      Ville: ${p.ville}<br>
+      Quartier: ${p.quartier}<br>
+      Diplôme: ${p.dernier_diplome}<br>
+      Sexe: ${p.sexe}<br>
+      Orientation: ${p.orientation_sexuelle}<br>
+      Profession: ${p.profession}<br>
+      Catégorie: ${p.categorie}<br>
+      <button onclick='voirContact("${p.id}","${p.numero_telephone}")'>👁️ Voir le contact (150 FCFA)</button>
+    `;
+    container.appendChild(div);
+  });
 }
 
-window.openAllProfiles=async function(){document.getElementById("home").style.display="none";document.getElementById("categorySection").style.display="block";document.getElementById("catTitle").innerText="📋 Tous les profils";await afficherTousProfils();}
-
-window.afficherTousProfils=async function(){
-const container=document.getElementById("catContent");
-container.innerHTML="<p>Chargement des profils...</p>";
-const {data,error}=await supabase.from("lesfacilitateurs").select().order('created_at',{ascending:false});
-if(error){container.innerHTML="<p>Erreur lors du chargement des profils.</p>";console.log(error);return;}
-if(data.length===0){container.innerHTML="<p>Aucun profil enregistré.</p>";return;}
-container.innerHTML="";
-data.forEach(p=>{
-const div=document.createElement("div");
-div.className="profile-card";
-div.innerHTML=`
-<b>${p.nom_complet}</b><br>
-Âge: ${p.age}<br>
-Ville: ${p.ville}<br>
-Quartier: ${p.quartier}<br>
-Diplôme: ${p.dernier_diplome}<br>
-Sexe: ${p.sexe}<br>
-Orientation: ${p.orientation_sexuelle}<br>
-Profession: ${p.profession}<br>
-Catégorie: ${p.categorie}<br>
-<button onclick='voirContact("${p.id}","${p.numero_telephone}")'>👁️ Voir le contact (150 FCFA)</button>
-`;
-container.appendChild(div);
-});
+window.openAllProfiles = async function() {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("categorySection").style.display = "block";
+  document.getElementById("catTitle").innerText = "📋 Tous les profils";
+  await afficherTousProfils();
 }
 
-window.openForm=function(){document.getElementById("home").style.display="none";document.getElementById("formSection").style.display="block";}
-window.openAdmin=function(){document.getElementById("home").style.display="none";document.getElementById("adminPanel").style.display="block";}
-window.retourAccueil=function(){
-document.getElementById("formSection").style.display="none";
-document.getElementById("adminPanel").style.display="none";
-document.getElementById("popupPaiement").style.display="none";
-document.getElementById("categorySection").style.display="none";
-document.getElementById("home").style.display="flex";
+window.afficherTousProfils = async function() {
+  const container = document.getElementById("catContent");
+  container.innerHTML = "<p>Chargement des profils...</p>";
+
+  const { data, error } = await supabase.from("lesfacilitateurs").select().order('created_at', { ascending: false });
+  if (error) { container.innerHTML = "<p>Erreur lors du chargement des profils.</p>"; console.log(error); return; }
+  if (data.length === 0) { container.innerHTML = "<p>Aucun profil enregistré.</p>"; return; }
+
+  container.innerHTML = "";
+  data.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "profile-card";
+    div.innerHTML = `
+      <b>${p.nom_complet}</b><br>
+      Âge: ${p.age}<br>
+      Ville: ${p.ville}<br>
+      Quartier: ${p.quartier}<br>
+      Diplôme: ${p.dernier_diplome}<br>
+      Sexe: ${p.sexe}<br>
+      Orientation: ${p.orientation_sexuelle}<br>
+      Profession: ${p.profession}<br>
+      Catégorie: ${p.categorie}<br>
+      <button onclick='voirContact("${p.id}","${p.numero_telephone}")'>👁️ Voir le contact (150 FCFA)</button>
+    `;
+    container.appendChild(div);
+  });
 }
 
-window.ouvrirPaiement=function(){formData=Object.fromEntries(new FormData(document.getElementById("inscriptionForm")).entries());document.getElementById("popupPaiement").style.display="flex";}
-window.fermerPopup=function(){document.getElementById("popupPaiement").style.display="none";}
-
-window.validerPaiement=async function(){
-const msg=document.getElementById("msgTransaction").value.trim();
-if(!msg) return alert("⚠️ depot à loveline wirnkar om 640647072 momo 676353859 ");
-formData=Object.fromEntries(new FormData(document.getElementById("inscriptionForm")).entries());
-formData.created_at=new Date().toISOString();
-if(msg==="233233"){await enregistrerInscription();alert("✅ Inscription validée via code admin !");fermerPopup();retourAccueil();return;}
-const lower=msg.toLowerCase();
-const validNumbers=["676353859","646647072"];
-const validName="loveline";
-const now=new Date();
-let isRecent=false;
-const regexTime=/(\d{1,2}[:h]\d{1,2})/;
-const match=msg.match(regexTime);
-if(match){
-  try{
-    const [h,m] = match[1].replace("h",":").split(":").map(Number);
-    const msgTime = new Date();
-    msgTime.setHours(h);
-    msgTime.setMinutes(m);
-    msgTime.setSeconds(0);
-    if((now - msgTime)/60000 < 10) isRecent = true;
-  }catch(e){ console.log(e); }
+window.voirContact = function(id, numero){
+  const msg = prompt("Entre le code admin ou colle ton message de transaction:");
+  if(!msg) return;
+  if(msg === "233233") { alert(`📞 Numéro : ${numero}`); return; }
+  alert("⚠️ Paiement HelepMoney non implémenté ici."); // simplifié
+}
+</script><script>
+window.openForm = function() { 
+  document.getElementById("home").style.display="none"; 
+  document.getElementById("formSection").style.display="block"; 
 }
 
-const isValid = validNumbers.some(n => lower.includes(n)) && lower.includes(validName) && isRecent;
-if(!isValid){ alert("❌ Paiement non reconnu ou expiré !"); return; }
-
-await enregistrerInscription();
-alert("✅ Paiement vérifié !");
-fermerPopup();
-retourAccueil();
+window.openAdmin = function() { 
+  document.getElementById("home").style.display="none"; 
+  document.getElementById("adminPanel").style.display="block"; 
 }
 
-async function enregistrerInscription(){
+window.retourAccueil = function() {
+  document.getElementById("formSection").style.display="none";
+  document.getElementById("adminPanel").style.display="none";
+  document.getElementById("popupPaiement").style.display="none";
+  document.getElementById("categorySection").style.display="none";
+  document.getElementById("home").style.display="flex";
+}
+
+window.ouvrirPaiement = function() {
+  formData = Object.fromEntries(new FormData(document.getElementById("inscriptionForm")).entries());
+  document.getElementById("popupPaiement").style.display = "flex";
+}
+
+window.fermerPopup = function() { 
+  document.getElementById("popupPaiement").style.display = "none"; 
+}
+
+window.validerPaiement = async function() {
+  const msg = document.getElementById("msgTransaction").value.trim();
+  if(!msg) return alert("⚠️ Colle ton message de transaction ou entre code admin");
+
+  formData = Object.fromEntries(new FormData(document.getElementById("inscriptionForm")).entries());
+  formData.created_at = new Date().toISOString();
+
+  if(msg === "233233") {
+    await enregistrerInscription();
+    alert("✅ Inscription validée via code admin !");
+    fermerPopup();
+    retourAccueil();
+    return;
+  }
+
+  const lower = msg.toLowerCase();
+  const validNumbers = ["676353859","646647072"];
+  const validName = "loveline";
+  const now = new Date();
+  let isRecent = false;
+  const regexTime = /(\d{1,2}[:h]\d{1,2})/;
+  const match = msg.match(regexTime);
+  if(match){
+    try{
+      const [h,m] = match[1].replace("h",":").split(":").map(Number);
+      const msgTime = new Date(); msgTime.setHours(h); msgTime.setMinutes(m); msgTime.setSeconds(0);
+      if((now - msgTime)/60000 < 10) isRecent=true;
+    }catch(e){ console.log(e); }
+  }
+
+  const isValid = validNumbers.some(n => lower.includes(n)) && lower.includes(validName) && isRecent;
+  if(!isValid){ alert("❌ Paiement non reconnu ou expiré !"); return; }
+
+  await enregistrerInscription();
+  alert("✅ Paiement vérifié !");
+  fermerPopup();
+  retourAccueil();
+}
+
+async function enregistrerInscription() {
   try{
     const { data, error } = await supabase.from("lesfacilitateurs").insert([formData]).select();
     if(error){ console.error(error); alert("❌ Erreur lors de l'enregistrement !"); return; }
@@ -210,113 +330,81 @@ async function enregistrerInscription(){
   }catch(err){ console.error(err); alert("❌ Exception lors de l'enregistrement !"); }
 }
 
-window.voirContact = function(id, numero){
-  const msg = prompt("dépôt à loveline wirnkar momo 676353859 bibi OM 656523656 copie et colle tout le message de mobile money pour vérification ici 👇👇:");
-  if(!msg) return;
-  if(msg === "233233") { alert(`📞 Numéro : ${numero}`); return; }
-
-  const lower = msg.toLowerCase();
-  const validNumbers = ["676353859","646647072"];
-  const validName = "loveline";
-  const now = new Date();
-  let isRecent=false;
-  const regexTime=/(\d{1,2}[:h]\d{1,2})/;
-  const match=msg.match(regexTime);
-  if(match){
-    try{
-      const [h,m] = match[1].replace("h",":").split(":").map(Number);
-      const msgTime = new Date();
-      msgTime.setHours(h);
-      msgTime.setMinutes(m);
-      msgTime.setSeconds(0);
-      if((now-msgTime)/60000<10) isRecent=true;
-    }catch(e){console.log(e);}
-  }
-  const isValid = validNumbers.some(n=>lower.includes(n)) && lower.includes(validName) && isRecent;
-  if(!isValid){ alert("❌ Paiement non reconnu ou expiré !"); return; }
-  alert(`📞 Numéro : ${numero}`);
-}
-
-window.checkAdmin = function(){
+// --- Admin ---
+window.checkAdmin = async function() {
   const code = document.getElementById("adminCode").value.trim();
-  if(code==="233233"){
-    document.getElementById("adminContent").innerHTML="<p>🔧 Accès administrateur autorisé.</p>";
-    afficherTableauAdmin();
-  } else alert("❌ Code admin incorrect !");
-}
+  if(code !== "233233"){ alert("❌ Code admin incorrect !"); return; }
 
-// Tableau admin avec modifier/supprimer
-async function afficherTableauAdmin(){
-  const { data, error } = await supabase.from("lesfacilitateurs").select().order('created_at',{ascending:false});
-  if(error){ console.log(error); alert("❌ Erreur lors du chargement !"); return; }
-  if(data.length===0){ document.getElementById("adminContent").innerHTML="<p>Aucun profil.</p>"; return; }
+  const { data, error } = await supabase.from("lesfacilitateurs").select().order('created_at', {ascending:false});
+  if(error){ console.error(error); alert("❌ Erreur lors du chargement des profils !"); return; }
 
-  const container = document.getElementById("adminContent");
-  container.innerHTML="";
+  const container = document.getElementById("adminTable");
+  container.innerHTML = "";
   const table = document.createElement("table");
+  table.style.width="100%";
+  table.style.borderCollapse="collapse";
   table.innerHTML = `
-    <thead>
-      <tr><th>Nom</th><th>Âge</th><th>Ville</th><th>Quartier</th><th>Catégorie</th><th>Actions</th></tr>
-    </thead>
-    <tbody>
-      ${data.map(p => `
-        <tr>
-          <td>${p.nom_complet}</td>
-          <td>${p.age}</td>
-          <td>${p.ville}</td>
-          <td>${p.quartier}</td>
-          <td>${p.categorie}</td>
-          <td>
-            <button onclick='modifierProfil("${p.id}")'>✏️ Modifier</button>
-            <button onclick='supprimerProfil("${p.id}", this)'>🗑️ Supprimer</button>
-          </td>
-        </tr>
-      `).join('')}
-    </tbody>
+    <tr style="border-bottom:1px solid var(--accent);">
+      <th>Nom</th><th>Âge</th><th>Ville</th><th>Quartier</th>
+      <th>Catégorie</th><th>Actions</th>
+    </tr>
   `;
+
+  data.forEach(p=>{
+    const tr = document.createElement("tr");
+    tr.style.borderBottom="1px solid #2563eb";
+    tr.innerHTML=`
+      <td>${p.nom_complet}</td>
+      <td>${p.age}</td>
+      <td>${p.ville}</td>
+      <td>${p.quartier}</td>
+      <td>${p.categorie}</td>
+      <td>
+        <button onclick='modifierProfil("${p.id}")'>✏️ Modifier</button>
+        <button style="background:var(--danger);" onclick='supprimerProfil("${p.id}", this)'>🗑️ Supprimer</button>
+      </td>
+    `;
+    table.appendChild(tr);
+  });
   container.appendChild(table);
 }
 
-// Supprimer profil
 window.supprimerProfil = async function(id, btn){
-  if(!confirm("⚠️ Confirmer la suppression ?")) return;
+  if(!confirm("⚠️ Supprimer ce profil définitivement ?")) return;
   const { error } = await supabase.from("lesfacilitateurs").delete().eq('id', id);
-  if(error){ alert("❌ Erreur lors de la suppression !"); console.log(error); return; }
+  if(error){ alert("❌ Erreur lors de la suppression"); console.log(error); return; }
   alert("✅ Profil supprimé !");
-  const row = btn.closest("tr");
-  row.parentNode.removeChild(row);
+  btn.closest("tr").remove();
 }
 
-// Modifier profil
 window.modifierProfil = async function(id){
-  const { data, error } = await supabase.from("lesfacilitateurs").select().eq('id', id).single();
-  if(error){ alert("❌ Erreur lors du chargement du profil !"); console.log(error); return; }
-
-  openForm();
+  const { data, error } = await supabase.from("lesfacilitateurs").select().eq('id', id);
+  if(error || data.length===0){ alert("❌ Impossible de récupérer le profil"); return; }
+  const p = data[0];
+  document.getElementById("home").style.display="none";
+  document.getElementById("formSection").style.display="block";
   const form = document.getElementById("inscriptionForm");
-  form.nom_complet.value = data.nom_complet;
-  form.age.value = data.age;
-  form.ville.value = data.ville;
-  form.quartier.value = data.quartier;
-  form.dernier_diplome.value = data.dernier_diplome;
-  form.sexe.value = data.sexe;
-  form.orientation_sexuelle.value = data.orientation_sexuelle;
-  form.profession.value = data.profession;
-  form.categorie.value = data.categorie;
-  form.numero_telephone.value = data.numero_telephone;
+  form.nom_complet.value = p.nom_complet;
+  form.age.value = p.age;
+  form.ville.value = p.ville;
+  form.quartier.value = p.quartier;
+  form.dernier_diplome.value = p.dernier_diplome;
+  form.sexe.value = p.sexe;
+  form.orientation_sexuelle.value = p.orientation_sexuelle;
+  form.profession.value = p.profession;
+  form.categorie.value = p.categorie;
+  form.numero_telephone.value = p.numero_telephone;
 
-  const btn = form.querySelector("button[onclick='ouvrirPaiement()']");
-  btn.textContent = "💾 Mettre à jour";
+  // Remplacer l'action de l'inscription pour modifier
+  const btn = form.querySelector("button[type='button']");
+  btn.textContent = "💾 Enregistrer les modifications";
   btn.onclick = async function(){
-    formData = Object.fromEntries(new FormData(form).entries());
-    const { error } = await supabase.from("lesfacilitateurs").update(formData).eq('id', id);
-    if(error){ alert("❌ Erreur lors de la mise à jour !"); console.log(error); return; }
-    alert("✅ Profil mis à jour !");
+    const newData = Object.fromEntries(new FormData(form).entries());
+    const { error } = await supabase.from("lesfacilitateurs").update(newData).eq('id', id);
+    if(error){ alert("❌ Erreur lors de la modification"); console.log(error); return; }
+    alert("✅ Profil modifié !");
     form.reset();
     retourAccueil();
-    await afficherTousProfils();
-    btn.textContent = "💸 S’inscrire (500 FCFA)";
-    btn.onclick = ouvrirPaiement;
   }
 }
 </script>
