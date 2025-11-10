@@ -151,8 +151,7 @@ window.openAllProfiles = function() {
 window.openForm = function(){ document.getElementById("home").style.display="none"; document.getElementById("formSection").style.display="block"; }
 window.openAdmin = function(){ document.getElementById("home").style.display="none"; document.getElementById("adminPanel").style.display="block"; }
 window.retourAccueil = function()
-document.getElementById("home").style.display="flex";
-document.getElementById("home").style.flexDirection="column"; document.getElementById("formSection").style.display="none"; document.getElementById("categorySection").style.display="none"; document.getElementById("popupPaiement").style.display="none"; document.getElementById("adminPanel").style.display="none"; }
+document.getElementById("home").style.display="flex"; document.getElementById("formSection").style.display="none"; document.getElementById("categorySection").style.display="none"; document.getElementById("popupPaiement").style.display="none"; document.getElementById("adminPanel").style.display="none"; }
 window.ouvrirPaiement = function(){ formData=Object.fromEntries(new FormData(document.getElementById("inscriptionForm")).entries()); document.getElementById("popupPaiement").style.display="flex"; }
 window.fermerPopup = function(){ document.getElementById("popupPaiement").style.display="none"; }
 
