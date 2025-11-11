@@ -3,216 +3,228 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>♥️ lovestring 💘</title>
+<title>Espace LesFacilitateurs</title>
 <style>
-:root {
-  --bg: #0b1220; --card: #101a30; --accent: #2563eb; --accent2: #10b981; --text: #e0e7ff;
-}
-body { background: var(--bg); color: var(--text); font-family: "Poppins", sans-serif; margin:0; padding:0; display:flex; flex-direction:column; align-items:center;}
-header { text-align:center; padding:20px;}
-header img { width:100px; border-radius:50%; box-shadow:0 0 10px var(--accent);}
-h1 { font-size:1.5em; color: var(--accent2); margin-top:10px;}
-button { background: var(--card); border: 2px solid var(--accent); border-radius: 12px; padding: 12px 20px; color: var(--text); font-size:1em; margin:8px; width:80%; max-width:300px; cursor:pointer; transition:0.3s;}
-button:hover { background: var(--accent); transform: scale(1.05);}
-section { display:none; width:90%; max-width:400px; background: var(--card); border-radius:15px; padding:20px; margin-top:10px;}
-input, select, textarea { width:100%; margin:5px 0; padding:10px; border:none; border-radius:10px; outline:none; background:#1a2438; color: var(--text);}
-label { font-size:0.9em; color:#cbd5e1;}
-.popup { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:100;}
-.popup-content { background: var(--card); border-radius:15px; padding:20px; text-align:center; color: var(--text); max-width:320px;}
-#catContent { max-height:400px; overflow-y:auto; padding-right:5px;}
-.profile-card { background:#1a2438; padding:12px; margin:8px 0; border-radius:12px;}
+body { background:#0a0f1a; color:#e0e6ff; font-family:Poppins,sans-serif; margin:0; padding:10px;}
+h1{text-align:center; color:#4ea1ff;}
+.cardFlyer{background:#121b2c; border-radius:12px; padding:12px; margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,0.4);}
+.cardFlyer img, .cardFlyer video{max-width:100%; border-radius:10px; margin-top:8px;}
+button{background:#0044cc; color:white; border:none; border-radius:8px; padding:8px 12px; cursor:pointer;}
+button:hover{background:#0059ff;}
+.like-btn{cursor:pointer; color:#ff4d6d; font-weight:bold; margin-right:8px;}
+.share-btn{cursor:pointer; color:#00ffff; font-weight:bold;}
+#popup{display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:100;}
+#popup .popup-content{background:#1a2438; border-radius:15px; padding:20px; text-align:center; max-width:320px;}
+#publishArea{display:none; flex-direction:column; gap:8px; margin-bottom:15px; background:#11192a; padding:10px; border-radius:12px;}
+input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2a3b57; border-radius:8px; padding:8px;}
 </style>
 </head>
 <body>
-<header>
-  <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/main/Polish_20251101_140054583.png" alt="Photo d'accueil">
-  <h1>♥️lovestring 🌶️</h1>
-</header>
 
-<div id="home">
-  <button onclick="openCategory('Marketing')">📈 Marketing</button>
-  <button onclick="openCategory('Rencontres')">💞 Rencontre</button>
-  <button onclick="openCategory('Emplois')">💼 Emploi</button>
-  <button onclick="openCategory('Trainings')">🎓 Formation</button>
-  <button onclick="openForm()">📝 Inscription</button>
-  <button onclick="openAllProfiles()">📋 Tous les profils</button>
-  <button onclick="openAdmin()">🔐 Admin</button>
+<h1>📺 Espace LesFacilitateurs - Posts</h1>
+
+<div id="adminCodeArea">
+  <label>🔐 Code admin :</label>
+  <input type="password" id="adminCodeInput" placeholder="Code admin...">
+  <button onclick="checkAdminCode()">Valider</button>
 </div>
 
-<section id="formSection">
-  <h2>📝 Fiche d'inscription</h2>
-  <form id="inscriptionForm">
-    <label>Nom complet</label><input name="nom_complet" required>
-    <label>Âge</label><input name="age" type="number" required>
-    <label>Ville</label>
-    <select name="ville">
-      <option>Yaoundé</option><option>Douala</option><option>Maroua</option>
-      <option>Garoua</option><option>Ngaoundéré</option><option>Bamenda</option>
-      <option>Buea</option><option>Ebolowa</option><option>Bertoua</option><option>Bafoussam</option>
-    </select>
-    <label>Quartier</label><input name="quartier">
-    <label>Dernier diplôme</label><input name="dernier_diplome">
-    <label>Sexe</label><select name="sexe"><option>Homme</option><option>Femme</option></select>
-    <label>Orientation sexuelle</label><select name="orientation_sexuelle">
-      <option>Hétéro</option><option>Homo</option><option>Bisexuel</option><option>Lesbienne</option>
-    </select>
-    <label>Profession</label><input name="profession">
-    <label>Catégorie</label><select name="categorie">
-      <option>Marketing</option><option>Rencontres</option><option>Emplois</option><option>Trainings</option>
-    </select>
-    <label>Numéro de téléphone</label><input name="numero_telephone" required>
-    <button type="button" onclick="ouvrirPaiement()">💸 S’inscrire (100 FCFA)</button>
-  </form>
-  <button onclick="retourAccueil()">🔙 Retour</button>
-</section>
+<div id="publishArea">
+  <textarea id="newPostText" placeholder="Écrire un post (sera le commentaire)..."></textarea>
+  <input type="text" id="numeroPayant" placeholder="Numéro payant (ex: 676353859)">
+  <input type="file" id="mediaInput" accept="image/*,video/*">
+  <button id="btnPublish">Publier</button>
+  <button id="btnResetLikes" onclick="resetLikes()">🔁 Réinitialiser les likes</button>
+</div>
 
-<section id="categorySection">
-  <h2 id="catTitle">📂 Catégorie</h2>
-  <div id="catContent"></div>
-  <button onclick="retourAccueil()">🔙 Retour</button>
-</section>
+<div id="postsContainer"></div>
 
-<div class="popup" id="popupPaiement">
+<div id="popup">
   <div class="popup-content">
-    <h3>💰 HelepMoney Local</h3>
-    <p>Effectue ton paiement :</p>
-    <p>Loveline Wirnkar<br>OM : 646647072<br>MoMo : 676353859</p>
-    <p>Bibi<br>OM : 656523656</p>
-    <textarea id="msgTransaction" rows="4" placeholder="Colle ici ton message de transaction ou entre code admin"></textarea>
+    <h3>💰 HelepMoney</h3>
+    <p id="popupText"></p>
+    <label for="likeCount">Nombre de likes (100 FCFA / like) :</label>
+    <input type="number" id="likeCount" value="1" min="1" max="10">
+    <textarea id="transactionMsg" rows="3" placeholder="Colle ici ton message de transaction ou code admin"></textarea>
     <button onclick="validerPaiement()">✅ Valider</button>
     <button onclick="fermerPopup()">❌ Annuler</button>
   </div>
 </div>
 
-<section id="adminPanel">
-  <h2>🔐 Administration</h2>
-  <input id="adminCode" type="password" placeholder="Entrer le code admin">
-  <button onclick="checkAdmin()">Valider</button>
-  <div id="adminContent"></div>
-  <button onclick="retourAccueil()">🔙 Retour</button>
-</section>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-<script>
-// --- Profils déjà enregistrés ---
-let profiles = [
-  {nom_complet:"vanessa", age:24, ville:"Yaoundé", quartier:"ngousso", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Hétéro", profession:"commercante", categorie:"Rencontres", numero_telephone:"655995497", created_at:"2025-11-01T10:00:00Z"},
-  {nom_complet:"luna", age:27, ville:"kribi", quartier:"dombe", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Bisexuel", profession:"commercante", categorie:"Rencontres", numero_telephone:"651809483", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"andy yves reijjder", age:25, ville:"Douala", quartier:"logbessou", dernier_diplome:"xx", sexe:"Homme", orientation_sexuelle:"Hétéro", profession:"suga daddy", categorie:"Rencontres", numero_telephone:"640062953", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"bebe bio", age:29, ville:"Yaoundé", quartier:"meec", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Hétéro", profession:"commercante", categorie:"Rencontres", numero_telephone:"689670979", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"electra", age:28, ville:"Yaoundé", quartier:"nkozoa", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Bisexuel", profession:"commercante", categorie:"Rencontres", numero_telephone:"689544129", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"posse Adèle", age:27, ville:"Yaoundé", quartier:"nkolbissong", dernier_diplome:"xx", sexe:"homme", orientation_sexuelle:"Bisexuel", profession:"commercant", categorie:"Rencontres", numero_telephone:"680791628", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"naomie", age:27, ville:"Douala", quartier:"pk14", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Hétéro", profession:"commercante", categorie:"Rencontres", numero_telephone:"657518896", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"la ronde", age:24, ville:"Kribi", quartier:"Kribi", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Hétéro", profession:"commercante", categorie:"Rencontres", numero_telephone:"696872135", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"ta perle rare", age:25, ville:"Ngaoundéré", quartier:"xx", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Hétéro", profession:"commercante", categorie:"Rencontres", numero_telephone:"672139589", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"jessica", age:20, ville:"Douala", quartier:"Deido", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Lesbienne", profession:"Lesbienne", categorie:"Rencontres", numero_telephone:"678385423", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"baddie", age:23, ville:"Yaoundé", quartier:"Nkolmesseng", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Bisexuel", profession:"commercante", categorie:"Rencontres", numero_telephone:"656043176", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"lethy", age:25, ville:"Yaoundé", quartier:"Total Olympique", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Lesbienne", profession:"Lesbienne", categorie:"Rencontres", numero_telephone:"690834553", created_at:"2025-11-02T14:30:00Z"},
-  {nom_complet:"celia", age:25, ville:"Douala", quartier:"Bonamoussadi", dernier_diplome:"xx", sexe:"Femme", orientation_sexuelle:"Hétéro", profession:"commercante", categorie:"Rencontres", numero_telephone:"682459387", created_at:"2025-11-02T14:30:00Z"}
-];
+const supabaseUrl = 'https://nqqlsntgmorujffrntih.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xcWxzbnRnbW9ydWpmZnJudGloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk1NzE5OTQsImV4cCI6MjA3NTE0Nzk5NH0.d77RSXyoK-2rFvxAiJB4xgSYpXEHsTKCdF0A3RwzXwY'
+const supabase = createClient(supabaseUrl, supabaseKey)
 
-// --- Fonctions générales ---
-let formData = {};
-window.openCategory = function(cat){
-  document.getElementById("home").style.display="none";
-  document.getElementById("categorySection").style.display="block";
-  document.getElementById("catTitle").innerText="📂 "+cat;
-  const container=document.getElementById("catContent"); container.innerHTML="";
-  const filt = profiles.filter(p => p.categorie === cat);
-  if(filt.length===0){ container.innerHTML="<p>Aucun profil.</p>"; return;}
-  filt.forEach(p=>{
-    const div=document.createElement("div"); div.className="profile-card";
-    div.innerHTML=`<b>${p.nom_complet}</b><br>
-    Âge: ${p.age}<br>Ville: ${p.ville}<br>Quartier: ${p.quartier}<br>
-    Diplôme: ${p.dernier_diplome}<br>Sexe: ${p.sexe}<br>Orientation: ${p.orientation_sexuelle}<br>
-    Profession: ${p.profession}<br>Catégorie: ${p.categorie}<br>
-    <button onclick='voirContact("${p.numero_telephone}", "${p.nom_complet}")'>👁️ Voir le contact (150 FCFA)</button>`;
-    container.appendChild(div);
-  });
-};
+let currentUser = 'User-' + crypto.randomUUID().slice(0,8)
+let isAdmin = false
+let currentAction = {type:'', postId:null}
 
-window.openAllProfiles = function() {
-  document.getElementById("home").style.display="none";
-  document.getElementById("categorySection").style.display="block";
-  document.getElementById("catTitle").innerText="📋 Tous les profils";
-  const container=document.getElementById("catContent"); container.innerHTML="";
-  profiles.forEach(p=>{
-    const div=document.createElement("div"); div.className="profile-card";
-    div.innerHTML=`<b>${p.nom_complet}</b><br>
-    Âge: ${p.age}<br>Ville: ${p.ville}<br>Quartier: ${p.quartier}<br>
-    Diplôme: ${p.dernier_diplome}<br>Sexe: ${p.sexe}<br>Orientation: ${p.orientation_sexuelle}<br>
-    Profession: ${p.profession}<br>Catégorie: ${p.categorie}<br>
-    <button onclick='voirContact("${p.numero_telephone}", "${p.nom_complet}")'>👁️ Voir le contact (150 FCFA)</button>`;
-    container.appendChild(div);
-  });
-};
+const adminCodeInput = document.getElementById('adminCodeInput')
+const publishArea = document.getElementById('publishArea')
+const postsContainer = document.getElementById('postsContainer')
+const mediaInput = document.getElementById('mediaInput')
+const numeroInput = document.getElementById('numeroPayant')
 
-window.openForm = function(){ document.getElementById("home").style.display="none"; document.getElementById("formSection").style.display="block"; }
-window.openAdmin = function(){ document.getElementById("home").style.display="none"; document.getElementById("adminPanel").style.display="block"; }
-
-// --- CORRECTION RETOUR ACCUEIL ---
-window.retourAccueil = function() {
-  const home = document.getElementById("home");
-  home.style.display = "flex";
-  home.style.flexDirection = "column"; // conserve verticalité
-  home.style.alignItems = "center";
-  document.getElementById("formSection").style.display="none";
-  document.getElementById("categorySection").style.display="none";
-  document.getElementById("popupPaiement").style.display="none";
-  document.getElementById("adminPanel").style.display="none";
+// Vérification code admin
+window.checkAdminCode = function() {
+  if(adminCodeInput.value.trim()==='233233'){
+    isAdmin = true
+    alert('✅ Accès administrateur activé !')
+    publishArea.style.display='flex'
+    adminCodeInput.parentElement.style.display='none'
+    loadPosts()
+  } else alert('❌ Code incorrect')
 }
 
-window.ouvrirPaiement = function(){ formData=Object.fromEntries(new FormData(document.getElementById("inscriptionForm")).entries()); document.getElementById("popupPaiement").style.display="flex"; }
-window.fermerPopup = function(){ document.getElementById("popupPaiement").style.display="none"; }
+// Publier post
+document.getElementById('btnPublish').onclick = async () => {
+  if(!isAdmin) return alert('Seul l’admin peut publier.')
+  const text = document.getElementById('newPostText').value.trim()
+  const numero = numeroInput.value.trim()
+  if(!text && !mediaInput.files[0]) return alert('Rien à publier.')
 
-// --- Validation paiement local ---
-window.validerPaiement = function(){
-  const msg = document.getElementById("msgTransaction").value.trim().toLowerCase();
-  if(!msg) return alert("⚠️ Colle ton message de transaction ou entre code admin");
-
-  if(msg==="233233"){ // code admin
-    ajouterProfil(); alert("✅ Inscription validée via code admin !"); fermerPopup(); retourAccueil(); return;
+  let mediaUrl = null
+  if(mediaInput.files[0]){
+    const file = mediaInput.files[0]
+    const fileName = `${Date.now()}_${file.name}`
+    const { error:uploadError } = await supabase.storage.from('media').upload(fileName, file)
+    if(uploadError) return alert('Erreur upload média')
+    const { data:urlData } = supabase.storage.from('media').getPublicUrl(fileName)
+    mediaUrl = urlData.publicUrl
   }
 
-  const now = new Date();
-  const numOk = ["676353859","656523656"];
-  const nameOk = ["loveline wirnkar","bibi"];
-  let timeOk=false;
-
-  const regexTime=/(\d{1,2}[:h]\d{1,2})/; const match = msg.match(regexTime);
-  if(match){ try{ let [h,m]=match[1].replace("h",":").split(":").map(Number); const msgTime=new Date(); msgTime.setHours(h); msgTime.setMinutes(m); msgTime.setSeconds(0); if((now-msgTime)/60000<10) timeOk=true; }catch(e){console.log(e);} }
-
-  const numValid = numOk.some(n=>msg.includes(n));
-  const nameValid = nameOk.some(n=>msg.includes(n));
-
-  if(numValid && nameValid && timeOk){ ajouterProfil(); alert("✅ Paiement vérifié !"); fermerPopup(); retourAccueil(); }
-  else{ alert("❌ Paiement non reconnu ou expiré !"); }
-};
-
-// --- Ajouter profil au tableau local ---
-function ajouterProfil(){
-  formData.created_at=new Date().toISOString();
-  profiles.push(formData);
-  document.getElementById("inscriptionForm").reset();
-  openAllProfiles();
+  const { error } = await supabase.from('posts').insert([{
+    id: crypto.randomUUID(),
+    user_id: currentUser,
+    text,
+    media_url: mediaUrl,
+    media_comment: text,
+    numero_payant: numero || 'NUMERO_CACHÉ',
+    likes:0,
+    liked_by: [],
+    created_at: new Date().toISOString()
+  }])
+  if(error) return alert('Erreur création post : ' + error.message)
+  document.getElementById('newPostText').value=''
+  mediaInput.value=''
+  numeroInput.value=''
+  loadPosts()
 }
 
-// --- Voir contact ---
-function voirContact(numero, nom){
-  const msg = prompt("LOVELINE WIRNKAR MOMO 676353859 BIBI OM 656523656 fais le depot et copie tout le sms mobile money colle ça ici :").toLowerCase();
-  if(!msg) return;
-  if(msg==="233233"){ alert(`📞 Numéro : ${numero}`); return; }
-  const numOk=["676353859","656523656"];
-  const nameOk=["loveline wirnkar","bibi"];
-  const now=new Date(); let timeOk=false;
-  const regexTime=/(\d{1,2}[:h]\d{1,2})/; const match=msg.match(regexTime);
-  if(match){ try{ let [h,m]=match[1].replace("h",":").split(":").map(Number); const msgTime=new Date(); msgTime.setHours(h); msgTime.setMinutes(m); msgTime.setSeconds(0); if((now-msgTime)/60000<10) timeOk=true; }catch(e){console.log(e);} }
-  if(numOk.some(n=>msg.includes(n)) && nameOk.some(n=>msg.includes(n)) && timeOk){ alert(`📞 Numéro : ${numero}`); return; }
-  alert("❌ Paiement non reconnu ou expiré !");
+// Charger posts
+async function loadPosts(){
+  postsContainer.innerHTML=''
+  const { data: posts } = await supabase.from('posts').select().order('created_at',{ascending:false})
+  if(!posts || posts.length===0){
+    postsContainer.innerHTML = '<p style="text-align:center;">Aucun post publié.</p>'
+    return
+  }
+  posts.forEach(post=>{
+    const media = post.media_url
+      ? (post.media_url.endsWith('.mp4') ? `<video src="${post.media_url}" controls></video>` : `<img src="${post.media_url}">`)
+      : ''
+    const card = document.createElement('div')
+    card.className='cardFlyer'
+    card.innerHTML=`
+      <b>Commentaire:</b> ${post.media_comment || ''}<br>
+      ${media}
+      <div style="margin-top:6px;">
+        <span class="like-btn" onclick="demanderPaiement('like','${post.id}')">❤️ ${post.likes||0}</span>
+        <span class="like-btn" onclick="demanderPaiement('numero','${post.id}')">📞 Voir numéro</span>
+        <span class="share-btn" onclick="partagerPost('${post.id}')">🔗 Partager</span>
+        ${isAdmin?`<button onclick="deletePost('${post.id}')">🗑️</button>`:''}
+      </div>
+      <small>${new Date(post.created_at).toLocaleString()}</small>
+    `
+    postsContainer.appendChild(card)
+  })
 }
 
-// --- Admin ---
-function checkAdmin(){ const code=document.getElementById("adminCode").value.trim(); if(code==="233233"){ document.getElementById("adminContent").innerHTML="<p>🔧 Accès admin autorisé. Vous pouvez modifier/supprimer les profils dans le code.</p>"; } else alert("❌ Code admin incorrect !"); }
+// Popup paiement
+window.demanderPaiement = function(type, postId){
+  currentAction={type, postId}
+  const beneficiaries=[
+    {name:'Loveline Wirnkar', numero:'676353859'},
+    {name:'Bibi OM', numero:'656523656'}
+  ]
+  let text = type==='like'
+    ? '💰 Paiement pour acheter des likes.\n(100 FCFA par like)\n'
+    : '💰 Paiement pour voir le numéro payant.\n'
+  text += 'Bénéficiaires HelepMoney :\n'
+  beneficiaries.forEach(b=> text+=`• ${b.name} : ${b.numero}\n`)
+  document.getElementById('popupText').innerText=text
+  document.getElementById('likeCount').value=1
+  document.getElementById('transactionMsg').value=''
+  document.getElementById('popup').style.display='flex'
+}
 
+window.fermerPopup = function(){ document.getElementById('popup').style.display='none' }
+
+// Valider paiement
+window.validerPaiement = async function(){
+  const msg = document.getElementById('transactionMsg').value.trim().toLowerCase()
+  const likeCount = parseInt(document.getElementById('likeCount').value)
+  if(!msg) return alert('⚠️ Message requis ou code admin')
+
+  const { data: post } = await supabase.from('posts').select().eq('id', currentAction.postId).single()
+  if(!post) return
+
+  if(msg==='233233'){
+    appliquerAction(currentAction.type, post, likeCount)
+    alert('✅ Action validée via code admin !')
+    fermerPopup()
+    return
+  }
+
+  if(msg.includes('loveline') || msg.includes('bibi')){
+    appliquerAction(currentAction.type, post, likeCount)
+    alert(`✅ Paiement accepté : ${likeCount} like(s) achetés (${likeCount*100} FCFA) !`)
+    fermerPopup()
+  } else alert('❌ Paiement invalide !')
+}
+
+// Appliquer action
+async function appliquerAction(type, post, likeCount=1){
+  if(type==='like'){
+    const newLikes = (post.likes||0) + likeCount
+    const likedByArray = post.liked_by || []
+    likedByArray.push(currentUser)
+    await supabase.from('posts').update({likes:newLikes, liked_by:likedByArray}).eq('id',post.id)
+  }
+  if(type==='numero'){
+    alert(`📞 Numéro payant: ${post.numero_payant}`)
+  }
+  loadPosts()
+}
+
+// 🔁 Réinitialiser tous les likes
+window.resetLikes = async function(){
+  if(!isAdmin) return alert('Action réservée à l’admin.')
+  if(!confirm('Voulez-vous vraiment remettre tous les likes à 0 ?')) return
+  const { error } = await supabase.from('posts').update({ likes: 0, liked_by: [] }).neq('id', '')
+  if(error) alert('Erreur lors de la réinitialisation : ' + error.message)
+  else {
+    alert('✅ Tous les likes ont été remis à zéro !')
+    loadPosts()
+  }
+}
+
+// Partager post
+window.partagerPost = function(postId){
+  const url = `${window.location.origin}${window.location.pathname}?post=${postId}`
+  prompt('Copie ce lien pour partager le post :', url)
+}
+
+// Supprimer post
+window.deletePost = async function(postId){
+  await supabase.from('posts').delete().eq('id', postId)
+  loadPosts()
+}
+
+loadPosts()
 </script>
 </body>
 </html>
