@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💋 lovestring ❤️‍🔥</title>
+<title>lovestring</title>
 <style>
 body { background:#0a0f1a; color:#e0e6ff; font-family:Poppins,sans-serif; margin:0; padding:10px;}
 h1{text-align:center; color:#4ea1ff;}
-header img {display:block; margin:10px auto; border-radius:12px; max-width:200px;}
 .cardFlyer{background:#121b2c; border-radius:12px; padding:12px; margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,0.4);}
-.cardFlyer img, .cardFlyer video, .cardFlyer audio{max-width:100%; border-radius:10px; margin-top:8px;}
+.cardFlyer img, .cardFlyer video, .cardFlyer audio{max-width:100%; border-radius:10px; margin-top:8px; cursor:pointer;}
 button{background:#0044cc; color:white; border:none; border-radius:8px; padding:8px 12px; cursor:pointer;}
 button:hover{background:#0059ff;}
 .like-btn{cursor:pointer; color:#ff4d6d; font-weight:bold; margin-right:8px;}
@@ -18,14 +17,13 @@ button:hover{background:#0059ff;}
 #popup .popup-content{background:#1a2438; border-radius:15px; padding:20px; text-align:center; max-width:320px;}
 #publishArea{display:none; flex-direction:column; gap:8px; margin-bottom:15px; background:#11192a; padding:10px; border-radius:12px;}
 input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2a3b57; border-radius:8px; padding:8px;}
+#profilePic{display:block; margin:0 auto 10px; max-width:150px; border-radius:50%;}
 </style>
 </head>
 <body>
 
 <h1>💋 lovestring ❤️‍🔥</h1>
-<header>
-  <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/f1dc4576c317909de024794c0b29d5adcab556cf/20250830_035314.jpg" alt="Photo accueil">
-</header>
+<img id="profilePic" src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/f1dc4576c317909de024794c0b29d5adcab556cf/20250830_035314.jpg" alt="Photo de profil">
 
 <div id="adminCodeArea">
   <label>🔐 Code admin :</label>
@@ -36,7 +34,7 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
 <div id="publishArea">
   <textarea id="newPostText" placeholder="Écrire un post (sera le commentaire)..."></textarea>
   <input type="text" id="numeroPayant" placeholder="Numéro payant (ex: 676353859)">
-  <input type="number" id="mediaPrice" placeholder="Prix du média (0=gratuit)">
+  <input type="number" id="mediaPrice" placeholder="Prix média (FCFA)">
   <input type="file" id="mediaInput" accept="image/*,video/*,audio/*">
   <button id="btnPublish">Publier</button>
 </div>
@@ -106,7 +104,7 @@ document.getElementById('btnPublish').onclick = async () => {
     text: text,
     media_url: mediaUrl,
     media_comment: text,
-    numero_payant: numero || 'NUMERO_CACHÉ',
+    numero_payant: numero || '',
     media_price: price,
     likes:0,
     liked_by: JSON.stringify([]),
@@ -125,13 +123,11 @@ async function loadPosts(){
   postsContainer.innerHTML=''
   const { data: posts } = await supabase.from('posts').select().order('created_at',{ascending:false})
   posts.forEach(post=>{
-    let media = ''
-    if(post.media_url){
-      if(post.media_url.endsWith('.mp4')) media = `<video src="${post.media_url}" controls></video>`
-      else if(post.media_url.endsWith('.mp3') || post.media_url.endsWith('.wav')) media = `<audio src="${post.media_url}" controls></audio>`
-      else media = `<img src="${post.media_url}">`
-    }
-
+    const media = post.media_url
+      ? (post.media_url.endsWith('.mp4') ? `<video data-id="${post.id}" style="max-width:100%; border-radius:10px; margin-top:8px; cursor:pointer;" preload="metadata"></video>` 
+         : post.media_url.endsWith('.mp3') || post.media_url.endsWith('.wav') ? `<audio data-id="${post.id}" style="max-width:100%; border-radius:10px; margin-top:8px; cursor:pointer;" preload="metadata"></audio>` 
+         : `<img data-id="${post.id}" src="${post.media_url}" style="cursor:pointer;">`)
+      : ''
     const card = document.createElement('div')
     card.className='cardFlyer'
     card.innerHTML=`
@@ -140,34 +136,40 @@ async function loadPosts(){
       <div style="margin-top:6px;">
         <span class="like-btn" onclick="demanderPaiement('like','${post.id}')">❤️ ${post.likes||0}</span>
         <span class="like-btn" onclick="demanderPaiement('numero','${post.id}')">📞 Voir numéro</span>
-        <span class="like-btn" onclick="demanderPaiement('media','${post.id}')">📂 Accéder au média</span>
-        <span class="share-btn" onclick="partagerPost('${post.id}')">🔗</span>
         ${isAdmin?`<button onclick="deletePost('${post.id}')">🗑️</button>`:''}
       </div>
       <small>${new Date(post.created_at).toLocaleString()}</small>
     `
     postsContainer.appendChild(card)
   })
+  // Attacher le clic sur les médias pour paiement
+  document.querySelectorAll('video[data-id], audio[data-id], img[data-id]').forEach(el=>{
+    el.onclick = async ()=>{
+      const postId = el.dataset.id
+      const { data: post } = await supabase.from('posts').select().eq('id', postId).single()
+      if(!post) return
+      if(post.media_price>0){
+        currentAction = {type:'media', postId:postId}
+        showPopupMedia(post)
+      } else {
+        openMedia(el, post)
+      }
+    }
+  })
 }
 
-// Popup paiement avec info bénéficiaire
-window.demanderPaiement = async function(type, postId){
-  currentAction={type, postId};
-  const { data: post } = await supabase.from('posts').select().eq('id', postId).single();
-  if(!post) return;
-
-  let text = ''
-  if(type==='like') text = `💰 Paiement pour liker ce post : ${post.media_price || 100} FCFA\n`
-  else if(type==='numero') text = `💰 Paiement pour voir le numéro : ${post.media_price || 100} FCFA\n`
-  else if(type==='media') text = `💰 Paiement pour accéder au média : ${post.media_price || 25} FCFA\n`
-
-  text += 'Bénéficiaires HelepMoney :\n• Loveline Wirnkar : 676353859\n• Bibi OM : 656523656'
-  document.getElementById('popupText').innerText = text
-  document.getElementById('transactionMsg').value = ''
-  document.getElementById('popup').style.display = 'flex'
+// Popup paiement média
+function showPopupMedia(post){
+  const beneficiaries=[
+    {name:'Loveline Wirnkar', numero:'676353859'},
+    {name:'Bibi OM', numero:'656523656'}
+  ]
+  let text = `💰 Paiement pour accéder au média: ${post.media_price} FCFA\nBénéficiaires HelepMoney :\n`
+  beneficiaries.forEach(b=> text+=`• ${b.name} : ${b.numero}\n`)
+  document.getElementById('popupText').innerText=text
+  document.getElementById('transactionMsg').value=''
+  document.getElementById('popup').style.display='flex'
 }
-
-window.fermerPopup = function(){ document.getElementById('popup').style.display='none' }
 
 // Valider paiement
 window.validerPaiement = async function(){
@@ -177,48 +179,45 @@ window.validerPaiement = async function(){
   const { data: post } = await supabase.from('posts').select().eq('id', currentAction.postId).single()
   if(!post) return
 
-  if(msg==='233233'){
-    appliquerAction(currentAction.type, post)
-    alert('✅ Action validée via code admin !')
-    fermerPopup()
-    return
-  }
-
-  if(msg.includes('loveline') || msg.includes('bibi')){
-    appliquerAction(currentAction.type, post)
-    alert('✅ Paiement simulé accepté !')
+  if(msg==='233233' || msg.includes('loveline') || msg.includes('bibi')){
+    if(currentAction.type==='like'){
+      const newLikes = (post.likes||0)+1
+      const likedByArray = JSON.parse(post.liked_by || '[]')
+      if(!likedByArray.includes(currentUser)) likedByArray.push(currentUser)
+      await supabase.from('posts').update({likes:newLikes, liked_by:JSON.stringify(likedByArray)}).eq('id',post.id)
+      alert('✅ Like validé !')
+    } else if(currentAction.type==='numero'){
+      alert(`📞 Numéro payant: ${post.numero_payant}`)
+    } else if(currentAction.type==='media'){
+      const el = document.querySelector(`[data-id="${post.id}"]`)
+      openMedia(el, post)
+    }
     fermerPopup()
   } else alert('❌ Paiement invalide !')
 }
 
-// Appliquer action
-async function appliquerAction(type, post){
-  if(type==='like'){
-    const newLikes = (post.likes||0)+1
-    const likedByArray = JSON.parse(post.liked_by||'[]')
-    if(likedByArray.includes(currentUser)) return alert('Déjà liké !')
-    likedByArray.push(currentUser)
-    await supabase.from('posts').update({likes:newLikes, liked_by:JSON.stringify(likedByArray)}).eq('id',post.id)
+function openMedia(el, post){
+  if(!el) return
+  if(post.media_url.endsWith('.mp4')){
+    el.src = post.media_url
+    el.controls = true
+    el.autoplay = true
+  } else if(post.media_url.endsWith('.mp3') || post.media_url.endsWith('.wav')){
+    el.src = post.media_url
+    el.controls = true
+    el.autoplay = true
+  } else {
+    el.src = post.media_url
   }
-  if(type==='numero'){
-    alert(`📞 Numéro payant: ${post.numero_payant}`)
-  }
-  if(type==='media'){
-    window.open(post.media_url, '_blank')
-  }
-  loadPosts()
 }
+
+// Fermer popup
+window.fermerPopup = function(){ document.getElementById('popup').style.display='none' }
 
 // Supprimer post (admin)
 window.deletePost = async function(postId){
   await supabase.from('posts').delete().eq('id', postId)
   loadPosts()
-}
-
-// Partager post
-window.partagerPost = function(postId){
-  const url = `${window.location.origin}${window.location.pathname}?post=${postId}`
-  prompt('Copie ce lien pour partager le post :', url)
 }
 
 loadPosts()
