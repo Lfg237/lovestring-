@@ -12,7 +12,6 @@ h1{text-align:center; color:#4ea1ff;}
 button{background:#0044cc; color:white; border:none; border-radius:8px; padding:8px 12px; cursor:pointer;}
 button:hover{background:#0059ff;}
 .like-btn{cursor:pointer; color:#ff4d6d; font-weight:bold; margin-right:8px;}
-.share-btn{cursor:pointer; color:#00ffff; font-weight:bold;}
 #popup{display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:100;}
 #popup .popup-content{background:#1a2438; border-radius:15px; padding:20px; text-align:center; max-width:320px;}
 #publishArea{display:none; flex-direction:column; gap:8px; margin-bottom:15px; background:#11192a; padding:10px; border-radius:12px;}
@@ -158,7 +157,7 @@ async function loadPosts(){
   })
 }
 
-// Popup paiement média
+// Popup paiement
 function showPopupMedia(post){
   const beneficiaries=[
     {name:'Loveline Wirnkar', numero:'676353859'},
@@ -171,24 +170,56 @@ function showPopupMedia(post){
   document.getElementById('popup').style.display='flex'
 }
 
-// Valider paiement
+// Demander paiement pour like, numero, media
+window.demanderPaiement = function(type, postId){
+  currentAction = {type, postId}
+  const beneficiaries=[
+    {name:'Loveline Wirnkar', numero:'676353859'},
+    {name:'Bibi OM', numero:'656523656'}
+  ]
+  supabase.from('posts').select().eq('id', postId).single().then(({data: post})=>{
+    if(!post) return
+    let price = 0
+    if(type==='like') price = 100
+    else if(type==='numero') price = post.numero_payant ? 50 : 0
+    else if(type==='media') price = post.media_price || 0
+    if(price===0){
+      if(type==='like') validerPaiementDirect(post)
+      else if(type==='numero') alert(`📞 Numéro: ${post.numero_payant || 'Non défini'}`)
+      else if(type==='media'){
+        const el = document.querySelector(`[data-id="${post.id}"]`)
+        openMedia(el, post)
+      }
+      return
+    }
+    let text = `💰 Paiement pour ${type==='like'?'liker':type==='numero'?'voir le numéro':'accéder au média'} : ${price} FCFA\nBénéficiaires HelepMoney :\n`
+    beneficiaries.forEach(b=> text+=`• ${b.name} : ${b.numero}\n`)
+    document.getElementById('popupText').innerText = text
+    document.getElementById('transactionMsg').value = ''
+    document.getElementById('popup').style.display='flex'
+  })
+}
+
+// Action directe like gratuit
+function validerPaiementDirect(post){
+  const likedByArray = JSON.parse(post.liked_by || '[]')
+  if(!likedByArray.includes(currentUser)){
+    likedByArray.push(currentUser)
+    supabase.from('posts').update({likes:(post.likes||0)+1, liked_by:JSON.stringify(likedByArray)}).eq('id', post.id)
+    loadPosts()
+  }
+}
+
+// Valider paiement popup
 window.validerPaiement = async function(){
   const msg = document.getElementById('transactionMsg').value.trim().toLowerCase()
   if(!msg) return alert('⚠️ Message requis ou code admin')
-
   const { data: post } = await supabase.from('posts').select().eq('id', currentAction.postId).single()
   if(!post) return
-
   if(msg==='233233' || msg.includes('loveline') || msg.includes('bibi')){
-    if(currentAction.type==='like'){
-      const newLikes = (post.likes||0)+1
-      const likedByArray = JSON.parse(post.liked_by || '[]')
-      if(!likedByArray.includes(currentUser)) likedByArray.push(currentUser)
-      await supabase.from('posts').update({likes:newLikes, liked_by:JSON.stringify(likedByArray)}).eq('id',post.id)
-      alert('✅ Like validé !')
-    } else if(currentAction.type==='numero'){
-      alert(`📞 Numéro payant: ${post.numero_payant}`)
-    } else if(currentAction.type==='media'){
+    if(currentAction.type==='like') validerPaiementDirect(post)
+    else if(currentAction.type==='numero') alert(`📞 Numéro: ${post.numero_payant || 'Non défini'}`)
+    else if(currentAction.type==='media'){
       const el = document.querySelector(`[data-id="${post.id}"]`)
       openMedia(el, post)
     }
@@ -196,13 +227,10 @@ window.validerPaiement = async function(){
   } else alert('❌ Paiement invalide !')
 }
 
+// Ouvrir média
 function openMedia(el, post){
   if(!el) return
-  if(post.media_url.endsWith('.mp4')){
-    el.src = post.media_url
-    el.controls = true
-    el.autoplay = true
-  } else if(post.media_url.endsWith('.mp3') || post.media_url.endsWith('.wav')){
+  if(post.media_url.endsWith('.mp4') || post.media_url.endsWith('.mp3') || post.media_url.endsWith('.wav')){
     el.src = post.media_url
     el.controls = true
     el.autoplay = true
