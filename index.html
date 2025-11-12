@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Espace LesFacilitateurs</title>
+<title>💋 lovestring ❤️‍🔥</title>
 <style>
 body { background:#0a0f1a; color:#e0e6ff; font-family:Poppins,sans-serif; margin:0; padding:10px;}
 h1{text-align:center; color:#4ea1ff;}
+header img {display:block; margin:10px auto; border-radius:12px; max-width:200px;}
 .cardFlyer{background:#121b2c; border-radius:12px; padding:12px; margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,0.4);}
-.cardFlyer img, .cardFlyer video{max-width:100%; border-radius:10px; margin-top:8px;}
+.cardFlyer img, .cardFlyer video, .cardFlyer audio{max-width:100%; border-radius:10px; margin-top:8px;}
 button{background:#0044cc; color:white; border:none; border-radius:8px; padding:8px 12px; cursor:pointer;}
 button:hover{background:#0059ff;}
 .like-btn{cursor:pointer; color:#ff4d6d; font-weight:bold; margin-right:8px;}
@@ -21,7 +22,10 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
 </head>
 <body>
 
-<h1>📺 Espace LesFacilitateurs - Posts</h1>
+<h1>💋 lovestring ❤️‍🔥</h1>
+<header>
+  <img src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/f1dc4576c317909de024794c0b29d5adcab556cf/20250830_035314.jpg" alt="Photo accueil">
+</header>
 
 <div id="adminCodeArea">
   <label>🔐 Code admin :</label>
@@ -32,9 +36,9 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
 <div id="publishArea">
   <textarea id="newPostText" placeholder="Écrire un post (sera le commentaire)..."></textarea>
   <input type="text" id="numeroPayant" placeholder="Numéro payant (ex: 676353859)">
-  <input type="file" id="mediaInput" accept="image/*,video/*">
+  <input type="number" id="mediaPrice" placeholder="Prix du média (0=gratuit)">
+  <input type="file" id="mediaInput" accept="image/*,video/*,audio/*">
   <button id="btnPublish">Publier</button>
-  <button id="btnResetLikes" onclick="resetLikes()">🔁 Réinitialiser les likes</button>
 </div>
 
 <div id="postsContainer"></div>
@@ -65,6 +69,7 @@ const publishArea = document.getElementById('publishArea')
 const postsContainer = document.getElementById('postsContainer')
 const mediaInput = document.getElementById('mediaInput')
 const numeroInput = document.getElementById('numeroPayant')
+const mediaPriceInput = document.getElementById('mediaPrice')
 
 // Vérification code admin
 window.checkAdminCode = function() {
@@ -82,6 +87,7 @@ document.getElementById('btnPublish').onclick = async () => {
   if(!isAdmin) return alert('Seul l’admin peut publier.')
   const text = document.getElementById('newPostText').value.trim()
   const numero = numeroInput.value.trim()
+  const price = parseInt(mediaPriceInput.value) || 0
   if(!text && !mediaInput.files[0]) return alert('Rien à publier.')
 
   let mediaUrl = null
@@ -97,18 +103,20 @@ document.getElementById('btnPublish').onclick = async () => {
   const { error } = await supabase.from('posts').insert([{
     id: crypto.randomUUID(),
     user_id: currentUser,
-    text,
+    text: text,
     media_url: mediaUrl,
     media_comment: text,
     numero_payant: numero || 'NUMERO_CACHÉ',
+    media_price: price,
     likes:0,
-    liked_by: [],
+    liked_by: JSON.stringify([]),
     created_at: new Date().toISOString()
   }])
-  if(error) return alert('Erreur création post : ' + error.message)
+  if(error) return alert('Erreur création post')
   document.getElementById('newPostText').value=''
   mediaInput.value=''
   numeroInput.value=''
+  mediaPriceInput.value=''
   loadPosts()
 }
 
@@ -116,14 +124,14 @@ document.getElementById('btnPublish').onclick = async () => {
 async function loadPosts(){
   postsContainer.innerHTML=''
   const { data: posts } = await supabase.from('posts').select().order('created_at',{ascending:false})
-  if(!posts || posts.length===0){
-    postsContainer.innerHTML = '<p style="text-align:center;">Aucun post publié.</p>'
-    return
-  }
   posts.forEach(post=>{
-    const media = post.media_url
-      ? (post.media_url.endsWith('.mp4') ? `<video src="${post.media_url}" controls></video>` : `<img src="${post.media_url}">`)
-      : ''
+    let media = ''
+    if(post.media_url){
+      if(post.media_url.endsWith('.mp4')) media = `<video src="${post.media_url}" controls></video>`
+      else if(post.media_url.endsWith('.mp3') || post.media_url.endsWith('.wav')) media = `<audio src="${post.media_url}" controls></audio>`
+      else media = `<img src="${post.media_url}">`
+    }
+
     const card = document.createElement('div')
     card.className='cardFlyer'
     card.innerHTML=`
@@ -132,7 +140,8 @@ async function loadPosts(){
       <div style="margin-top:6px;">
         <span class="like-btn" onclick="demanderPaiement('like','${post.id}')">❤️ ${post.likes||0}</span>
         <span class="like-btn" onclick="demanderPaiement('numero','${post.id}')">📞 Voir numéro</span>
-        <span class="share-btn" onclick="partagerPost('${post.id}')">🔗 Partager</span>
+        <span class="like-btn" onclick="demanderPaiement('media','${post.id}')">📂 Accéder au média</span>
+        <span class="share-btn" onclick="partagerPost('${post.id}')">🔗</span>
         ${isAdmin?`<button onclick="deletePost('${post.id}')">🗑️</button>`:''}
       </div>
       <small>${new Date(post.created_at).toLocaleString()}</small>
@@ -142,20 +151,20 @@ async function loadPosts(){
 }
 
 // Popup paiement avec info bénéficiaire
-window.demanderPaiement = function(type, postId){
-  currentAction={type, postId}
-  const beneficiaries=[
-    {name:'Loveline Wirnkar', numero:'676353859'},
-    {name:'Bibi OM', numero:'656523656'}
-  ]
-  let text = type==='like'
-    ? '💰 Paiement pour liker ce post.\n'
-    : '💰 Paiement pour voir le numéro payant.\n'
-  text += 'Bénéficiaires HelepMoney :\n'
-  beneficiaries.forEach(b=> text+=`• ${b.name} : ${b.numero}\n`)
-  document.getElementById('popupText').innerText=text
-  document.getElementById('transactionMsg').value=''
-  document.getElementById('popup').style.display='flex'
+window.demanderPaiement = async function(type, postId){
+  currentAction={type, postId};
+  const { data: post } = await supabase.from('posts').select().eq('id', postId).single();
+  if(!post) return;
+
+  let text = ''
+  if(type==='like') text = `💰 Paiement pour liker ce post : ${post.media_price || 100} FCFA\n`
+  else if(type==='numero') text = `💰 Paiement pour voir le numéro : ${post.media_price || 100} FCFA\n`
+  else if(type==='media') text = `💰 Paiement pour accéder au média : ${post.media_price || 25} FCFA\n`
+
+  text += 'Bénéficiaires HelepMoney :\n• Loveline Wirnkar : 676353859\n• Bibi OM : 656523656'
+  document.getElementById('popupText').innerText = text
+  document.getElementById('transactionMsg').value = ''
+  document.getElementById('popup').style.display = 'flex'
 }
 
 window.fermerPopup = function(){ document.getElementById('popup').style.display='none' }
@@ -168,7 +177,6 @@ window.validerPaiement = async function(){
   const { data: post } = await supabase.from('posts').select().eq('id', currentAction.postId).single()
   if(!post) return
 
-  // code admin
   if(msg==='233233'){
     appliquerAction(currentAction.type, post)
     alert('✅ Action validée via code admin !')
@@ -176,7 +184,6 @@ window.validerPaiement = async function(){
     return
   }
 
-  // Vérification simple HelepMoney
   if(msg.includes('loveline') || msg.includes('bibi')){
     appliquerAction(currentAction.type, post)
     alert('✅ Paiement simulé accepté !')
@@ -188,44 +195,30 @@ window.validerPaiement = async function(){
 async function appliquerAction(type, post){
   if(type==='like'){
     const newLikes = (post.likes||0)+1
-    const likedByArray = post.liked_by || []
+    const likedByArray = JSON.parse(post.liked_by||'[]')
     if(likedByArray.includes(currentUser)) return alert('Déjà liké !')
     likedByArray.push(currentUser)
-    await supabase.from('posts').update({likes:newLikes, liked_by:likedByArray}).eq('id',post.id)
+    await supabase.from('posts').update({likes:newLikes, liked_by:JSON.stringify(likedByArray)}).eq('id',post.id)
   }
   if(type==='numero'){
     alert(`📞 Numéro payant: ${post.numero_payant}`)
   }
+  if(type==='media'){
+    window.open(post.media_url, '_blank')
+  }
   loadPosts()
 }
 
-// 🔁 Réinitialiser tous les likes
-window.resetLikes = async function(){
-  if(!isAdmin) return alert('Action réservée à l’admin.')
-  if(!confirm('Voulez-vous vraiment remettre tous les likes à 0 ?')) return
-
-  const { error } = await supabase
-    .from('posts')
-    .update({ likes: 0, liked_by: [] })
-    .neq('id', '') // ✅ tous les posts
-
-  if(error) alert('Erreur lors de la réinitialisation : ' + error.message)
-  else {
-    alert('✅ Tous les likes ont été réinitialisés !')
-    loadPosts()
-  }
+// Supprimer post (admin)
+window.deletePost = async function(postId){
+  await supabase.from('posts').delete().eq('id', postId)
+  loadPosts()
 }
 
 // Partager post
 window.partagerPost = function(postId){
   const url = `${window.location.origin}${window.location.pathname}?post=${postId}`
   prompt('Copie ce lien pour partager le post :', url)
-}
-
-// Supprimer post
-window.deletePost = async function(postId){
-  await supabase.from('posts').delete().eq('id', postId)
-  loadPosts()
 }
 
 loadPosts()
