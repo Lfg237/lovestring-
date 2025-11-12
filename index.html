@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>♥️ lovestring top model ❤️‍🔥</title>
+<title>Espace LesFacilitateurs</title>
 <style>
 body { background:#0a0f1a; color:#e0e6ff; font-family:Poppins,sans-serif; margin:0; padding:10px;}
 h1{text-align:center; color:#4ea1ff;}
@@ -21,7 +21,7 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
 </head>
 <body>
 
-<h1>💋 lovestring modèle ❤️‍🔥</h1>
+<h1>📺 Espace LesFacilitateurs - Posts</h1>
 
 <div id="adminCodeArea">
   <label>🔐 Code admin :</label>
@@ -43,9 +43,7 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
   <div class="popup-content">
     <h3>💰 HelepMoney</h3>
     <p id="popupText"></p>
-    <label for="likeCount">Nombre de likes (100 FCFA / like) :</label>
-    <input type="number" id="likeCount" value="1" min="1" max="10">
-    <textarea id="transactionMsg" rows="3" placeholder="Colle ici ton message de transaction ou code admin"></textarea>
+    <textarea id="transactionMsg" rows="4" placeholder="Colle ici ton message de transaction ou code admin"></textarea>
     <button onclick="validerPaiement()">✅ Valider</button>
     <button onclick="fermerPopup()">❌ Annuler</button>
   </div>
@@ -143,7 +141,7 @@ async function loadPosts(){
   })
 }
 
-// Popup paiement
+// Popup paiement avec info bénéficiaire
 window.demanderPaiement = function(type, postId){
   currentAction={type, postId}
   const beneficiaries=[
@@ -151,12 +149,11 @@ window.demanderPaiement = function(type, postId){
     {name:'Bibi OM', numero:'656523656'}
   ]
   let text = type==='like'
-    ? '💰 Paiement pour acheter des likes.\n(100 FCFA par like)\n'
+    ? '💰 Paiement pour liker ce post.\n'
     : '💰 Paiement pour voir le numéro payant.\n'
   text += 'Bénéficiaires HelepMoney :\n'
   beneficiaries.forEach(b=> text+=`• ${b.name} : ${b.numero}\n`)
   document.getElementById('popupText').innerText=text
-  document.getElementById('likeCount').value=1
   document.getElementById('transactionMsg').value=''
   document.getElementById('popup').style.display='flex'
 }
@@ -166,31 +163,33 @@ window.fermerPopup = function(){ document.getElementById('popup').style.display=
 // Valider paiement
 window.validerPaiement = async function(){
   const msg = document.getElementById('transactionMsg').value.trim().toLowerCase()
-  const likeCount = parseInt(document.getElementById('likeCount').value)
   if(!msg) return alert('⚠️ Message requis ou code admin')
 
   const { data: post } = await supabase.from('posts').select().eq('id', currentAction.postId).single()
   if(!post) return
 
+  // code admin
   if(msg==='233233'){
-    appliquerAction(currentAction.type, post, likeCount)
+    appliquerAction(currentAction.type, post)
     alert('✅ Action validée via code admin !')
     fermerPopup()
     return
   }
 
+  // Vérification simple HelepMoney
   if(msg.includes('loveline') || msg.includes('bibi')){
-    appliquerAction(currentAction.type, post, likeCount)
-    alert(`✅ Paiement accepté : ${likeCount} like(s) achetés (${likeCount*100} FCFA) !`)
+    appliquerAction(currentAction.type, post)
+    alert('✅ Paiement simulé accepté !')
     fermerPopup()
   } else alert('❌ Paiement invalide !')
 }
 
 // Appliquer action
-async function appliquerAction(type, post, likeCount=1){
+async function appliquerAction(type, post){
   if(type==='like'){
-    const newLikes = (post.likes||0) + likeCount
+    const newLikes = (post.likes||0)+1
     const likedByArray = post.liked_by || []
+    if(likedByArray.includes(currentUser)) return alert('Déjà liké !')
     likedByArray.push(currentUser)
     await supabase.from('posts').update({likes:newLikes, liked_by:likedByArray}).eq('id',post.id)
   }
@@ -204,10 +203,15 @@ async function appliquerAction(type, post, likeCount=1){
 window.resetLikes = async function(){
   if(!isAdmin) return alert('Action réservée à l’admin.')
   if(!confirm('Voulez-vous vraiment remettre tous les likes à 0 ?')) return
-  const { error } = await supabase.from('posts').update({ likes: 0, liked_by: [] }).neq('id', '')
+
+  const { error } = await supabase
+    .from('posts')
+    .update({ likes: 0, liked_by: [] })
+    .neq('id', '') // ✅ tous les posts
+
   if(error) alert('Erreur lors de la réinitialisation : ' + error.message)
   else {
-    alert('✅ Tous les likes ont été remis à zéro !')
+    alert('✅ Tous les likes ont été réinitialisés !')
     loadPosts()
   }
 }
