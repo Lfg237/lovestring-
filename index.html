@@ -251,7 +251,7 @@ window.deletePost = async function(postId){
 window.demanderPaiement = function(type, postId){
   currentAction={type, postId}
   const { data: post } = supabase.from('posts').select().eq('id', postId)
-  document.getElementById('popupText').innerText = type==='like' ? '💰 dépôt a loveline wirnkar momo 676353859' bibi OM 656523656' pour liker ce post.' : '💰 dépôt a loveline wirnkar momo 676353859 bibi OM 656523656 pour voir le numéro.'
+  document.getElementById('popupText').innerText = type==='like' ? '💰 dépôt a loveline wirnkar momo 676353859 bibi OM 656523656 pour liker ce post.' : '💰 dépôt a loveline wirnkar momo 676353859 bibi OM 656523656 pour voir le numéro.'
   document.getElementById('transactionMsg').value=''
   document.getElementById('popup').style.display='flex'
 }
