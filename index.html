@@ -12,19 +12,19 @@ h1{text-align:center; color:#4ea1ff;}
 button{background:#0044cc; color:white; border:none; border-radius:8px; padding:8px 12px; cursor:pointer;}
 button:hover{background:#0059ff;}
 .like-btn{cursor:pointer; color:#ff4d6d; font-weight:bold; margin-right:8px;}
-.edit-btn{cursor:pointer; background:#00ff66; color:#000; border-radius:6px; padding:2px 6px; margin-left:5px;}
 #popup{display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:100;}
 #popup .popup-content{background:#1a2438; border-radius:15px; padding:20px; text-align:center; max-width:320px;}
 #publishArea{display:none; flex-direction:column; gap:8px; margin-bottom:15px; background:#11192a; padding:10px; border-radius:12px;}
 input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2a3b57; border-radius:8px; padding:8px;}
 #profilePic{display:block; margin:0 auto 10px; max-width:150px; border-radius:50%;}
+.price {color:#10b981; font-weight:bold; margin-left:8px;}
 </style>
 </head>
 <body>
 
 <h1>💋 lovestring ❤️‍🔥</h1>
 <img id="profilePic" src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/f1dc4576c317909de024794c0b29d5adcab556cf/20250830_035314.jpg" alt="Photo de profil">
-
+agence de rencontres discretes serieuses 100%237 fiable mise en contact payante free
 <div id="adminCodeArea">
   <label>🔐 Code admin :</label>
   <input type="password" id="adminCodeInput" placeholder="Code admin...">
@@ -32,7 +32,7 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
 </div>
 
 <div id="publishArea">
-  <textarea id="newPostText" placeholder="Écrire un post (sera le commentaire)..."></textarea>
+  <textarea id="newPostText" placeholder="Écrire un post..."></textarea>
   <input type="text" id="numeroPayant" placeholder="Numéro payant (ex: 676353859)">
   <input type="number" id="numeroPrice" placeholder="Prix numéro payant (FCFA)">
   <input type="number" id="mediaPrice" placeholder="Prix média (FCFA)">
@@ -71,7 +71,7 @@ const numeroInput = document.getElementById('numeroPayant')
 const numeroPriceInput = document.getElementById('numeroPrice')
 const mediaPriceInput = document.getElementById('mediaPrice')
 
-// Vérification code admin
+// Admin check
 window.checkAdminCode = function() {
   if(adminCodeInput.value.trim()==='233233'){
     isAdmin = true
@@ -82,7 +82,7 @@ window.checkAdminCode = function() {
   } else alert('❌ Code incorrect')
 }
 
-// Publier post
+// Publish post
 document.getElementById('btnPublish').onclick = async () => {
   if(!isAdmin) return alert('Seul l’admin peut publier.')
   const text = document.getElementById('newPostText').value.trim()
@@ -96,7 +96,7 @@ document.getElementById('btnPublish').onclick = async () => {
     const file = mediaInput.files[0]
     const fileName = `${Date.now()}_${file.name}`
     const { error:uploadError } = await supabase.storage.from('media').upload(fileName, file)
-    if(uploadError) return alert('Erreur upload média')
+    if(uploadError) return alert('Erreur upload média: ' + uploadError.message)
     const { data:urlData } = supabase.storage.from('media').getPublicUrl(fileName)
     mediaUrl = urlData.publicUrl
   }
@@ -123,12 +123,11 @@ document.getElementById('btnPublish').onclick = async () => {
   loadPosts()
 }
 
-// Charger posts
+// Load posts
 async function loadPosts(){
   postsContainer.innerHTML=''
   const { data: posts } = await supabase.from('posts').select().order('created_at',{ascending:false})
-  if(!posts || posts.length===0) return postsContainer.innerHTML='<p>Aucun post disponible.</p>'
-  
+  if(!posts || posts.length===0){postsContainer.innerHTML='<i>Aucun post disponible</i>'; return;}
   posts.forEach(post=>{
     const media = post.media_url
       ? (post.media_url.endsWith('.mp4') ? `<video data-id="${post.id}" style="max-width:100%; border-radius:10px; margin-top:8px; cursor:pointer;" preload="metadata"></video>` 
@@ -143,88 +142,91 @@ async function loadPosts(){
       <div style="margin-top:6px;">
         <span class="like-btn" onclick="demanderPaiement('like','${post.id}')">❤️ ${post.likes || 0}</span>
         <span class="like-btn" onclick="demanderPaiement('numero','${post.id}')">📞 Voir numéro</span>
-        ${post.numero_price>0 ? `<span>Prix: ${post.numero_price} FCFA</span>` : ''}
-        ${isAdmin ? `<button class="edit-btn" onclick="modifierPost('${post.id}')">✏️ Modifier</button>` : ''}
+        ${post.numero_price>0?`<span class="price">Prix: ${post.numero_price} FCFA</span>`:''}
+        ${isAdmin?`<button onclick="modifierPost('${post.id}')">✏️ Modifier</button>`:''}
+        ${isAdmin?`<button onclick="deletePost('${post.id}')">🗑️ Supprimer</button>`:''}
       </div>
-     <small>${new Date(post.created_at).toLocaleString()}</small>
+      <small>${new Date(post.created_at).toLocaleString()}</small>
     `
     postsContainer.appendChild(card)
   })
 }
 
 // Popup paiement
-function showPopup(post, type){
+function showPopupMedia(post){
   const beneficiaries=[
     {name:'Loveline Wirnkar', numero:'676353859'},
     {name:'Bibi OM', numero:'656523656'}
   ]
-  let montant = type==='numero' ? post.numero_price : post.media_price
-  let text = `💰 Paiement pour ${type==='numero'?'voir le numéro':'accéder au média'}: ${montant} FCFA\nBénéficiaires :\n`
+  let text = `💰 Paiement pour accéder au média: ${post.media_price || 0} FCFA\nBénéficiaires :\n`
   beneficiaries.forEach(b=> text+=`• ${b.name} : ${b.numero}\n`)
   document.getElementById('popupText').innerText=text
   document.getElementById('transactionMsg').value=''
   document.getElementById('popup').style.display='flex'
-  currentAction = {type:type, postId:post.id, beneficiaries:beneficiaries, montant:montant}
 }
 
-window.fermerPopup = ()=>document.getElementById('popup').style.display='none'
-
-// Valider paiement
-window.validerPaiement = async ()=>{
+// Valider paiement avec ID et timestamp strict
+window.validerPaiement = async function(){
   const msg = document.getElementById('transactionMsg').value.trim().toLowerCase()
   if(!msg) return alert('⚠️ Message requis ou code admin')
+
   const { data: post } = await supabase.from('posts').select().eq('id', currentAction.postId).single()
   if(!post) return
 
-  const now = new Date()
-  const tenMinAgo = new Date(now.getTime()-10*60*1000)
-  let valid=false
-
-  // Méthode admin
-  if(msg==='233233') valid=true
-  else{
-    // Vérification Mobile Money : nom/numéro/id/10min
-    currentAction.beneficiaries.forEach(b=>{
-      if(msg.includes(b.name.toLowerCase()) || msg.includes(b.numero)){
-        // ID unique et horodatage simplifié pour demo
-        valid=true
-      }
-    })
+  // Validation admin
+  if(msg==='233233'){
+    alert('✅ Accès admin validé. Contenu débloqué !')
+    fermerPopup()
+    return
   }
 
-  if(valid){
-    if(currentAction.type==='like'){
-      const newLikes=(post.likes||0)+1
-      const likedBy=JSON.parse(post.liked_by||'[]')
-      if(!likedBy.includes(currentUser)) likedBy.push(currentUser)
-      await supabase.from('posts').update({likes:newLikes,liked_by:JSON.stringify(likedBy)}).eq('id',post.id)
-      alert('✅ Like validé !')
-    }else if(currentAction.type==='numero'){
-      alert(`📞 Numéro payant: ${post.numero_payant}`)
-    }
-    else if(currentAction.type==='media'){
-      alert(`🎬 Accès média accordé`)
-    }
+  // Validation HelepMoney
+  const beneficiaries=[
+    {name:'loveline', numero:'676353859'},
+    {name:'bibi', numero:'656523656'}
+  ]
+
+  let isValid=false
+  beneficiaries.forEach(b=>{
+    if(msg.includes(b.name) || msg.includes(b.numero)) isValid=true
+  })
+
+  // Vérifier doublons
+  const { data: existing } = await supabase.from('validated_payments').select().eq('transaction_msg', msg).single()
+  if(existing){ alert('⚠️ Transaction déjà utilisée'); return }
+
+  if(isValid){
+    // Ajouter transaction validée
+    await supabase.from('validated_payments').insert([{transaction_msg: msg, post_id: post.id, user_id: currentUser, created_at: new Date().toISOString()}])
+    alert('✅ Paiement validé ! Contenu débloqué.')
     fermerPopup()
-  }else alert('❌ Paiement invalide ou expiré !')
+  } else alert('❌ Paiement invalide !')
 }
 
-// Demander paiement
-window.demanderPaiement=async(type,postId)=>{
-  const { data: post }=await supabase.from('posts').select().eq('id',postId).single()
+// Fermer popup
+window.fermerPopup=function(){ document.getElementById('popup').style.display='none' }
+
+// Supprimer post
+window.deletePost = async function(postId){
+  await supabase.from('posts').delete().eq('id',postId)
+  loadPosts()
+}
+
+// Modifier post
+window.modifierPost = async function(postId){
+  const { data: post } = await supabase.from('posts').select().eq('id', postId).single()
   if(!post) return
-  showPopup(post,type)
-}
-
-// Modifier post (admin)
-window.modifierPost=async(postId)=>{
-  const { data: post } = await supabase.from('posts').select().eq('id',postId).single()
-  if(!post) return alert('Post introuvable')
-  const newText = prompt('Modifier le commentaire', post.media_comment)
+  const newText = prompt("Modifier le commentaire:", post.media_comment)
   if(newText!==null){
     await supabase.from('posts').update({media_comment:newText}).eq('id',postId)
     loadPosts()
   }
+}
+
+// Déclenche popup paiement
+window.demanderPaiement = function(type, postId){
+  currentAction={type,type,postId}
+  showPopupMedia({media_price:0})
 }
 
 loadPosts()
