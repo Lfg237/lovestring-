@@ -22,16 +22,9 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
 </head>
 <body>
 
-<h1>💋 lovestring agence de rencontre ❤️‍🔥</h1>
-rencontre sérieuses où discrètes kmer piment mariage sugamomy sugadaddy libertin libertine partage ton profil pour multiplier tes chances inscription gratuite pour les filles homme 1000xaf ♥️pour avoir le contact c'est 200 XAF contact Admin où dépôt à loveline wirnkar (momo 676353859) où bibi (OM 656523656)🪔
-<button onclick="window.open('https://lesfacilitateurs.vercel.app', 'black')">
-  acceuil
-</button>,
-<button onclick="window.open('https://chat.whatsapp.com/CqTRJ0vcJelGDZbWPI8yNl', 'black')">
-  groupe WhatsApp 
-</button>
+<h1>💋 lovestring ❤️‍🔥</h1>
 <img id="profilePic" src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/f1dc4576c317909de024794c0b29d5adcab556cf/20250830_035314.jpg" alt="Photo de profil">
-⏳ un instant chargement de la page...
+
 <div id="adminCodeArea">
   <label>🔐 Code admin :</label>
   <input type="password" id="adminCodeInput" placeholder="Code admin...">
@@ -41,6 +34,7 @@ rencontre sérieuses où discrètes kmer piment mariage sugamomy sugadaddy liber
 <div id="publishArea">
   <textarea id="newPostText" placeholder="Écrire un post (sera le commentaire)..."></textarea>
   <input type="text" id="numeroPayant" placeholder="Numéro payant (ex: 676353859)">
+  <input type="number" id="numeroPrice" placeholder="Prix numéro payant (FCFA)">
   <input type="number" id="mediaPrice" placeholder="Prix média (FCFA)">
   <input type="file" id="mediaInput" accept="image/*,video/*,audio/*">
   <button id="btnPublish">Publier</button>
@@ -74,6 +68,7 @@ const publishArea = document.getElementById('publishArea')
 const postsContainer = document.getElementById('postsContainer')
 const mediaInput = document.getElementById('mediaInput')
 const numeroInput = document.getElementById('numeroPayant')
+const numeroPriceInput = document.getElementById('numeroPrice')
 const mediaPriceInput = document.getElementById('mediaPrice')
 
 // Vérification code admin
@@ -92,7 +87,8 @@ document.getElementById('btnPublish').onclick = async () => {
   if(!isAdmin) return alert('Seul l’admin peut publier.')
   const text = document.getElementById('newPostText').value.trim()
   const numero = numeroInput.value.trim()
-  const price = parseInt(mediaPriceInput.value) || 0
+  const numeroPrice = parseInt(numeroPriceInput.value) || 0
+  const mediaPrice = parseInt(mediaPriceInput.value) || 0
   if(!text && !mediaInput.files[0]) return alert('Rien à publier.')
 
   let mediaUrl = null
@@ -112,7 +108,8 @@ document.getElementById('btnPublish').onclick = async () => {
     media_url: mediaUrl,
     media_comment: text,
     numero_payant: numero || '',
-    media_price: price,
+    numero_price: numeroPrice,
+    media_price: mediaPrice,
     likes:0,
     liked_by: JSON.stringify([]),
     created_at: new Date().toISOString()
@@ -121,6 +118,7 @@ document.getElementById('btnPublish').onclick = async () => {
   document.getElementById('newPostText').value=''
   mediaInput.value=''
   numeroInput.value=''
+  numeroPriceInput.value=''
   mediaPriceInput.value=''
   loadPosts()
 }
@@ -141,22 +139,24 @@ async function loadPosts(){
       <b>Commentaire:</b> ${post.media_comment || ''}<br>
       ${media}
       <div style="margin-top:6px;">
-        <span class="like-btn" onclick="demanderPaiement('like','${post.id}')">❤️ ${post.likes||0}</span>
+        <span class="like-btn" onclick="demanderPaiement('like','${post.id}')">❤️ ${post.likes || 0}</span>
         <span class="like-btn" onclick="demanderPaiement('numero','${post.id}')">📞 Voir numéro</span>
-        ${isAdmin?`<button onclick="deletePost('${post.id}')">🗑️</button>`:''}
+        ${post.numero_price > 0 ? `<span class="price">Prix: ${post.numero_price} FCFA</span>` : ''}
+        ${isAdmin ? `<button onclick="deletePost('${post.id}')">🗑️</button>` : ''}
       </div>
-      <small>${new Date(post.created_at).toLocaleString()}</small>
+     <small>${new Date(post.created_at).toLocaleString()}</small>
     `
     postsContainer.appendChild(card)
   })
+
   // Attacher le clic sur les médias pour paiement
-  document.querySelectorAll('video[data-id], audio[data-id], img[data-id]').forEach(el=>{
-    el.onclick = async ()=>{
+  document.querySelectorAll('video[data-id], audio[data-id], img[data-id]').forEach(el => {
+    el.onclick = async () => {
       const postId = el.dataset.id
       const { data: post } = await supabase.from('posts').select().eq('id', postId).single()
-      if(!post) return
-      if(post.media_price>0){
-        currentAction = {type:'media', postId:postId}
+      if (!post) return
+      if (post.media_price > 0) {
+        currentAction = { type: 'media', postId: postId }
         showPopupMedia(post)
       } else {
         openMedia(el, post)
@@ -166,76 +166,50 @@ async function loadPosts(){
 }
 
 // Popup paiement média
-function showPopupMedia(post){
-  const beneficiaries=[
-    {name:'Loveline Wirnkar', numero:'676353859'},
-    {name:'Bibi OM', numero:'656523656'}
+function showPopupMedia(post) {
+  const beneficiaries = [
+    { name: 'Loveline Wirnkar', numero: '676353859' },
+    { name: 'Bibi OM', numero: '656523656' }
   ]
   let text = `💰 Paiement pour accéder au média: ${post.media_price} FCFA\nBénéficiaires HelepMoney :\n`
-  beneficiaries.forEach(b=> text+=`• ${b.name} : ${b.numero}\n`)
-  document.getElementById('popupText').innerText=text
-  document.getElementById('transactionMsg').value=''
-  document.getElementById('popup').style.display='flex'
-}
-
-// Vérification locale du paiement (message MoMo)
-function verifierPaiementLocal(msg, post){
-    msg = msg.toLowerCase();
-    const beneficiaries = ['loveline kinyuy wirnkar','bibi om'];
-    const montantAttendu = post.media_price || 0;
-
-    // Vérifie bénéficiaire
-    const beneficiaireValide = beneficiaries.some(name => msg.includes(name.toLowerCase()));
-
-    // Vérifie montant
-    const montantMatch = msg.match(/transfert de (\d+)\s*fcfa/i);
-    const montantValide = montantMatch && parseInt(montantMatch[1]) === montantAttendu;
-
-    // Vérifie date récente (aujourd'hui)
-    const dateMatch = msg.match(/le (\d{4}-\d{2}-\d{2})/i);
-    let dateValide = true;
-    if(dateMatch){
-        const msgDate = new Date(dateMatch[1]);
-        const now = new Date();
-        dateValide = msgDate.toDateString() === now.toDateString();
-    }
-
-    return beneficiaireValide && montantValide && dateValide;
+  beneficiaries.forEach(b => text += `• ${b.name} : ${b.numero}\n`)
+  document.getElementById('popupText').innerText = text
+  document.getElementById('transactionMsg').value = ''
+  document.getElementById('popup').style.display = 'flex'
 }
 
 // Valider paiement
-window.validerPaiement = async function(){
-  const msg = document.getElementById('transactionMsg').value.trim()
-  if(!msg) return alert('⚠️ Message requis ou code admin')
+window.validerPaiement = async function () {
+  const msg = document.getElementById('transactionMsg').value.trim().toLowerCase()
+  if (!msg) return alert('⚠️ Message requis ou code admin')
 
   const { data: post } = await supabase.from('posts').select().eq('id', currentAction.postId).single()
-  if(!post) return
+  if (!post) return
 
-  // Code admin toujours valide
-  if(msg==='233233' || verifierPaiementLocal(msg, post)){
-    if(currentAction.type==='like'){
-      const newLikes = (post.likes||0)+1
+  if (msg === '233233' || msg.includes('loveline') || msg.includes('bibi')) {
+    if (currentAction.type === 'like') {
+      const newLikes = (post.likes || 0) + 1
       const likedByArray = JSON.parse(post.liked_by || '[]')
-      if(!likedByArray.includes(currentUser)) likedByArray.push(currentUser)
-      await supabase.from('posts').update({likes:newLikes, liked_by:JSON.stringify(likedByArray)}).eq('id',post.id)
+      if (!likedByArray.includes(currentUser)) likedByArray.push(currentUser)
+      await supabase.from('posts').update({ likes: newLikes, liked_by: JSON.stringify(likedByArray) }).eq('id', post.id)
       alert('✅ Like validé !')
-    } else if(currentAction.type==='numero'){
+    } else if (currentAction.type === 'numero') {
       alert(`📞 Numéro payant: ${post.numero_payant}`)
-    } else if(currentAction.type==='media'){
+    } else if (currentAction.type === 'media') {
       const el = document.querySelector(`[data-id="${post.id}"]`)
       openMedia(el, post)
     }
     fermerPopup()
-  } else alert('❌ Paiement invalide ou ancien message !')
+  } else alert('❌ Paiement invalide !')
 }
 
-function openMedia(el, post){
-  if(!el) return
-  if(post.media_url.endsWith('.mp4')){
+function openMedia(el, post) {
+  if (!el) return
+  if (post.media_url.endsWith('.mp4')) {
     el.src = post.media_url
     el.controls = true
     el.autoplay = true
-  } else if(post.media_url.endsWith('.mp3') || post.media_url.endsWith('.wav')){
+  } else if (post.media_url.endsWith('.mp3') || post.media_url.endsWith('.wav')) {
     el.src = post.media_url
     el.controls = true
     el.autoplay = true
@@ -245,21 +219,12 @@ function openMedia(el, post){
 }
 
 // Fermer popup
-window.fermerPopup = function(){ document.getElementById('popup').style.display='none' }
+window.fermerPopup = function () { document.getElementById('popup').style.display = 'none' }
 
 // Supprimer post (admin)
-window.deletePost = async function(postId){
+window.deletePost = async function (postId) {
   await supabase.from('posts').delete().eq('id', postId)
   loadPosts()
-}
-
-// Paiement like, numéro ou média
-window.demanderPaiement = function(type, postId){
-  currentAction={type, postId}
-  const { data: post } = supabase.from('posts').select().eq('id', postId)
-  document.getElementById('popupText').innerText = type==='like' ? '💰 dépôt a loveline wirnkar momo 676353859 bibi OM 656523656 pour liker ce post.' : '💰 dépôt a loveline wirnkar momo 676353859 bibi OM 656523656 pour voir le numéro 200xaf.'
-  document.getElementById('transactionMsg').value=''
-  document.getElementById('popup').style.display='flex'
 }
 
 loadPosts()
