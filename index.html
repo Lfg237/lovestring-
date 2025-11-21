@@ -12,8 +12,8 @@ h1{text-align:center; color:#4ea1ff;}
 button{background:#0044cc; color:white; border:none; border-radius:8px; padding:8px 12px; cursor:pointer;}
 button:hover{background:#0059ff;}
 .like-btn{cursor:pointer; color:#ff4d6d; font-weight:bold; margin-right:8px;}
-#popup{display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:100;}
-#popup .popup-content{background:#1a2438; border-radius:15px; padding:20px; text-align:center; max-width:320px;}
+#popup, #popupNum{display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:100;}
+.popup-content{background:#1a2438; border-radius:15px; padding:20px; text-align:center; max-width:320px;}
 #publishArea{display:none; flex-direction:column; gap:8px; margin-bottom:15px; background:#11192a; padding:10px; border-radius:12px;}
 input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2a3b57; border-radius:8px; padding:8px;}
 #profilePic{display:block; margin:0 auto 10px; max-width:150px; border-radius:50%;}
@@ -24,10 +24,9 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
 
 <h1>💋 lovestring ❤️‍🔥</h1>
 <img id="profilePic" src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/f1dc4576c317909de024794c0b29d5adcab556cf/20250830_035314.jpg" alt="Photo de profil">
-agence de rencontres discretes serieuses 100%237 fiable mise en contact payante free
-<button onclick="window.open('https://lesfacilitateurs.vercel.app/index.html', '_blank')">
-  accueil 
-</button>
+agence de rencontres discrètes sérieuses 100% fiable mise en contact payante
+<button onclick="window.open('https://lesfacilitateurs.vercel.app/index.html', '_blank')">Accueil</button>
+
 <div id="adminCodeArea">
   <label>🔐 Code admin :</label>
   <input type="password" id="adminCodeInput" placeholder="Code admin...">
@@ -45,13 +44,23 @@ agence de rencontres discretes serieuses 100%237 fiable mise en contact payante 
 
 <div id="postsContainer"></div>
 
-<div id="popup">
+<!-- Popup général paiement / médias -->
+<div id="popup" class="popup">
   <div class="popup-content">
-    <h3>💰 HelepMoney</h3>
+    <h3>💰 Paiement requis</h3>
     <p id="popupText"></p>
     <textarea id="transactionMsg" rows="4" placeholder="Colle ici ton message de transaction ou code admin"></textarea>
     <button onclick="validerPaiement()">✅ Valider</button>
     <button onclick="fermerPopup()">❌ Annuler</button>
+  </div>
+</div>
+
+<!-- Popup numéro -->
+<div id="popupNum" class="popup">
+  <div class="popup-content">
+    <h3>📞 Numéro débloqué</h3>
+    <p id="popupNumText"></p>
+    <button onclick="fermerPopupNum()">❌ Fermer</button>
   </div>
 </div>
 
@@ -131,21 +140,37 @@ async function loadPosts(){
   postsContainer.innerHTML=''
   const { data: posts } = await supabase.from('posts').select().order('created_at',{ascending:false})
   if(!posts || posts.length===0){postsContainer.innerHTML='<i>Aucun post disponible</i>'; return;}
-  posts.forEach(post=>{
-    const media = post.media_url
-      ? (post.media_url.endsWith('.mp4') ? `<video data-id="${post.id}" style="max-width:100%; border-radius:10px; margin-top:8px; cursor:pointer;" preload="metadata"></video>` 
-         : post.media_url.endsWith('.mp3') || post.media_url.endsWith('.wav') ? `<audio data-id="${post.id}" style="max-width:100%; border-radius:10px; margin-top:8px; cursor:pointer;" preload="metadata"></audio>` 
-         : `<img data-id="${post.id}" src="${post.media_url}" style="cursor:pointer;">`)
-      : ''
+  
+  posts.forEach(async post=>{
+    // Vérifier si l'utilisateur a payé
+    const { data: payment } = await supabase.from('validated_payments')
+      .select().eq('post_id', post.id).eq('user_id', currentUser).maybeSingle()
+    const hasPaid = payment!==null || isAdmin
+
+    // Média affiché normalement
+    let mediaHTML = ''
+    if(post.media_url){
+      const type = post.media_url.split('.').pop().toLowerCase()
+      if(type==='mp4'){
+        mediaHTML = `<video src="${post.media_url}" style="max-width:100%; border-radius:10px; margin-top:8px; cursor:pointer;" ${hasPaid?'controls':''} onclick="!${hasPaid}?demanderPaiement('media','${post.id}'):null"></video>`
+      } else if(type==='mp3' || type==='wav'){
+        mediaHTML = `<audio src="${post.media_url}" style="width:100%;" ${hasPaid?'controls':''} onclick="!${hasPaid}?demanderPaiement('media','${post.id}'):null"></audio>`
+      } else {
+        mediaHTML = `<img src="${post.media_url}" style="width:100%; cursor:pointer;" onclick="!${hasPaid}?demanderPaiement('media','${post.id}'):null">`
+      }
+    }
+
+    const numeroHTML = post.numero_payant ? 
+      (hasPaid ? `<span class="price">Numéro débloqué</span>` 
+       : `<span class="like-btn" onclick="demanderPaiement('numero','${post.id}')">📞 Voir numéro</span> <span class="price">${post.numero_price} FCFA</span>`) : ''
+
     const card = document.createElement('div')
     card.className='cardFlyer'
     card.innerHTML=`
       <b>Commentaire:</b> ${post.media_comment || ''}<br>
-      ${media}
+      ${mediaHTML}
       <div style="margin-top:6px;">
-        <span class="like-btn" onclick="demanderPaiement('like','${post.id}')">❤️ ${post.likes || 0}</span>
-        <span class="like-btn" onclick="demanderPaiement('numero','${post.id}')">📞 Voir numéro</span>
-        ${post.numero_price>0?`<span class="price">Prix: ${post.numero_price} FCFA</span>`:''}
+        ${numeroHTML}
         ${isAdmin?`<button onclick="modifierPost('${post.id}')">✏️ Modifier</button>`:''}
         ${isAdmin?`<button onclick="deletePost('${post.id}')">🗑️ Supprimer</button>`:''}
       </div>
@@ -155,20 +180,20 @@ async function loadPosts(){
   })
 }
 
-// Popup paiement
+// Popup paiement général
 function showPopupMedia(post){
   const beneficiaries=[
     {name:'Loveline Wirnkar', numero:'676353859'},
     {name:'Bibi OM', numero:'656523656'}
   ]
-  let text = `💰 Paiement pour accéder au média: ${post.media_price || 0} FCFA\nBénéficiaires :\n`
+  let text = `💰 Paiement requis\nMédia ou numéro payant\nBénéficiaires :\n`
   beneficiaries.forEach(b=> text+=`• ${b.name} : ${b.numero}\n`)
   document.getElementById('popupText').innerText=text
   document.getElementById('transactionMsg').value=''
   document.getElementById('popup').style.display='flex'
 }
 
-// Valider paiement avec ID et timestamp strict
+// Validation paiement
 window.validerPaiement = async function(){
   const msg = document.getElementById('transactionMsg').value.trim().toLowerCase()
   if(!msg) return alert('⚠️ Message requis ou code admin')
@@ -176,52 +201,67 @@ window.validerPaiement = async function(){
   const { data: post } = await supabase.from('posts').select().eq('id', currentAction.postId).single()
   if(!post) return
 
-  // Validation admin
+  // Admin débloque tout
   if(msg==='233233'){
-    alert('✅ Accès admin validé. Contenu débloqué !')
+    alert('✅ Accès admin validé ! Contenu débloqué.')
+    if(currentAction.type==='numero') showNumeroPopup(post.numero_payant)
     fermerPopup()
+    loadPosts()
     return
   }
 
-  // Validation HelepMoney
+  // Validation mobile money
   const beneficiaries=[
     {name:'loveline', numero:'676353859'},
     {name:'bibi', numero:'656523656'}
   ]
-
-  let isValid=false
-  beneficiaries.forEach(b=>{
-    if(msg.includes(b.name) || msg.includes(b.numero)) isValid=true
-  })
-
-  // Vérifier doublons
+  let valid=false
+  beneficiaries.forEach(b=>{ if(msg.includes(b.name) || msg.includes(b.numero)) valid=true })
   const { data: existing } = await supabase.from('validated_payments').select().eq('transaction_msg', msg).single()
   if(existing){ alert('⚠️ Transaction déjà utilisée'); return }
 
-  if(isValid){
-    // Ajouter transaction validée
+  if(valid){
     await supabase.from('validated_payments').insert([{transaction_msg: msg, post_id: post.id, user_id: currentUser, created_at: new Date().toISOString()}])
-    alert('✅ Paiement validé ! Contenu débloqué.')
+    alert('✅ Paiement validé !')
+    if(currentAction.type==='numero') showNumeroPopup(post.numero_payant)
     fermerPopup()
+    loadPosts()
   } else alert('❌ Paiement invalide !')
 }
 
-// Fermer popup
-window.fermerPopup=function(){ document.getElementById('popup').style.display='none' }
+// Popup numéro
+function showNumeroPopup(numero){
+  document.getElementById('popupNumText').innerText = numero
+  document.getElementById('popupNum').style.display='flex'
+}
+window.fermerPopup = function(){ document.getElementById('popup').style.display='none' }
+window.fermerPopupNum = function(){ document.getElementById('popupNum').style.display='none' }
 
-// Supprimer post
+// Supprimer / modifier
 window.deletePost = async function(postId){
   await supabase.from('posts').delete().eq('id',postId)
   loadPosts()
 }
-
-// Modifier post
 window.modifierPost = async function(postId){
   const { data: post } = await supabase.from('posts').select().eq('id', postId).single()
   if(!post) return
+
+  // Modifier tout le post via prompts
   const newText = prompt("Modifier le commentaire:", post.media_comment)
-  if(newText!==null){
-    await supabase.from('posts').update({media_comment:newText}).eq('id',postId)
+  const newNumero = prompt("Modifier le numéro payant:", post.numero_payant)
+  const newNumeroPrice = prompt("Modifier le prix du numéro (FCFA):", post.numero_price)
+  const newMediaPrice = prompt("Modifier le prix du média (FCFA):", post.media_price)
+  const newMediaUrl = prompt("Modifier le lien média (laisser vide si inchangé):", post.media_url)
+
+  if(newText!==null && newNumero!==null && newNumeroPrice!==null && newMediaPrice!==null && newMediaUrl!==null){
+    await supabase.from('posts').update({
+      media_comment: newText,
+      numero_payant: newNumero,
+      numero_price: parseInt(newNumeroPrice)||0,
+      media_price: parseInt(newMediaPrice)||0,
+      media_url: newMediaUrl
+    }).eq('id', postId)
+
     loadPosts()
   }
 }
