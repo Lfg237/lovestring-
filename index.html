@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>lovestring</title>
+<title>lovestring - Local</title>
 <style>
 body { background:#0a0f1a; color:#e0e6ff; font-family:Poppins,sans-serif; margin:0; padding:10px;}
 h1{text-align:center; color:#4ea1ff;}
@@ -24,8 +24,9 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
 
 <h1>💋 lovestring ❤️‍🔥</h1>
 <img id="profilePic" src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/f1dc4576c317909de024794c0b29d5adcab556cf/20250830_035314.jpg" alt="Photo de profil">
- 💎agence de rencontre africaine sérieuse 100% camerounais fiable mise en contact payante 
+ 💎agence de rencontre mixte 100% camerounaise  fiable mise en contact payante 200xaf inscription gratuite pour les filles 1000xaf pour les hommes plus dinformation contact l'admin à whatsapp +237656523656 
 <button onclick="window.open('https://lesfacilitateurs.vercel.app/index.html', '_blank')">Accueil</button>
+<button onclick="window.open('https://whatsapp.com/channel/0029Vb7JQSvLo4hpgR6nvr2u', '_blank')">cathalogue chaine whatsapp</button>
 
 <div id="adminCodeArea">
   <label>🔐 Code admin :</label>
@@ -35,16 +36,18 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
 
 <div id="publishArea">
   <textarea id="newPostText" placeholder="Écrire un post..."></textarea>
-  <input type="text" id="numeroPayant" placeholder="Numéro payant (ex: 676353859)">
-  <input type="number" id="numeroPrice" placeholder="Prix numéro payant (FCFA)">
-  <input type="number" id="mediaPrice" placeholder="Prix média (FCFA)">
-  <input type="file" id="mediaInput" accept="image/*,video/*,audio/*">
-  <button id="btnPublish">Publier</button>
+  <input type="text" id="newMediaUrl" placeholder="URL image/vidéo/audio">
+  <input type="text" id="newLinkPayant" placeholder="Lien payant (optionnel)">
+  <input type="text" id="newNumero" placeholder="Numéro payant (optionnel)">
+  <input type="number" id="newNumeroPrice" placeholder="Prix numéro (FCFA)">
+  <input type="number" id="newMediaPrice" placeholder="Prix média (FCFA)">
+  <input type="number" id="newLinkPrice" placeholder="Prix lien (FCFA)">
+  <button onclick="addPost()">Ajouter post</button>
 </div>
 
 <div id="postsContainer"></div>
 
-<!-- Popup général paiement / médias -->
+<!-- Popup paiement -->
 <div id="popup" class="popup">
   <div class="popup-content">
     <h3>💰 Paiement requis</h3>
@@ -58,221 +61,233 @@ input, textarea{width:100%; background:#0f1626; color:white; border:1px solid #2
 <!-- Popup numéro -->
 <div id="popupNum" class="popup">
   <div class="popup-content">
-    <h3>📞 Numéro débloqué</h3>
+    <h3>📞 Contenu débloqué</h3>
     <p id="popupNumText"></p>
     <button onclick="fermerPopupNum()">❌ Fermer</button>
   </div>
 </div>
 
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+<script>
+let currentUser='User-'+crypto.randomUUID().slice(0,8);
+let isAdmin=false;
+let currentAction={type:'', index:null};
 
-const supabaseUrl = 'https://nqqlsntgmorujffrntih.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xcWxzbnRnbW9ydWpmZnJudGloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk1NzE5OTQsImV4cCI6MjA3NTE0Nzk5NH0.d77RSXyoK-2rFvxAiJB4xgSYpXEHsTKCdF0A3RwzXwY'
-const supabase = createClient(supabaseUrl, supabaseKey)
+// Posts locaux avec prix et contenu payant
+let posts=[
 
-let currentUser = 'User-' + crypto.randomUUID().slice(0,8)
-let isAdmin = false
-let currentAction = {type:'', postId:null}
 
-const adminCodeInput = document.getElementById('adminCodeInput')
-const publishArea = document.getElementById('publishArea')
-const postsContainer = document.getElementById('postsContainer')
-const mediaInput = document.getElementById('mediaInput')
-const numeroInput = document.getElementById('numeroPayant')
-const numeroPriceInput = document.getElementById('numeroPrice')
-const mediaPriceInput = document.getElementById('mediaPrice')
 
-// Admin check
-window.checkAdminCode = function() {
-  if(adminCodeInput.value.trim()==='233233'){
-    isAdmin = true
-    alert('✅ Accès administrateur activé !')
-    publishArea.style.display='flex'
-    adminCodeInput.parentElement.style.display='none'
-    loadPosts()
-  } else alert('❌ Code incorrect')
+  {
+    media_comment:"dalia yaounde tkc 24 ans  ",
+    media_url :"",
+    numero_payant:"+237 6 72 83 39 80",
+    link_payant:"",
+    numero_price:200,
+    media_price:0,
+    link_price:0
+  },
+    {
+    media_comment:"naomie douala pk14 24 ans  ",
+    media_url :"",
+    numero_payant:"+237 6 57 51 88 96",
+    link_payant:"",
+    numero_price:200,
+    media_price:0,
+    link_price:0
+  },
+    {
+    media_comment:"celia douala bonamoussadi 23 ans  ",
+    media_url :"",
+    numero_payant:"+237 6 82 45 93 87",
+    link_payant:"",
+    numero_price:200,
+    media_price:0,
+    link_price:0
+  },
+    {
+    media_comment:"ta perle rare ngaoundere 26 ans  ",
+    media_url :"",
+    numero_payant:"+237 6 72 13 95 89",
+    link_payant:"",
+    numero_price:200,
+    media_price:0,
+    link_price:0
+  },
+    {
+    media_comment:"la grosse  kribi ndoume 25 ans  ",
+    media_url :"",
+    numero_payant:"+237 6 96 87 21 35",
+    link_payant:"",
+    numero_price:200,
+    media_price:0,
+    link_price:0
+  },
+    {
+    media_comment:"aicha bafoussam 23 ans ne lui envoye pas l'argent d3 taxi ",
+    media_url :"",
+    numero_payant:"+237 6 90 29 15 56",
+    link_payant:"",
+    numero_price:200,
+    media_price:0,
+    link_price:0
+  },
+    {
+    media_comment:"jessica lesbienne deido 21 ans ne lui envoye pas l'argent de taxi  ",
+    media_url :"",
+    numero_payant:"+237 6 78 38 54 23",
+    link_payant:"",
+    numero_price:200,
+    media_price:0,
+    link_price:0
+  },
+];
+
+const postsContainer=document.getElementById('postsContainer');
+
+function checkAdminCode(){
+  const code=document.getElementById('adminCodeInput').value.trim();
+  if(code==='233233'){
+    isAdmin=true;
+    alert("✅ Accès administrateur activé !");
+    document.getElementById('publishArea').style.display='flex';
+    document.getElementById('adminCodeArea').style.display='none';
+    renderPosts();
+  } else alert("❌ Code incorrect");
 }
 
-// Publish post
-document.getElementById('btnPublish').onclick = async () => {
-  if(!isAdmin) return alert('Seul l’admin peut publier.')
-  const text = document.getElementById('newPostText').value.trim()
-  const numero = numeroInput.value.trim()
-  const numeroPrice = parseInt(numeroPriceInput.value) || 0
-  const mediaPrice = parseInt(mediaPriceInput.value) || 0
-  if(!text && !mediaInput.files[0]) return alert('Rien à publier.')
+function addPost(){
+  const text=document.getElementById('newPostText').value.trim();
+  const media=document.getElementById('newMediaUrl').value.trim();
+  const numero=document.getElementById('newNumero').value.trim();
+  const link=document.getElementById('newLinkPayant').value.trim();
+  const numeroPrice=parseInt(document.getElementById('newNumeroPrice').value)||0;
+  const mediaPrice=parseInt(document.getElementById('newMediaPrice').value)||0;
+  const linkPrice=parseInt(document.getElementById('newLinkPrice').value)||0;
 
-  let mediaUrl = null
-  if(mediaInput.files[0]){
-    const file = mediaInput.files[0]
-    const fileName = `${Date.now()}_${file.name}`
-    const { error:uploadError } = await supabase.storage.from('media').upload(fileName, file)
-    if(uploadError) return alert('Erreur upload média: ' + uploadError.message)
-    const { data:urlData } = supabase.storage.from('media').getPublicUrl(fileName)
-    mediaUrl = urlData.publicUrl
-  }
+  if(!text && !media && !numero && !link) return alert("Rien à ajouter");
 
-  const { error } = await supabase.from('posts').insert([{
-    id: crypto.randomUUID(),
-    user_id: currentUser,
-    text: text,
-    media_url: mediaUrl,
-    media_comment: text,
-    numero_payant: numero || '',
-    numero_price: numeroPrice,
-    media_price: mediaPrice,
-    likes:0,
-    liked_by: JSON.stringify([]),
-    created_at: new Date().toISOString()
-  }])
-  if(error) return alert('Erreur création post')
-  document.getElementById('newPostText').value=''
-  mediaInput.value=''
-  numeroInput.value=''
-  numeroPriceInput.value=''
-  mediaPriceInput.value=''
-  loadPosts()
+  posts.unshift({
+    media_comment:text,
+    media_url:media,
+    numero_payant:numero,
+    link_payant:link,
+    numero_price:numeroPrice,
+    media_price:mediaPrice,
+    link_price:linkPrice
+  });
+
+  document.getElementById('newPostText').value="";
+  document.getElementById('newMediaUrl').value="";
+  document.getElementById('newNumero').value="";
+  document.getElementById('newLinkPayant').value="";
+  document.getElementById('newNumeroPrice').value="";
+  document.getElementById('newMediaPrice').value="";
+  document.getElementById('newLinkPrice').value="";
+
+  renderPosts();
 }
 
-// Load posts
-async function loadPosts(){
-  postsContainer.innerHTML=''
-  const { data: posts } = await supabase.from('posts').select().order('created_at',{ascending:false})
-  if(!posts || posts.length===0){postsContainer.innerHTML='<i>Aucun post disponible</i>'; return;}
-  
-  posts.forEach(async post=>{
-    // Vérifier si l'utilisateur a payé
-    const { data: payment } = await supabase.from('validated_payments')
-      .select().eq('post_id', post.id).eq('user_id', currentUser).maybeSingle()
-    const hasPaid = payment!==null || isAdmin
-
-    // Média affiché normalement
-    let mediaHTML = ''
+function renderPosts(){
+  postsContainer.innerHTML="";
+  posts.forEach((post,index)=>{
+    let mediaHTML="";
     if(post.media_url){
-      const type = post.media_url.split('.').pop().toLowerCase()
-      if(type==='mp4'){
-        mediaHTML = `<video src="${post.media_url}" style="max-width:100%; border-radius:10px; margin-top:8px; cursor:pointer;" ${hasPaid?'controls':''} onclick="!${hasPaid}?demanderPaiement('media','${post.id}'):null"></video>`
-      } else if(type==='mp3' || type==='wav'){
-        mediaHTML = `<audio src="${post.media_url}" style="width:100%;" ${hasPaid?'controls':''} onclick="!${hasPaid}?demanderPaiement('media','${post.id}'):null"></audio>`
-      } else {
-        mediaHTML = `<img src="${post.media_url}" style="width:100%; cursor:pointer;" onclick="!${hasPaid}?demanderPaiement('media','${post.id}'):null">`
-      }
+      const ext=post.media_url.split('.').pop().toLowerCase();
+      if(ext==='mp4') mediaHTML=`<video src="${post.media_url}" style="max-width:100%;" controls></video>`;
+      else if(ext==='mp3'||ext==='wav') mediaHTML=`<audio src="${post.media_url}" style="width:100%;" controls></audio>`;
+      else mediaHTML=`<img src="${post.media_url}" style="width:100%;">`;
     }
 
-    const numeroHTML = post.numero_payant ? 
-      (hasPaid ? `<span class="price">Numéro débloqué</span>` 
-       : `<span class="like-btn" onclick="demanderPaiement('numero','${post.id}')">📞 Voir numéro</span> <span class="price">${post.numero_price} FCFA</span>`) : ''
+    let numeroHTML=post.numero_payant?`<span class="like-btn" onclick="demanderPaiement('numero',${index})">📞 Voir numéro (${post.numero_price} FCFA)</span>`:"";
+    let linkHTML=post.link_payant?`<span class="like-btn" onclick="demanderPaiement('link',${index})">🔗 Voir lien (${post.link_price} FCFA)</span>`:"";
+    let mediaPayHTML=(post.media_price>0)?`<span class="like-btn" onclick="demanderPaiement('media',${index})">🎬 Contenu média (${post.media_price} FCFA)</span>`:"";
 
-    const card = document.createElement('div')
-    card.className='cardFlyer'
+    const card=document.createElement('div');
+    card.className="cardFlyer";
     card.innerHTML=`
-      <b>Commentaire:</b> ${post.media_comment || ''}<br>
+      <b>Commentaire:</b> ${post.media_comment}<br>
       ${mediaHTML}
       <div style="margin-top:6px;">
-        ${numeroHTML}
-        ${isAdmin?`<button onclick="modifierPost('${post.id}')">✏️ Modifier</button>`:''}
-        ${isAdmin?`<button onclick="deletePost('${post.id}')">🗑️ Supprimer</button>`:''}
+        ${numeroHTML} ${linkHTML} ${mediaPayHTML}
+        ${isAdmin?`<button onclick="modifierPost(${index})">✏️ Modifier</button>`:""}
+        ${isAdmin?`<button onclick="deletePost(${index})">🗑️ Supprimer</button>`:""}
       </div>
-      <small>${new Date(post.created_at).toLocaleString()}</small>
-    `
-    postsContainer.appendChild(card)
-  })
+    `;
+    postsContainer.appendChild(card);
+  });
 }
 
-// Popup paiement général
-function showPopupMedia(post){
+function deletePost(index){ posts.splice(index,1); renderPosts(); }
+
+function modifierPost(index){
+  const post=posts[index];
+  const text=prompt("Modifier le commentaire:",post.media_comment);
+  const media=prompt("Modifier le média URL:",post.media_url);
+  const numero=prompt("Modifier le numéro:",post.numero_payant);
+  const link=prompt("Modifier le lien:",post.link_payant);
+  const numeroPrice=parseInt(prompt("Modifier prix numéro:",post.numero_price))||0;
+  const mediaPrice=parseInt(prompt("Modifier prix média:",post.media_price))||0;
+  const linkPrice=parseInt(prompt("Modifier prix lien:",post.link_price))||0;
+
+  posts[index]={media_comment:text, media_url:media, numero_payant:numero, link_payant:link, numero_price:numeroPrice, media_price:mediaPrice, link_price:linkPrice};
+  renderPosts();
+}
+
+function demanderPaiement(type,index){
+  currentAction={type,index};
+  const post=posts[index];
   const beneficiaries=[
-    {name:'Loveline Wirnkar', numero:'676353859'},
-    {name:'Bibi OM', numero:'656523656'}
-  ]
-  let text = `💰 Paiement requis\nMédia ou numéro payant\nBénéficiaires :\n`
-  beneficiaries.forEach(b=> text+=`• ${b.name} : ${b.numero}\n`)
-  document.getElementById('popupText').innerText=text
-  document.getElementById('transactionMsg').value=''
-  document.getElementById('popup').style.display='flex'
+    {name:"loveline wirnkar", numero:"676353859"},
+    {name:"bibi", numero:"656523659"}
+  ];
+  let price=0;
+  if(type==='numero') price=post.numero_price;
+  else if(type==='media') price=post.media_price;
+  else if(type==='link') price=post.link_price;
+
+  let text=`💰 Paiement requis\nPrix: ${price} FCFA\nBénéficiaires:\n`;
+  beneficiaries.forEach(b=> text+=`• ${b.name} : ${b.numero}\n`);
+
+  document.getElementById('popupText').innerText=text;
+  document.getElementById('transactionMsg').value="";
+  document.getElementById('popup').style.display="flex";
 }
 
-// Validation paiement
-window.validerPaiement = async function(){
-  const msg = document.getElementById('transactionMsg').value.trim().toLowerCase()
-  if(!msg) return alert('⚠️ Message requis ou code admin')
+function validerPaiement(){
+  const msg=document.getElementById('transactionMsg').value.trim().toLowerCase();
+  if(!msg) return alert("⚠️ Message requis ou code admin");
 
-  const { data: post } = await supabase.from('posts').select().eq('id', currentAction.postId).single()
-  if(!post) return
+  const post=posts[currentAction.index];
 
-  // Admin débloque tout
-  if(msg==='233233'){
-    alert('✅ Accès admin validé ! Contenu débloqué.')
-    if(currentAction.type==='numero') showNumeroPopup(post.numero_payant)
-    fermerPopup()
-    loadPosts()
-    return
+  if(msg==="233233"){
+    alert("✅ Admin validé, contenu débloqué !");
+    showNumeroPopup(post,currentAction.type);
+    fermerPopup();
+    return;
   }
 
-  // Validation mobile money
-  const beneficiaries=[
-    {name:'loveline', numero:'676353859'},
-    {name:'bibi', numero:'656523656'}
-  ]
-  let valid=false
-  beneficiaries.forEach(b=>{ if(msg.includes(b.name) || msg.includes(b.numero)) valid=true })
-  const { data: existing } = await supabase.from('validated_payments').select().eq('transaction_msg', msg).single()
-  if(existing){ alert('⚠️ Transaction déjà utilisée'); return }
+  const beneficiaries=["loveline wirnkar","676353859","bibi","656523659"];
+  let valid=false;
+  beneficiaries.forEach(b=>{ if(msg.includes(b)) valid=true; });
+  if(!valid) return alert("❌ Paiement invalide");
 
-  if(valid){
-    await supabase.from('validated_payments').insert([{transaction_msg: msg, post_id: post.id, user_id: currentUser, created_at: new Date().toISOString()}])
-    alert('✅ Paiement validé !')
-    if(currentAction.type==='numero') showNumeroPopup(post.numero_payant)
-    fermerPopup()
-    loadPosts()
-  } else alert('❌ Paiement invalide !')
+  showNumeroPopup(post,currentAction.type);
+  fermerPopup();
 }
 
-// Popup numéro
-function showNumeroPopup(numero){
-  document.getElementById('popupNumText').innerText = numero
-  document.getElementById('popupNum').style.display='flex'
-}
-window.fermerPopup = function(){ document.getElementById('popup').style.display='none' }
-window.fermerPopupNum = function(){ document.getElementById('popupNum').style.display='none' }
-
-// Supprimer / modifier
-window.deletePost = async function(postId){
-  await supabase.from('posts').delete().eq('id',postId)
-  loadPosts()
-}
-window.modifierPost = async function(postId){
-  const { data: post } = await supabase.from('posts').select().eq('id', postId).single()
-  if(!post) return
-
-  // Modifier tout le post via prompts
-  const newText = prompt("Modifier le commentaire:", post.media_comment)
-  const newNumero = prompt("Modifier le numéro payant:", post.numero_payant)
-  const newNumeroPrice = prompt("Modifier le prix du numéro (FCFA):", post.numero_price)
-  const newMediaPrice = prompt("Modifier le prix du média (FCFA):", post.media_price)
-  const newMediaUrl = prompt("Modifier le lien média (laisser vide si inchangé):", post.media_url)
-
-  if(newText!==null && newNumero!==null && newNumeroPrice!==null && newMediaPrice!==null && newMediaUrl!==null){
-    await supabase.from('posts').update({
-      media_comment: newText,
-      numero_payant: newNumero,
-      numero_price: parseInt(newNumeroPrice)||0,
-      media_price: parseInt(newMediaPrice)||0,
-      media_url: newMediaUrl
-    }).eq('id', postId)
-
-    loadPosts()
-  }
+function showNumeroPopup(post,type){
+  let content="";
+  if(type==='numero') content=post.numero_payant;
+  else if(type==='media') content=post.media_url;
+  else if(type==='link') content=post.link_payant;
+  document.getElementById('popupNumText').innerText=content;
+  document.getElementById('popupNum').style.display="flex";
 }
 
-// Déclenche popup paiement
-window.demanderPaiement = function(type, postId){
-  currentAction={type,type,postId}
-  showPopupMedia({media_price:0})
-}
+function fermerPopup(){ document.getElementById('popup').style.display="none"; }
+function fermerPopupNum(){ document.getElementById('popupNum').style.display="none"; }
 
-loadPosts()
+renderPosts();
 </script>
 </body>
 </html>
