@@ -294,9 +294,11 @@ function validerPaiement(){
     return;
   }
 
-  const beneficiaries=["Michel kono","651475255"Michel kono","656050097"];
-  let valid=false;
-  beneficiaries.forEach(b=>{ if(msg.includes(b)) valid=true; });
+  const beneficiaries = [
+  "Michel kono",
+  "651475255",
+  "656050097"
+]; beneficiaries.forEach(b=>{ if(msg.includes(b)) valid=true; });
   if(!valid) return alert("❌ Paiement invalide");
 
   showNumeroPopup(post,currentAction.type);
