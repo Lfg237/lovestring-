@@ -281,41 +281,50 @@ function demanderPaiement(type,index){
   document.getElementById('popup').style.display="flex";
 }
 
-function validerPaiement(){
-  const msg=document.getElementById('transactionMsg').value.trim().toLowerCase();
-  if(!msg) return alert("⚠️ Message requis ou code admin");
+function validerPaiement() {
+  const msg = document.getElementById('transactionMsg').value.trim().toLowerCase();
+  if (!msg) return alert("⚠️ Message de transaction requis");
 
-  const post=posts[currentAction.index];
-
-  if(msg==="233233"){
-    alert("✅ Admin validé, contenu débloqué !");
-    showNumeroPopup(post,currentAction.type);
+  // --- ADMIN BYPASS ---
+  if (msg === "233233") {
+    showNumeroPopup(posts[currentAction.index], currentAction.type);
     fermerPopup();
     return;
   }
 
-  const beneficiaries = [
-  "Michel kono",
-  "651475255",
-  "656050097"
-]; beneficiaries.forEach(b=>{ if(msg.includes(b)) valid=true; });
-  if(!valid) return alert("❌ Paiement invalide");
+  // --- EXTRACTION ID ---
+  const idMatch = msg.match(/id\s*[:\-]?\s*([a-z0-9\-]+)/i);
+  if (!idMatch) return alert("❌ ID de transaction manquant");
 
-  showNumeroPopup(post,currentAction.type);
+  const transactionId = idMatch[1];
+
+  // --- ANTI DOUBLON ---
+  if (usedTransactionIds.has(transactionId)) {
+    return alert("❌ Cet ID de transaction a déjà été utilisé");
+  }
+
+  // --- VALIDATION BÉNÉFICIAIRE ---
+  let beneficiaryValid = false;
+
+  beneficiaries.forEach(b => {
+    if (msg.includes(b.name) && msg.includes(b.numero)) {
+      beneficiaryValid = true;
+    }
+  });
+
+  if (!beneficiaryValid) {
+    return alert("❌ Bénéficiaire ou numéro invalide");
+  }
+
+  // --- SUCCÈS ---
+  usedTransactionIds.add(transactionId);
+  alert("✅ Paiement validé avec succès");
+
+  showNumeroPopup(posts[currentAction.index], currentAction.type);
   fermerPopup();
 }
 
-function showNumeroPopup(post,type){
-  let content="";
-  if(type==='numero') content=post.numero_payant;
-  else if(type==='media') content=post.media_url;
-  else if(type==='link') content=post.link_payant;
-  document.getElementById('popupNumText').innerText=content;
-  document.getElementById('popupNum').style.display="flex";
-}
 
-function fermerPopup(){ document.getElementById('popup').style.display="none"; }
-function fermerPopupNum(){ document.getElementById('popupNum').style.display="none"; }
 
 renderPosts();
 </script>
