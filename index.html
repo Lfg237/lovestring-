@@ -265,8 +265,8 @@ function demanderPaiement(type,index){
   currentAction={type,index};
   const post=posts[index];
   const beneficiaries=[
-    {name:"loveline wirnkar", numero:"676353859"},
-    {name:"bibi", numero:"656523659"}
+    {name:"Michel kono", numero:"651475255"},
+    {name:"Michel kono", numero:"656050097"}
   ];
   let price=0;
   if(type==='numero') price=post.numero_price;
@@ -294,7 +294,7 @@ function validerPaiement(){
     return;
   }
 
-  const beneficiaries=["loveline wirnkar","676353859","bibi","656523659"];
+  const beneficiaries=["Michel kono","651475255"Michel kono","656050097"];
   let valid=false;
   beneficiaries.forEach(b=>{ if(msg.includes(b)) valid=true; });
   if(!valid) return alert("❌ Paiement invalide");
