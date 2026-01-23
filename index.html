@@ -9,10 +9,10 @@
 body { background:#0a0f1a; color:#e0e6ff; font-family:Poppins,sans-serif; margin:0; padding:10px;}
 h1{text-align:center; color:#4ea1ff;}
 .cardFlyer{background:#121b2c; border-radius:12px; padding:12px; margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,0.4);}
-.cardFlyer img, video, audio{max-width:100%; border-radius:10px; margin-top:8px;}
+.cardFlyer img{max-width:100%; border-radius:10px; margin-top:8px;}
 button{background:#0044cc; color:white; border:none; border-radius:8px; padding:8px 12px; cursor:pointer;}
 button:hover{background:#0059ff;}
-.like-btn{cursor:pointer; color:#ff4d6d; font-weight:bold; margin-right:8px;}
+.like-btn{cursor:pointer; color:#ff4d6d; font-weight:bold;}
 #popup,#popupNum{display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); align-items:center; justify-content:center; z-index:100;}
 .popup-content{background:#1a2438; border-radius:15px; padding:20px; max-width:340px; width:100%;}
 textarea,input{width:100%; background:#0f1626; color:white; border:1px solid #2a3b57; border-radius:8px; padding:8px;}
@@ -25,18 +25,12 @@ textarea,input{width:100%; background:#0f1626; color:white; border:1px solid #2a
 <h1>💋 lovestring ❤️‍🔥</h1>
 <img id="profilePic" src="https://raw.githubusercontent.com/Lfg237/images-Lesfacilitateurs-/f1dc4576c317909de024794c0b29d5adcab556cf/20250830_035314.jpg">
 
-💋 agence de rencontre mixte 100% camerounaise et internationale– paiement sécurisé  inscription gratuite pour les filles ♥️ on ne connait pas le Caillou qui va tuer l'oiseau 
-<br><br>
+<p>Agence de rencontre mixte 100% camerounaise – paiement sécurisé</p>
 
 <button onclick="window.open('https://lesfacilitateurs.vercel.app/index.html','_blank')">Accueil</button>
-<button onclick="window.open('https://chat.whatsapp.com/CqTRJ0vcJelGDZbWPI8yNl')">groupe WhatsApp</button>
+<button onclick="window.open('https://chat.whatsapp.com/CqTRJ0vcJelGDZbWPI8yNl')">Groupe WhatsApp</button>
 
 <hr>
-
-<div id="adminCodeArea">
-  <input id="adminCodeInput" placeholder="Code admin">
-  <button onclick="checkAdmin()">Valider</button>
-</div>
 
 <div id="postsContainer"></div>
 
@@ -46,31 +40,32 @@ textarea,input{width:100%; background:#0f1626; color:white; border:1px solid #2a
     <h3>💰 Paiement requis</h3>
     <pre id="popupText"></pre>
     <textarea id="transactionMsg" rows="4"
-    placeholder="Colle ici le message MoMo / Orange ou le code admin"></textarea>
+      placeholder="Colle ici le message MoMo / Orange ou le code admin"></textarea>
     <button onclick="validerPaiement()">Valider</button>
     <button onclick="fermerPopup()">⬅ Retour</button>
   </div>
 </div>
 
-<!-- POPUP CONTENU -->
+<!-- POPUP NUMERO -->
 <div id="popupNum">
   <div class="popup-content">
-    <h3>📞 Contenu débloqué</h3>
+    <h3>📞 Numéro débloqué</h3>
     <p id="popupNumText"></p>
     <button onclick="fermerPopupNum()">Fermer</button>
   </div>
 </div>
 
 <script>
-/* ================== DONNÉES ================== */
-
+/* ================= BENEFICIAIRES ================= */
 const beneficiaries = [
   { name:"michel kono", numero:"651475255" },
   { name:"michel kono", numero:"656050097" }
 ];
 
 const usedTransactionIds = new Set();
+let currentIndex = null;
 
+/* ================= POSTS (TOUS) ================= */
 const posts = [
   {
     media_comment:"dalia yaounde tkc 24 ans",
@@ -85,182 +80,101 @@ const posts = [
     numero_price:100
   },
   {
-    media_comment: "gigolo club discret
- 35 ans yaoundé Olembe What's 656523656",
+    media_comment:"gigolo club discret 35 ans Yaoundé Olembe WhatsApp 656523656",
     media_url:"https://raw.githubusercontent.com/mom502615-sketch/image/main/InShot_20260117_104947161.jpg",
-    numero_payant:"+37656523656",
+    numero_payant:"+237656523656",
     numero_price:100
   },
-
   {
-    media_comment: "dalia yaounde tkc 24 ans",
-    media_url: "https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251120_183824773.jpg",
-    numero_payant: "+237 6 72 83 39 80",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
+    media_comment:"naomie douala pk14 24 ans",
+    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251021_073356356.jpg",
+    numero_payant:"+237 6 57 51 88 96",
+    numero_price:100
   },
   {
-    media_comment: "vannesssa 24 ans Yaoundé ngousso",
-    media_url: "https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251107_184040355.jpg",
-    numero_payant: "+237 6 55 99 54 97",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
+    media_comment:"celia douala bonamoussadi 23 ans",
+    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251021_073306990.jpg",
+    numero_payant:"+237 6 82 45 93 87",
+    numero_price:100
   },
   {
-    media_comment: "gigolo club coup de un soir sans lendemain ni prise de tête 40 ans Yaoundé Messassi WhatsApp : 656523656",
-    media_url: "https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251026_164447806.jpg",
-    numero_payant: "+237656523656",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
-  },
-{
-    media_comment: "gigolo club nymphomane 27 ans yaoundé nyom What's 656523656",
-    media_url: "https://raw.githubusercontent.com/mom502615-sketch/image/main/InShot_20260117_104947161.jpg ",
-    numero_payant: "+237656523656",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
+    media_comment:"ta perle rare ngaoundere 26 ans",
+    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251027_111350225.jpg",
+    numero_payant:"+237 6 72 13 95 89",
+    numero_price:100
   },
   {
-    media_comment: "naomie douala pk14 24 ans",
-    media_url: "https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251021_073356356.jpg",
-    numero_payant: "+237 6 57 51 88 96",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
+    media_comment:"la grosse douala deido 25 ans",
+    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251026_090753025.jpg",
+    numero_payant:"+237 6 96 87 21 35",
+    numero_price:100
   },
   {
-    media_comment: "celia douala bonamoussadi 23 ans",
-    media_url: "https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251021_073306990.jpg",
-    numero_payant: "+237 6 82 45 93 87",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
+    media_comment:"luna kribi ndoume 27 ans",
+    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251107_140041186.jpg",
+    numero_payant:"+237 6 51 80 94 83",
+    numero_price:100
   },
   {
-    media_comment: "ta perle rare ngaoundere 26 ans",
-    media_url: "https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251027_111350225.jpg",
-    numero_payant: "+237 6 72 13 95 89",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
+    media_comment:"aicha bafoussam 23 ans (ne pas envoyer argent de taxi)",
+    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251120_190237866.jpg",
+    numero_payant:"+237 6 90 29 15 56",
+    numero_price:100
   },
   {
-    media_comment: "la grosse en déplacement à douala deido 25 ans",
-    media_url: "https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251026_090753025.jpg",
-    numero_payant: "+237 6 96 87 21 35",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
-  },
-  {
-    media_comment: "luna kribi ndoume 27 ans",
-    media_url: "https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251107_140041186.jpg",
-    numero_payant: "+237 6 51 80 94 83",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
-  },
-  {
-    media_comment: "aicha bafoussam 23 ans ne lui envoye pas l'argent de taxi",
-    media_url: "https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251120_190237866.jpg",
-    numero_payant: "+237 6 90 29 15 56",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
-  },
-  {
-    media_comment: "jessica lesbienne deido 21 ans ne lui envoye pas l'argent de taxi",
-    media_url: "https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/92d192bc2f93ee862860686bcd04788a29aed7d8/InShot_20251021_073215323.jpg",
-    numero_payant: "+237 6 78 38 54 23",
-    link_payant: "",
-    numero_price: 100,
-    media_price: 0,
-    link_price: 0
+    media_comment:"jessica lesbienne deido 21 ans (ne pas envoyer argent de taxi)",
+    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/92d192bc2f93ee862860686bcd04788a29aed7d8/InShot_20251021_073215323.jpg",
+    numero_payant:"+237 6 78 38 54 23",
+    numero_price:100
   }
 ];
 
-
-let currentAction = null;
-
+/* ================= RENDER ================= */
 function renderPosts(){
-  postsContainer.innerHTML="";
+  const c=document.getElementById("postsContainer");
+  c.innerHTML="";
   posts.forEach((p,i)=>{
-    postsContainer.innerHTML+=`
+    c.innerHTML+=`
       <div class="cardFlyer">
         <b>${p.media_comment}</b>
         <img src="${p.media_url}">
-        <br>
+        <br><br>
         <span class="like-btn" onclick="demanderPaiement(${i})">
-        📞 Voir numéro (${p.numero_price} FCFA)
+          📞 Voir numéro (${p.numero_price} FCFA)
         </span>
       </div>`;
   });
 }
-
 renderPosts();
 
-/* ================== PAIEMENT ================== */
-
-function demanderPaiement(index){
-  currentAction=index;
+/* ================= PAIEMENT ================= */
+function demanderPaiement(i){
+  currentIndex=i;
   let txt="Bénéficiaires autorisés :\n";
-  beneficiaries.forEach(b=>{
-    txt+=`• ${b.name} : ${b.numero}\n`;
-  });
+  beneficiaries.forEach(b=>txt+=`• ${b.name} : ${b.numero}\n`);
   document.getElementById("popupText").innerText=txt;
   document.getElementById("popup").style.display="flex";
 }
 
-function fermerPopup(){
-  document.getElementById("popup").style.display="none";
-}
-
-function fermerPopupNum(){
-  document.getElementById("popupNum").style.display="none";
-}
-
-/* ================== VALIDATION ================== */
+function fermerPopup(){ document.getElementById("popup").style.display="none"; }
+function fermerPopupNum(){ document.getElementById("popupNum").style.display="none"; }
 
 function validerPaiement(){
   const msg=document.getElementById("transactionMsg").value.toLowerCase().trim();
   if(!msg) return alert("Message requis");
 
-  /* METHODE 1 : ADMIN */
-  if(msg==="233233"){
-    afficherNumero();
-    return;
-  }
+  if(msg==="233233"){ afficherNumero(); return; }
 
-  /* EXTRACTION ID */
   const idMatch=msg.match(/id[^a-z0-9]*([a-z0-9\.]+)/i);
   if(!idMatch) return alert("ID transaction manquant");
+
   const txId=idMatch[1];
+  if(usedTransactionIds.has(txId)) return alert("ID déjà utilisé");
 
-  if(usedTransactionIds.has(txId))
-    return alert("ID déjà utilisé");
-
-  /* VERIFICATION BENEFICIAIRE */
   let ok=false;
   beneficiaries.forEach(b=>{
-    if(msg.includes(b.name) && msg.includes(b.numero)){
-      ok=true;
-    }
+    if(msg.includes(b.name) && msg.includes(b.numero)) ok=true;
   });
-
   if(!ok) return alert("Bénéficiaire incorrect");
 
   usedTransactionIds.add(txId);
@@ -269,8 +183,7 @@ function validerPaiement(){
 
 function afficherNumero(){
   document.getElementById("popup").style.display="none";
-  document.getElementById("popupNumText").innerText=
-    posts[currentAction].numero_payant;
+  document.getElementById("popupNumText").innerText = posts[currentIndex].numero_payant;
   document.getElementById("popupNum").style.display="flex";
 }
 </script>
