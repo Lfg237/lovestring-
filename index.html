@@ -184,29 +184,6 @@ footer{
   font-size:13px;
   border-top:1px solid #333;
 }
-.marquee{
-  position:fixed;
-  top:60px;
-  left:0;
-  width:100%;
-  background:linear-gradient(90deg,#ff4d6d,#ff7aa2,#ff4d6d);
-  overflow:hidden;
-  z-index:999;
-}
-
-.marquee-content{
-  display:inline-block;
-  white-space:nowrap;
-  padding:8px 0;
-  font-weight:bold;
-  color:blue;
-  animation:scrollText 15s linear infinite;
-}
-
-@keyframes scrollText{
-  0%{transform:translateX(100%);}
-  100%{transform:translateX(-100%);}
-}
 </style>
 </head>
 
@@ -228,12 +205,7 @@ for(let i=0;i<25;i++){
     💕 MIEUX LE VIENS ON RESTE QUE LE CELIBAT 💕
   </div>
 </header>
-<!-- BANDE DÉFILANTE -->
-<div class="marquee">
-  <div class="marquee-content">
-    💕 Site de rencontre sérieux • 💋 Trouve ton partenaire idéal • 🔥 Inscription gratuite femmes • 💰 Hommes vérifiés • ❤️ Nouveau profils chaque jour • 💕
-  </div>
-</div>
+
 <div class="container">
 <h2 style="text-align:center;">💋 Liste des profils</h2>
 <div id="postsContainer"></div>
@@ -254,7 +226,7 @@ for(let i=0;i<25;i++){
 </div>
 
 <footer>
-  © 2026 - Site de rencontre serieux et securisé 💕
+  © 2026 - Site de rencontre 💕
 </footer>
 
 <script>
@@ -264,14 +236,14 @@ const posts = [
   nom:"admin",
   ville:"Yaoundé",
   age:"44",
-  profession: "admin",
+  profession:"admin",
   photo:"https://raw.githubusercontent.com/Lfg237/image-lovestring/main/file_00000000aeac720aac7c9030f1dd48e6.png",
   numero:"+237 6 59 83 82 17",
   code:"233"
 },
 {
   nom:"rodrigue tchameni",
-  ville:"Douala  bepanda",
+  ville:"Douala bepanda",
   age:"43",
   profession:"ras",
   photo:"https://www.facebook.com/ashu.shanticlear.9",
@@ -291,6 +263,7 @@ const posts = [
 
 let currentIndex=null;
 
+/* ===== RENDER ===== */
 function renderPosts(){
   const c=document.getElementById("postsContainer");
   c.innerHTML="";
@@ -312,12 +285,17 @@ function renderPosts(){
         <span class="like-btn" onclick="demanderCode(${i})">
           📞 Voir numéro
         </span>
+
+        <br>
+
+        <button onclick="ouvrirLien('${p.photo}')">🌐 Ouvrir lien externe</button>
       </div>
     `;
   });
 }
 renderPosts();
 
+/* ===== CODE ===== */
 function demanderCode(i){
   const code=prompt("Entrez le code secret :");
 
@@ -329,6 +307,7 @@ function demanderCode(i){
   }
 }
 
+/* ===== NUMERO ===== */
 function afficherNumero(){
   document.getElementById("popupNumText").innerText=posts[currentIndex].numero;
   document.getElementById("popupNum").style.display="flex";
@@ -338,12 +317,25 @@ function fermerPopupNum(){
   document.getElementById("popupNum").style.display="none";
 }
 
+/* ===== PHOTO ===== */
+function ouvrirPhoto(src){
+  if(src.startsWith("http")){
+    document.getElementById("photoView").src=src;
+    document.getElementById("popupPhoto").style.display="flex";
+  }
+}
+
+/* ===== LIENS EXTERNES FIX ===== */
 function ouvrirLien(url){
-  if(url.startsWith("http")){
-    window.open(url, "_blank");
-  }else{
+  if(url && url.startsWith("http")){
+    window.open(url, "_blank", "noopener,noreferrer");
+  } else {
     alert("Lien invalide");
   }
+}
+
+function fermerPhoto(){
+  document.getElementById("popupPhoto").style.display="none";
 }
 </script>
 
