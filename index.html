@@ -77,6 +77,17 @@ header{
   border-radius:50%;
 }
 
+/* bouton remarque */
+.remarque-btn{
+  background:#ffcc00;
+  color:#000;
+  border:none;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
 /* ===== BODY ===== */
 .container{
   padding-top:90px;
@@ -149,26 +160,31 @@ button:hover{
   width:90%;
 }
 
-/* ===== PHOTO FIX MOBILE ===== */
-#popupPhoto{
+/* ===== POPUP REMARQUE ===== */
+#popupRemarque{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.95);
+  background:rgba(0,0,0,0.85);
   align-items:center;
   justify-content:center;
-  z-index:3000;
-  padding:10px;
+  z-index:4000;
 }
 
-#photoView{
-  max-width:95%;
-  max-height:85vh;
-  width:auto;
-  height:auto;
-  border-radius:12px;
-  box-shadow:0 0 25px rgba(255,255,255,0.2);
-  object-fit:contain;
+.remarque-box{
+  background:#1a2438;
+  padding:20px;
+  border-radius:15px;
+  width:90%;
+  max-width:500px;
+  max-height:80vh;
+  overflow-y:auto;
+  color:#fff;
+}
+
+.remarque-box button{
+  margin-top:15px;
+  background:#00c853;
 }
 
 /* FOOTER */
@@ -184,6 +200,32 @@ footer{
   font-size:13px;
   border-top:1px solid #333;
 }
+#popupLien{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.92);
+  z-index:5000;
+  align-items:center;
+  justify-content:center;
+  padding:10px;
+}
+
+#popupLien img{
+  max-width:90%;
+  max-height:85vh;
+  border-radius:12px;
+  box-shadow:0 0 20px rgba(255,255,255,0.2);
+  object-fit:contain;
+}
+
+#popupLien button{
+  position:absolute;
+  top:15px;
+  right:15px;
+  background:#ff4d6d;
+}
+
 </style>
 </head>
 
@@ -204,6 +246,8 @@ for(let i=0;i<25;i++){
     <img src="https://raw.githubusercontent.com/Lfg237/image-lovestring/main/file_00000000aeac720aac7c9030f1dd48e6.png">
     💕 MIEUX LE VIENS ON RESTE QUE LE CELIBAT 💕
   </div>
+
+  <button class="remarque-btn" onclick="ouvrirRemarque()">📌 Remarque</button>
 </header>
 
 <div class="container">
@@ -220,9 +264,41 @@ for(let i=0;i<25;i++){
   </div>
 </div>
 
-<!-- PHOTO -->
-<div id="popupPhoto" onclick="fermerPhoto()">
-  <img id="photoView">
+<!-- REMARQUE -->
+<div id="popupRemarque">
+  <div class="remarque-box">
+    <h2>📌 Remarque importante</h2>
+
+    p>
+    Bonjour Madame et Monsieur. J'ai fait le constat dans le groupe ici, avec le témoignage de certains hommes du groupe. Le résultat est le suivant : Mon idée n'est pas de juger, ou donner des leçons à qui que ce soit.
+
+    <br><br>
+
+    À 50 ans et plus, c'est déjà beaucoup de questionnements : pourquoi je suis encore seule ? Pourquoi je tombe toujours sur des personnes qui ne sont pas intéressées ? Et à quand mon jour ?
+
+    <br><br>
+
+    La réponse se trouve souvent dans notre comportement. Chacun a sa façon d'aborder les autres.
+
+    <br><br>
+
+    Les hommes détestent les femmes autoritaires. Certaines femmes sont frustrées et pensent qu'un homme sérieux est celui qui donne de l'argent dès le premier échange.
+
+    <br><br>
+
+    Une femme ou un homme sans respect perd de la valeur dans les relations.
+
+    <br><br>
+
+    J'espère que vous allez comprendre ce message.
+
+    <br><br>
+
+    💌 soyons patient et sincere car la base c'est la sincerité et la verité  💕 💕
+    </p>
+
+    <button onclick="fermerRemarque()">🔙 Retour</button>
+  </div>
 </div>
 
 <footer>
@@ -230,6 +306,16 @@ for(let i=0;i<25;i++){
 </footer>
 
 <script>
+
+function ouvrirRemarque(){
+  document.getElementById("popupRemarque").style.display="flex";
+}
+
+function fermerRemarque(){
+  document.getElementById("popupRemarque").style.display="none";
+}
+
+let currentIndex=null;
 
 const posts = [
 {
@@ -258,76 +344,48 @@ const posts = [
   photo:"https://via.placeholder.com/400",
   numero:"+237 6 99 78 60 67",
   code:"x7"
-},
-{
-  nom:"vannessa",
-  ville:"yaoundé ngousso",
-  age:"24",
-  profession:"🌶️🌶️🌶️",
-  photo:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251107_184040355.jpg",
-  numero:"+237 6 55 99 54 97",
-  code:"x747"
-},
-{
-  nom:"dalia",
-  ville:"yaounde tkc",
-  age:"24",
-  profession:"🌶️🌶️🌶️",
-  photo:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251120_183824773.jpg",
-  numero:"+237 6 72 83 39 80",
-  code:"x897"
-},
-{
-  nom:"jessica",
-  ville:"douala deido",
-  age:"24",
-  profession:"🌶️🌶️🌶️",
-  photo:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/92d192bc2f93ee862860686bcd04788a29aed7d8/InShot_20251021_073215323.jpg",
-  numero:"+237 6 78 38 54 23",
-  code:"x70"
-},
-{
-  nom:"poupée sensuelle",
-  ville:"douala bonapriso",
-  age:"26",
-  profession:"🌶️🌶️🌶️",
-  photo:"https://raw.githubusercontent.com/Lfg237/image-lovestring/main/IMG-20260203-WA0026.jpg",
-  numero:"+237 6 40 59 00 12 ",
-  code:"x7b"
-},
-{
-  nom:"luna",
-  ville:"kribi ndombe",
-  age:"27",
-  profession:"🌶️🌶️🌶️",
-  photo:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251107_140041186.jpg",
-  numero:"+237 6 51 80 94 83 ",
-  code:"x7bx"
-},
-{
-  nom:"celia",
-  ville:"douala bonamoussadie",
-  age:"24",
-  profession:"🌶️🌶️🌶️",
-  photo:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251021_073306990.jpg",
-  numero:"+237 6 82 45 93 87",
-  code:"x707"
-},
-{
-  nom:"naomie",
-  ville:"douala pk14",
-  age:"24",
-  profession:"🌶️🌶️🌶️",
-  photo:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251021_073356356.jpg",
-  numero:"+237 6 57 51 88 96",
-  code:"x237"
-},
-
+}
 ];
 
-let currentIndex=null;
 
-/* ===== RENDER ===== */
+function ouvrirLien(url){
+
+  if(!url || !url.startsWith("http")){
+    alert("Lien invalide");
+    return;
+  }
+
+  // détecter si c’est une image
+  const isImage = url.match(/\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i);
+
+  if(isImage){
+    document.getElementById("imgLien").src = url;
+    document.getElementById("popupLien").style.display="flex";
+  }else{
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+}
+
+function fermerLien(){
+  document.getElementById("popupLien").style.display="none";
+  document.getElementById("imgLien").src="";
+}
+
+function demanderCode(i){
+  const code=prompt("Entrez le code secret :");
+  if(code===posts[i].code){
+    currentIndex=i;
+    document.getElementById("popupNumText").innerText=posts[i].numero;
+    document.getElementById("popupNum").style.display="flex";
+  }else{
+    alert("Code incorrect");
+  }
+}
+
+function fermerPopupNum(){
+  document.getElementById("popupNum").style.display="none";
+}
+
 function renderPosts(){
   const c=document.getElementById("postsContainer");
   c.innerHTML="";
@@ -342,66 +400,24 @@ function renderPosts(){
           <tr><td><b>Profession</b></td><td>${p.profession||""}</td></tr>
         </table>
 
-        <button onclick="ouvrirPhoto('${p.photo}')">📷 Voir photo</button>
+        <button onclick="ouvrirLien('${p.photo}')">🌐 Lien externe</button>
 
         <br>
 
         <span class="like-btn" onclick="demanderCode(${i})">
           📞 Voir numéro
         </span>
-
-        <br>
-
-        <button onclick="ouvrirLien('${p.photo}')">🌐 Ouvrir lien externe</button>
       </div>
     `;
   });
 }
+
 renderPosts();
 
-/* ===== CODE ===== */
-function demanderCode(i){
-  const code=prompt("Entrez le code secret :");
-
-  if(code===posts[i].code){
-    currentIndex=i;
-    afficherNumero();
-  }else{
-    alert("Code incorrect");
-  }
-}
-
-/* ===== NUMERO ===== */
-function afficherNumero(){
-  document.getElementById("popupNumText").innerText=posts[currentIndex].numero;
-  document.getElementById("popupNum").style.display="flex";
-}
-
-function fermerPopupNum(){
-  document.getElementById("popupNum").style.display="none";
-}
-
-/* ===== PHOTO ===== */
-function ouvrirPhoto(src){
-  if(src.startsWith("http")){
-    document.getElementById("photoView").src=src;
-    document.getElementById("popupPhoto").style.display="flex";
-  }
-}
-
-/* ===== LIENS EXTERNES FIX ===== */
-function ouvrirLien(url){
-  if(url && url.startsWith("http")){
-    window.open(url, "_blank", "noopener,noreferrer");
-  } else {
-    alert("Lien invalide");
-  }
-}
-
-function fermerPhoto(){
-  document.getElementById("popupPhoto").style.display="none";
-}
 </script>
-
+<div id="popupLien" onclick="fermerLien()">
+  <button onclick="fermerLien()">✖</button>
+  <img id="imgLien">
+</div>
 </body>
 </html>
