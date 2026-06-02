@@ -338,13 +338,12 @@ function fermerPopupNum(){
   document.getElementById("popupNum").style.display="none";
 }
 
-function ouvrirPhoto(src){
-  document.getElementById("photoView").src=src;
-  document.getElementById("popupPhoto").style.display="flex";
-}
-
-function fermerPhoto(){
-  document.getElementById("popupPhoto").style.display="none";
+function ouvrirLien(url){
+  if(url.startsWith("http")){
+    window.open(url, "_blank");
+  }else{
+    alert("Lien invalide");
+  }
 }
 </script>
 
