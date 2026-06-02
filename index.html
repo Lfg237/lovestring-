@@ -3,51 +3,243 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💋viens on reste ❤️</title>
+<title>💋 mieux le viens on reste que le célibat</title>
 
 <style>
-body { background:#0a0f1a; color:#e0e6ff; font-family:Poppins,sans-serif; margin:0; padding:10px;}
-h1{text-align:center; color:#4ea1ff;}
-.cardFlyer{background:#121b2c; border-radius:12px; padding:12px; margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,0.4);}
-.cardFlyer img{max-width:100%; border-radius:10px; margin-top:8px;}
-button{background:#0044cc; color:white; border:none; border-radius:8px; padding:8px 12px; cursor:pointer;}
-button:hover{background:#0059ff;}
-.like-btn{cursor:pointer; color:#ff4d6d; font-weight:bold;}
-#popup,#popupNum{display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); align-items:center; justify-content:center; z-index:100;}
-.popup-content{background:#1a2438; border-radius:15px; padding:20px; max-width:340px; width:100%;}
-textarea,input{width:100%; background:#0f1626; color:white; border:1px solid #2a3b57; border-radius:8px; padding:8px;}
-#profilePic{display:block; margin:0 auto 10px; max-width:150px; border-radius:50%;}
+
+/* ===== BACKGROUND ANIMÉ ===== */
+body{
+  margin:0;
+  font-family:Poppins,sans-serif;
+  color:#e0e6ff;
+  background:#0a0f1a;
+  overflow-x:hidden;
+}
+
+/* cœurs animés */
+.heart{
+  position:fixed;
+  width:15px;
+  height:15px;
+  background:pink;
+  transform:rotate(45deg);
+  animation:float 8s linear infinite;
+  opacity:0.6;
+  z-index:0;
+}
+
+.heart:before,
+.heart:after{
+  content:"";
+  position:absolute;
+  width:15px;
+  height:15px;
+  background:pink;
+  border-radius:50%;
+}
+
+.heart:before{top:-7px; left:0;}
+.heart:after{left:-7px; top:0;}
+
+@keyframes float{
+  0%{transform:translateY(100vh) rotate(45deg); opacity:0;}
+  50%{opacity:1;}
+  100%{transform:translateY(-10vh) rotate(45deg); opacity:0;}
+}
+
+/* ===== HEADER ===== */
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  background:rgba(20,20,40,0.95);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 15px;
+  z-index:1000;
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid #333;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:bold;
+  color:#ff4d6d;
+}
+
+.logo img{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+}
+
+/* ===== BODY ===== */
+.container{
+  padding-top:90px;
+  padding-bottom:90px;
+}
+
+/* ===== CARD MODERNE ===== */
+.card{
+  background:linear-gradient(135deg,#1a1f3a,#2a1440,#1b2b3a);
+  border-radius:16px;
+  padding:14px;
+  margin:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.5);
+  border:1px solid rgba(255,255,255,0.08);
+  position:relative;
+  z-index:2;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+}
+
+/* TABLE */
+table{
+  width:100%;
+  color:#fff;
+  font-size:14px;
+}
+
+/* bouton */
+button{
+  background:linear-gradient(45deg,#ff4d6d,#ff7aa2);
+  color:white;
+  border:none;
+  border-radius:10px;
+  padding:9px 12px;
+  cursor:pointer;
+  margin-top:8px;
+}
+
+button:hover{
+  filter:brightness(1.1);
+}
+
+.like-btn{
+  cursor:pointer;
+  color:#ffb3c6;
+  font-weight:bold;
+  display:inline-block;
+  margin-top:8px;
+}
+
+/* ===== POPUP NUMERO ===== */
+#popupNum{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+}
+
+.popup-content{
+  background:#1a2438;
+  border-radius:15px;
+  padding:20px;
+  max-width:340px;
+  width:90%;
+}
+
+/* ===== PHOTO FIX MOBILE ===== */
+#popupPhoto{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  align-items:center;
+  justify-content:center;
+  z-index:3000;
+  padding:10px;
+}
+
+#photoView{
+  max-width:95%;
+  max-height:85vh;
+  width:auto;
+  height:auto;
+  border-radius:12px;
+  box-shadow:0 0 25px rgba(255,255,255,0.2);
+  object-fit:contain;
+}
+
+/* FOOTER */
+footer{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:rgba(20,20,40,0.95);
+  text-align:center;
+  padding:10px;
+  color:#aaa;
+  font-size:13px;
+  border-top:1px solid #333;
+}
+.marquee{
+  position:fixed;
+  top:60px;
+  left:0;
+  width:100%;
+  background:linear-gradient(90deg,#ff4d6d,#ff7aa2,#ff4d6d);
+  overflow:hidden;
+  z-index:999;
+}
+
+.marquee-content{
+  display:inline-block;
+  white-space:nowrap;
+  padding:8px 0;
+  font-weight:bold;
+  color:blue;
+  animation:scrollText 15s linear infinite;
+}
+
+@keyframes scrollText{
+  0%{transform:translateX(100%);}
+  100%{transform:translateX(-100%);}
+}
 </style>
 </head>
 
 <body>
 
-<h1>💋 viens on reste que d'être célibataire ❤️‍🔥</h1>
-<img id="profilePic" src="https://raw.githubusercontent.com/Lfg237/image-lovestring/main/file_00000000aeac720aac7c9030f1dd48e6.png">
+<script>
+for(let i=0;i<25;i++){
+  let h=document.createElement("div");
+  h.className="heart";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(5+Math.random()*5)+"s";
+  document.body.appendChild(h);
+}
+</script>
 
-<p1>Agence de rencontre mixte 100% camerounaise inscription gratuite pour les femmes et 1000 XAF pour les hommes contact Admin 659838217 ♥️</p1>
-<p2>faites attention chacun sait ce qu'il recherche</p2>
-
-<button  onclick="window.open('https://chat.whatsapp.com/LroSOxuJLTtDS4XEmA5B0Z?mode=gi_t')">Groupe WhatsApp</button>
-<button onclick="window.open('https://xvideos-lovestring237.vercel.app/')"> xvideos</button>
-
-<hr>
-
-<div id="postsContainer"></div>
-
-<!-- POPUP PAIEMENT -->
-<div id="popup">
-  <div class="popup-content">
-    <h3>💰 Paiement requis</h3>
-    <pre id="popupText"></pre>
-    <textarea id="transactionMsg" rows="4"
-      placeholder=" fais le dépôt copie et Colle  le message MoMo / Orange pour afficher le contact"></textarea>
-    <button onclick="validerPaiement()">Valider</button>
-    <button onclick="fermerPopup()">⬅ Retour</button>
+<header>
+  <div class="logo">
+    <img src="https://raw.githubusercontent.com/Lfg237/image-lovestring/main/file_00000000aeac720aac7c9030f1dd48e6.png">
+    💕 MIEUX LE VIENS ON RESTE QUE LE CELIBAT 💕
+  </div>
+</header>
+<!-- BANDE DÉFILANTE -->
+<div class="marquee">
+  <div class="marquee-content">
+    💕 Site de rencontre sérieux • 💋 Trouve ton partenaire idéal • 🔥 Inscription gratuite femmes • 💰 Hommes vérifiés • ❤️ Nouveau profils chaque jour • 💕
   </div>
 </div>
+<div class="container">
+<h2 style="text-align:center;">💋 Liste des profils</h2>
+<div id="postsContainer"></div>
+</div>
 
-<!-- POPUP NUMERO -->
+<!-- NUMERO -->
 <div id="popupNum">
   <div class="popup-content">
     <h3>📞 Numéro débloqué</h3>
@@ -56,174 +248,103 @@ textarea,input{width:100%; background:#0f1626; color:white; border:1px solid #2a
   </div>
 </div>
 
+<!-- PHOTO -->
+<div id="popupPhoto" onclick="fermerPhoto()">
+  <img id="photoView">
+</div>
+
+<footer>
+  © 2026 - Site de rencontre serieux et securisé 💕
+</footer>
+
 <script>
-/* ================= BENEFICIAIRES ================= */
-const beneficiaries = [
-  { name:"loveline wirkar", numero:"" },
-  { name:"loveline wirkar", numero:"659838217" }
-];
 
-const usedTransactionIds = new Set();
-let currentIndex = null;
-
-/* ================= POSTS (TOUS) ================= */
 const posts = [
-
 {
-    media_comment:"contact admin +237 6 59 83 82 17 groupe WhatsApp Yaoundé Messassi pour plus information ",
-    media_url:"https://raw.githubusercontent.com/Lfg237/image-lovestring/main/file_00000000aeac720aac7c9030f1dd48e6.png",
-    numero_payant:"+237658412230",
-    numero_price:100
-  },
+  nom:"admin",
+  ville:"Yaoundé",
+  age:"44",
+  profession: "admin",
+  photo:"https://raw.githubusercontent.com/Lfg237/image-lovestring/main/file_00000000aeac720aac7c9030f1dd48e6.png",
+  numero:"+237 6 59 83 82 17",
+  code:"233"
+},
 {
-    media_comment:"contact admin +237 6 59 83 82 17 groupe WhatsApp Yaoundé Messassi pour plus information ",
-    media_url:"https://raw.githubusercontent.com/Lfg237/image-lovestring/main/IMG_20260125_111619.jpg",
-    numero_payant:"+237658412230",
-    numero_price:100
-  },
+  nom:"rodrigue tchameni",
+  ville:"Douala  bepanda",
+  age:"43",
+  profession:"ras",
+  photo:"https://www.facebook.com/ashu.shanticlear.9",
+  numero:"+237 6 82 21 04 68",
+  code:"777"
+},
 {
-    media_comment:"poupée sensuelle 26 ans Douala bonapriso 🌶️🌶️🌶️🌶️ What's 640590012",
-    media_url:"https://raw.githubusercontent.com/Lfg237/image-lovestring/main/IMG-20260203-WA0026.jpg",
-    numero_payant:"640590012",
-    numero_price:100
-  },
-  {
-    media_comment:"dalia yaounde tkc 24 ans 🌶️🌶️What's 672833980",
-    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251120_183824773.jpg",
-    numero_payant:"+237 6 72 83 39 80",
-    numero_price:100
-  },
-
-{
-    media_comment:"gigolo club discret envie de sexe placement des filles chaudes lesbiennes et bi Yaoundé Olembe contact +237 6 59 83 82 17 uniquement pour femme libertine ",
-    media_url:"https://raw.githubusercontent.com/Lfg237/image-lovestring/main/IMG_20260125_104742.jpg",
-    numero_payant:"+237658412230",
-    numero_price:100
-  },
-{
-    media_comment:"gigolo club discret recherche d'une vendeuse de piment pour mariage on va travailler ensemble à Yaoundé contact 659838217 uniquement pour femme libertine ",
-    media_url:"https://raw.githubusercontent.com/Lfg237/image-lovestring/main/IMG-20260201-WA0030.jpg",
-    numero_payant:"+237658412230",
-    numero_price:100
-  },
-  {
-    media_comment:"vannesssa 24 ans Yaoundé ngousso What's 655995497",
-    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251107_184040355.jpg",
-    numero_payant:"+237 6 55 99 54 97",
-    numero_price:100
-  },
-{
-    media_comment:"gigolo club discret envie de sexe 40 ans Yaoundé Olembe contact 659838217  femme libertine , insatisfaite , nymphowomane,",
-    media_url:"https://raw.githubusercontent.com/Lfg237/image-lovestring/main/IMG-20260206-WA0005.jpg",
-    numero_payant:"+237658412230",
-    numero_price:100
-  },
-  {
-    media_comment:"gigolo club discret envie de sexe 35 ans Yaoundé Olembe contact 659838217 WhatsApp uniquement pour femme libertine ",
-    media_url:"https://raw.githubusercontent.com/mom502615-sketch/image/main/InShot_20260117_104947161.jpg",
-    numero_payant:"+237658412230",
-    numero_price:100
-  },
-  {
-    media_comment:"naomie douala pk14 24 ans 657518896",
-    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251021_073356356.jpg",
-    numero_payant:"+237 6 57 51 88 96",
-    numero_price:100
-  },
-  {
-    media_comment:"celia douala bonamoussadi 23 ans What's 682459387",
-    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251021_073306990.jpg",
-    numero_payant:"+237 6 82 45 93 87",
-    numero_price:100
-  },
-  {
-    media_comment:"ta perle rare ngaoundere 26 ans What's 672139589",
-    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251027_111350225.jpg",
-    numero_payant:"+237 6 72 13 95 89",
-    numero_price:100
-  },
-  {
-    media_comment:"la grosse douala deido 25 ans What's 696872135",
-    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251026_090753025.jpg",
-    numero_payant:"+237 6 96 87 21 35",
-    numero_price:100
-  },
-  {
-    media_comment:"luna kribi ndoume 27 ans What's 651809483",
-    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251107_140041186.jpg",
-    numero_payant:"+237 6 51 80 94 83",
-    numero_price:100
-  },
-  {
-    media_comment:"aicha bafoussam 23 ans What's 690291556(ne pas envoyer argent de taxi)",
-    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/main/InShot_20251120_190237866.jpg",
-    numero_payant:"+237 6 90 29 15 56",
-    numero_price:100
-  },
-  {
-    media_comment:"jessica lesbienne deido 21 ans What's 678385423(ne pas envoyer argent de taxi)",
-    media_url:"https://raw.githubusercontent.com/facilitateursgroupe-stack/lovestring237-photo-/92d192bc2f93ee862860686bcd04788a29aed7d8/InShot_20251021_073215323.jpg",
-    numero_payant:"+237 6 78 38 54 23",
-    numero_price:100
-  }
+  nom:"josé sop moté",
+  ville:"Yaoundé",
+  age:"40",
+  profession:"medecin",
+  photo:"https://via.placeholder.com/400",
+  numero:"+237 6 99 78 60 67",
+  code:"x7"
+}
 ];
 
-/* ================= RENDER ================= */
+let currentIndex=null;
+
 function renderPosts(){
   const c=document.getElementById("postsContainer");
   c.innerHTML="";
+
   posts.forEach((p,i)=>{
     c.innerHTML+=`
-      <div class="cardFlyer">
-        <b>${p.media_comment}</b>
-        <img src="${p.media_url}">
-        <br><br>
-        <span class="like-btn" onclick="demanderPaiement(${i})">
-          📞 Voir numéro (${p.numero_price} FCFA)
+      <div class="card">
+        <table>
+          <tr><td><b>Nom</b></td><td>${p.nom}</td></tr>
+          <tr><td><b>Ville</b></td><td>${p.ville}</td></tr>
+          <tr><td><b>Âge</b></td><td>${p.age}</td></tr>
+          <tr><td><b>Profession</b></td><td>${p.profession||""}</td></tr>
+        </table>
+
+        <button onclick="ouvrirPhoto('${p.photo}')">📷 Voir photo</button>
+
+        <br>
+
+        <span class="like-btn" onclick="demanderCode(${i})">
+          📞 Voir numéro
         </span>
-      </div>`;
+      </div>
+    `;
   });
 }
 renderPosts();
 
-/* ================= PAIEMENT ================= */
-function demanderPaiement(i){
-  currentIndex=i;
-  let txt="Bénéficiaires autorisés :\n";
-  beneficiaries.forEach(b=>txt+=`• ${b.name} : ${b.numero}\n`);
-  document.getElementById("popupText").innerText=txt;
-  document.getElementById("popup").style.display="flex";
-}
+function demanderCode(i){
+  const code=prompt("Entrez le code secret :");
 
-function fermerPopup(){ document.getElementById("popup").style.display="none"; }
-function fermerPopupNum(){ document.getElementById("popupNum").style.display="none"; }
-
-function validerPaiement(){
-  const msg=document.getElementById("transactionMsg").value.toLowerCase().trim();
-  if(!msg) return alert("Message requis");
-
-  if(msg==="233233"){ afficherNumero(); return; }
-
-  const idMatch=msg.match(/id[^a-z0-9]*([a-z0-9\.]+)/i);
-  if(!idMatch) return alert("ID transaction manquant");
-
-  const txId=idMatch[1];
-  if(usedTransactionIds.has(txId)) return alert("ID déjà utilisé");
-
-  let ok=false;
-  beneficiaries.forEach(b=>{
-    if(msg.includes(b.name) && msg.includes(b.numero)) ok=true;
-  });
-  if(!ok) return alert("Bénéficiaire incorrect");
-
-  usedTransactionIds.add(txId);
-  afficherNumero();
+  if(code===posts[i].code){
+    currentIndex=i;
+    afficherNumero();
+  }else{
+    alert("Code incorrect");
+  }
 }
 
 function afficherNumero(){
-  document.getElementById("popup").style.display="none";
-  document.getElementById("popupNumText").innerText = posts[currentIndex].numero_payant;
+  document.getElementById("popupNumText").innerText=posts[currentIndex].numero;
   document.getElementById("popupNum").style.display="flex";
+}
+
+function fermerPopupNum(){
+  document.getElementById("popupNum").style.display="none";
+}
+
+function ouvrirPhoto(src){
+  document.getElementById("photoView").src=src;
+  document.getElementById("popupPhoto").style.display="flex";
+}
+
+function fermerPhoto(){
+  document.getElementById("popupPhoto").style.display="none";
 }
 </script>
 
